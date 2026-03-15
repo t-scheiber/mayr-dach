@@ -1,0 +1,26 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: vps.mayr-dach.com
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            export BUN_INSTALL="/root/.bun"
+            export PATH="$BUN_INSTALL/bin:$PATH"
+            cd /opt/mayr-dach
+            git pull origin main
+            bun install --frozen-lockfile
+            bunx prisma generate
+            bunx prisma db push --accept-data-loss
+            bun run build
+            systemctl restart mayr-dach

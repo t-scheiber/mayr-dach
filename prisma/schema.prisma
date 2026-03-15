@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 // ─── Better Auth tables ───
@@ -34,8 +34,6 @@ model Session {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model Account {
@@ -43,9 +41,9 @@ model Account {
   userId                String
   accountId             String
   providerId            String
-  accessToken           String?   @db.Text
-  refreshToken          String?   @db.Text
-  idToken               String?   @db.Text
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -54,14 +52,12 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
 
 model Verification {
   id         String   @id @default(cuid())
   identifier String
-  value      String   @db.Text
+  value      String
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -80,7 +76,7 @@ model Application {
   motivationPath        String?
   position              String?
   status                ApplicationStatus @default(NEW)
-  notes                 String?           @db.Text
+  notes                 String?
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
 }
@@ -107,14 +103,14 @@ model Job {
   durationDe        String?
   durationEn        String?
 
-  tasksDe           Json      @default("[]")
-  tasksEn           Json      @default("[]")
+  tasksDe           String[]
+  tasksEn           String[]
 
-  requirementsDe    Json      @default("[]")
-  requirementsEn    Json      @default("[]")
+  requirementsDe    String[]
+  requirementsEn    String[]
 
-  benefitsDe        Json      @default("[]")
-  benefitsEn        Json      @default("[]")
+  benefitsDe        String[]
+  benefitsEn        String[]
 
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
