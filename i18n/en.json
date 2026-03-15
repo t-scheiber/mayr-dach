@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "title": "Roofer, Metalworker & Glazier in Saalfelden | Karl Mayr GmbH & Co. KG",
+    "description": "We specialize in roofing, metalwork, facade construction, glazing, flat roof sealing, and all types of pitched roofs in Saalfelden."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "services": "Services",
+    "jobs": "Jobs",
+    "apply": "Apply",
+    "contact": "Contact",
+    "impressum": "Legal Notice",
+    "privacy": "Privacy Policy"
+  },
+  "hero": {
+    "title": "Your Reliable Roofer, Metalworker and Glazier in Saalfelden",
+    "description": "Welcome to Karl Mayr GmbH & Co. KG – your reliable partner for roofing, facades and glass in Saalfelden. We stand for high-quality craftsmanship, precise execution and honest consultation. As a master craftsman workshop, we combine modern technology with traditional craftsmanship – for durable, safe and visually appealing solutions for your roof.",
+    "subtitle": "Our service areas extend far beyond Saalfelden: We serve our customers throughout the Pinzgau region, in Tyrol, the city of Salzburg and in Upper Bavaria. Whether private residential, commercial or renovation projects – wherever quality is required, we are your reliable contact.",
+    "cta": "Call Now"
+  },
+  "values": {
+    "title": "Our Values – The Foundation of Our Work",
+    "expertise": {
+      "title": "Professional Expertise",
+      "description": "Master-level know-how and continuous training ensure the best results."
+    },
+    "team": {
+      "title": "Coordinated Team",
+      "description": "An experienced team that works hand in hand – precise, efficient and reliable."
+    },
+    "quality": {
+      "title": "Quality",
+      "description": "Highest quality in planning and execution – that's what our master workshop has stood for over the years."
+    }
+  },
+  "services": {
+    "title": "Our Services",
+    "subtitle": "Roofing, Metalwork and Glazing in Saalfelden",
+    "learnMore": "Learn more",
+    "roofing": {
+      "title": "Roofing",
+      "shortDescription": "Masterful handcraft for durable roofs. We plan, cover and renovate roofs with high-quality materials – precise, safe and visually convincing.",
+      "heroTitle": "Roofing in Saalfelden – Quality from Master Craftsmen",
+      "heroDescription": "A solid roof is the foundation for protection, safety and living comfort. We are your reliable roofer in Saalfelden – with masterful craftsmanship and years of experience. Whether pitched roof, flat roof or renovation – we offer well-thought-out solutions that perfectly combine function and design.",
+      "sectionTitle": "Durable Roofs Through Precise Handcraft",
+      "sectionText": "As a master roofing workshop, we place the greatest emphasis on professional planning and execution. Each roof is individually tailored to the building's requirements and covered with high-quality materials. We rely on modern techniques and proven craftsmanship – for a result that lasts for decades.\n\nOur services include new roofing, roof renovations, thermal insulation, roof window installation and storm damage repairs. Whether tile, slate or metal roofing – we create durable solutions that combine weather resistance, energy efficiency and attractive appearance.\n\nWith a well-coordinated team of qualified specialists, we ensure that every detail is right – from the substructure to the last row of roof tiles."
+    },
+    "metalwork": {
+      "title": "Metalwork",
+      "shortDescription": "From gutters to chimney caps to window sills – we manufacture and install metalwork from copper, aluminum, stainless steel or zinc with precision and weather resistance.",
+      "heroTitle": "Metalwork in Saalfelden – Precision from Master Hands",
+      "heroDescription": "Metalwork reveals how much detailed work goes into a perfectly executed roof. We manufacture and install all metalwork around the roof – precisely fitting, weatherproof and visually harmonious.",
+      "sectionTitle": "Metalwork with the Highest Precision",
+      "sectionText": "From installing gutters and chimney caps to attic flashings to window sills – we carry out all metalwork professionally and precisely. We process high-quality materials such as copper, aluminum, stainless steel or zinc that guarantee durability and weather resistance.\n\nThanks to modern manufacturing techniques and craftsmanship, individual solutions are created that perfectly match the overall appearance of the building. As an experienced metalwork workshop in Saalfelden, we place particular emphasis on clean processing, exact fits and stable fastenings – for functionality, quality and an appealing appearance that lasts."
+    },
+    "glazing": {
+      "title": "Glazing",
+      "shortDescription": "Whether repair, full-glass installation or shower glazing – we offer clear glass solutions that perfectly combine design and function.",
+      "heroTitle": "Glazing in Saalfelden – Clear Solutions with Style",
+      "heroDescription": "Glass combines transparency, light and design. As an experienced glazing workshop in Saalfelden, we offer high-quality glass work for interiors and exteriors – from classic to modern.",
+      "sectionTitle": "Custom Glass Elements for Every Application",
+      "sectionText": "Whether new glazing, repair or custom fabrication – we offer a wide range of glazing work. This includes full-glass systems, glass doors, partitions, shower glazing, kitchen backsplashes, leaded glass and sandblast designs. We are also quickly on site for glass breakage and storm damage."
+    },
+    "facade": {
+      "title": "Facade",
+      "shortDescription": "Facades in metal, wood-look or fiber cement – modern, durable and energy-efficient. Ideal for new builds and renovations.",
+      "heroTitle": "Facades – Protection, Design and Function in Perfection",
+      "heroDescription": "The facade is the calling card of your building – and crucial for weather protection, energy efficiency and visual impact.",
+      "sectionTitle": "Facade Work with System and Style",
+      "sectionText": "We offer metal facades, wood-look facades and fiber cement facades for new construction and renovation – including integrated thermal insulation and fire protection elements."
+    },
+    "sealing": {
+      "title": "Sealing Work",
+      "shortDescription": "Sealing with bitumen or plastic – reliable, tight and durable. Perfect for flat roofs, terraces and garages.",
+      "heroTitle": "Sealing Work – Reliable Protection for Every Structure",
+      "heroDescription": "Professional sealing is essential to permanently protect buildings from moisture and weather influences. We offer sealing solutions for roofs, terraces, balconies and more – safe, durable and precisely executed.",
+      "sectionTitle": "Flat Roof and Building Sealing from Specialists",
+      "sectionText": "We work with high-quality bitumen membranes and modern plastic films that withstand even extreme weather conditions. Whether new construction, renovation or repair – we ensure tight and permanent solutions that optimally insulate and minimize energy losses.\n\nOur specialists reliably carry out sealing work on flat roofs, garages, terraces or bridges – with particular attention to detail work and durable connections.\n\nThrough professional execution and combination with thermal insulation, systems are created that are both functionally and economically convincing."
+    },
+    "greenRoofs": {
+      "title": "Green Roofs",
+      "shortDescription": "With a green roof, you create additional living space, improve the indoor climate and protect your roof sealing at the same time.",
+      "heroTitle": "Green Roofs – Sustainable Roofing Solutions from Master Craftsmen",
+      "heroDescription": "A green roof is more than just an architectural highlight – it's a piece of nature on your building.",
+      "sectionTitle": "Roof Greening – Ecological, Durable and Functional",
+      "sectionText": "Through additional greening, rainwater is stored, ambient temperature is regulated and sound protection is improved. We offer both extensive greening with sedum plants and intensive systems for walkable garden areas. We combine craftsmanship with state-of-the-art technology."
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "heroTitle": "Your Master Workshop for Roofing, Facades and Glass in Saalfelden",
+    "heroDescription": "Our company stands on a solid foundation of craftsmanship. We combine decades of experience with modern technology and the highest master-level quality.",
+    "experienceTitle": "Experience and Expertise that Builds Trust",
+    "experienceText": "Founded in 1972, we operate as a family business in its second generation. All work – whether roofing, facades or glass – is planned and executed by trained specialists. We place great value on precise work, high-quality materials and professional implementation down to the smallest detail. This combination of knowledge, experience and passion for the craft makes the difference – and ensures that our customers receive durable results they can rely on.",
+    "teamTitle": "Our Team – Craftsmanship with Passion",
+    "teamDescription": "Every successful project depends on well-trained specialists with experience and technical expertise.",
+    "stats": {
+      "masters": "Masters",
+      "mastersCount": "3",
+      "experience": "Years Experience",
+      "experienceCount": "50+",
+      "employees": "Employees",
+      "employeesCount": "49",
+      "vehicles": "Vehicles",
+      "vehiclesCount": "36",
+      "projects": "Projects Annually",
+      "projectsCount": "100+"
+    }
+  },
+  "projects": {
+    "title": "Completed Projects",
+    "subtitle": "References"
+  },
+  "contact": {
+    "title": "Contact & Directions",
+    "subtitle": "Have questions? Don't hesitate to get in touch – we look forward to hearing from you!",
+    "ctaTitle": "Get in Touch!",
+    "ctaDescription": "Want to learn more about our services or receive a personal quote? We are happy to advise you individually and competently.",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "fax": "Fax",
+    "hours": "Business Hours",
+    "hoursWeekday": "Monday – Friday: 08:00 – 12:00, 13:00 – 17:00",
+    "hoursWeekend": "Saturday & Sunday: Closed",
+    "form": {
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email",
+      "message": "Message",
+      "send": "Send",
+      "privacy": "Personal data will be transmitted and used for the purposes described on the privacy page."
+    }
+  },
+  "jobs": {
+    "title": "Jobs & Careers with Us in Saalfelden",
+    "subtitle": "Join a successful craft business that values quality, teamwork and professional competence.",
+    "applyNow": "Apply Now",
+    "applyVoice": "Apply via Voice Message",
+    "workingTitle": "Working at a Master Workshop with a Future",
+    "workingText": "We offer a secure workplace in an established craft business. Fair compensation, good working atmosphere and long-term perspectives.",
+    "quickApplyTitle": "Apply in 30 Seconds – No Resume Needed!",
+    "quickApplyText": "Tell us briefly who you are – we'll clarify the rest personally. We'll contact you within 24 hours.",
+    "employerTitle": "What Makes Us Special as an Employer",
+    "development": {
+      "title": "Professional Development",
+      "description": "With us you can grow: through further training, new tasks and the opportunity to perfect your craft every day."
+    },
+    "teamSpirit": {
+      "title": "Team Spirit",
+      "description": "We pull together – a strong, reliable team that supports each other and celebrates successes together."
+    },
+    "qualityWork": {
+      "title": "Quality",
+      "description": "Whether in execution or in working together – we value clean work, responsibility and the highest standards."
+    }
+  },
+  "footer": {
+    "location": "Location",
+    "contact": "Contact",
+    "partners": "Partners"
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "callNow": "Call now",
+    "getInTouch": "Get in touch",
+    "references": "References",
+    "backToTop": "Back to top",
+    "language": "Language"
+  }
+}

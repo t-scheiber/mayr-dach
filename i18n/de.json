@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "title": "Dachdecker, Spengler & Glaser in Saalfelden | Karl Mayr GmbH & Co. KG",
+    "description": "Wir sind spezialisiert auf Dachdeckerei, Spenglerei, Fassadenbau, Glaserei, Flachdachabdichtungen und alle Arten von Steildächern in Saalfelden."
+  },
+  "nav": {
+    "home": "Home",
+    "about": "Über uns",
+    "services": "Leistungen",
+    "jobs": "Jobs",
+    "apply": "Bewerbung",
+    "contact": "Kontakt",
+    "impressum": "Impressum",
+    "privacy": "Datenschutz"
+  },
+  "hero": {
+    "title": "Ihr zuverlässiger Dachdecker, Spengler und Glaser in Saalfelden",
+    "description": "Willkommen bei der Karl Mayr GmbH & Co. KG – Ihrem zuverlässigen Partner für Dach, Fassade und Glas in Saalfelden. Wir stehen für hochwertige Handwerksarbeit, präzise Ausführung und ehrliche Beratung. Als Meisterbetrieb verbinden wir moderne Technik mit traditioneller Handwerkskunst – für langlebige, sichere und optisch ansprechende Lösungen rund ums Dach.",
+    "subtitle": "Unsere Einsatzgebiete erstrecken sich weit über Saalfelden hinaus: Wir sind für unsere Kunden im gesamten Pinzgau, in Tirol, der Stadt Salzburg sowie in Oberbayern im Einsatz. Ob privates Wohnhaus, Gewerbebau oder Sanierungsprojekt – überall dort, wo Qualität gefragt ist, sind wir Ihr verlässlicher Ansprechpartner.",
+    "cta": "Jetzt anrufen"
+  },
+  "values": {
+    "title": "Unsere Werte – Das Fundament unserer Arbeit",
+    "expertise": {
+      "title": "Fachkompetenz",
+      "description": "Meisterliches Know-how und laufende Weiterbildung sichern beste Ergebnisse."
+    },
+    "team": {
+      "title": "Eingespieltes Team",
+      "description": "Ein erfahrenes Team, das Hand in Hand arbeitet – präzise, effizient und zuverlässig."
+    },
+    "quality": {
+      "title": "Qualität",
+      "description": "Höchste Qualität in Planung und Ausführung – dafür steht unser Meisterbetrieb seit Jahren."
+    }
+  },
+  "services": {
+    "title": "Unsere Leistungen",
+    "subtitle": "Dachdecker, Spengler und Glaserarbeiten in Saalfelden",
+    "learnMore": "Mehr erfahren",
+    "roofing": {
+      "title": "Dachdeckerei",
+      "shortDescription": "Meisterhafte Handarbeit für langlebige Dächer. Wir planen, decken und sanieren Dächer mit hochwertigen Materialien – präzise, sicher und optisch überzeugend.",
+      "heroTitle": "Dachdeckerei in Saalfelden – Qualität vom Meisterbetrieb",
+      "heroDescription": "Ein solides Dach ist die Grundlage für Schutz, Sicherheit und Wohnkomfort. Wir sind Ihr zuverlässiger Dachdecker in Saalfelden – mit meisterhafter Handwerksqualität und langjähriger Erfahrung. Ob Steildach, Flachdach oder Sanierung – wir bieten durchdachte Lösungen, die Funktion und Design perfekt vereinen.",
+      "sectionTitle": "Langlebige Dächer durch präzise Handarbeit",
+      "sectionText": "Als Dachdecker-Meisterbetrieb legen wir größten Wert auf fachgerechte Planung und Ausführung. Jedes Dach wird individuell auf die Anforderungen des Gebäudes abgestimmt und mit hochwertigen Materialien eingedeckt. Dabei setzen wir auf moderne Techniken und bewährte Handwerkskunst – für ein Ergebnis, das Jahrzehnte überdauert.\n\nUnsere Leistungen umfassen Neueindeckungen, Dachsanierungen, Wärmedämmungen, Dachfenster-Einbau sowie Reparaturen nach Sturmschäden. Ob Ziegel-, Schiefer- oder Blechdach – wir realisieren langlebige Lösungen, die Wetterbeständigkeit, Energieeffizienz und ansprechende Optik verbinden.\n\nMit einem eingespielten Team aus qualifizierten Fachkräften sorgen wir dafür, dass jedes Detail stimmt – von der Unterkonstruktion bis zur letzten Dachziegelreihe."
+    },
+    "metalwork": {
+      "title": "Spenglerei",
+      "shortDescription": "Von Dachrinnen über Kamindächer bis zu Fensterbänken – wir fertigen und montieren Spenglerarbeiten aus Kupfer, Alu, Edelstahl oder Zink passgenau und wetterfest.",
+      "heroTitle": "Spenglerei in Saalfelden – Präzision aus Meisterhand",
+      "heroDescription": "In der Spenglerei zeigt sich, wie viel Detailarbeit in einem perfekt ausgeführten Dach steckt. Wir fertigen und montieren alle Metallarbeiten rund ums Dach – passgenau, wetterfest und optisch harmonisch.",
+      "sectionTitle": "Metallarbeiten mit höchster Präzision",
+      "sectionText": "Von der Montage von Dachrinnen und Kamindächern über Attikaverblechungen bis zu Fensterbänken – wir führen sämtliche Spenglerarbeiten fachgerecht und präzise aus. Dabei verarbeiten wir hochwertige Materialien wie Kupfer, Aluminium, Edelstahl oder Zink, die Langlebigkeit und Witterungsbeständigkeit garantieren.\n\nDank moderner Fertigungstechniken und handwerklichem Geschick entstehen individuelle Lösungen, die perfekt auf das Gesamtbild des Gebäudes abgestimmt sind. Als erfahrener Spenglerbetrieb in Saalfelden legen wir besonderen Wert auf saubere Verarbeitung, exakte Passformen und stabile Befestigungen – für Funktionalität, Qualität und ein ansprechendes Erscheinungsbild, das bleibt."
+    },
+    "glazing": {
+      "title": "Glaserei",
+      "shortDescription": "Ob Reparatur, Ganzglasanlage oder Duschverglasung – wir bieten klare Lösungen aus Glas, die Design und Funktion perfekt verbinden.",
+      "heroTitle": "Glaserei in Saalfelden – Klare Lösungen mit Stil",
+      "heroDescription": "Glas verbindet Transparenz, Licht und Design. Als erfahrener Glaserbetrieb in Saalfelden bieten wir hochwertige Glasarbeiten für Innen- und Außenbereiche – von klassisch bis modern.",
+      "sectionTitle": "Maßgefertigte Glaselemente für jeden Einsatzbereich",
+      "sectionText": "Ob Neuverglasung, Reparatur oder Sonderanfertigung – wir bieten ein breites Spektrum an Glaserarbeiten. Dazu zählen Ganzglasanlagen, Glastüren, Trennwände, Duschverglasungen, Küchenrückwände, Bleiverglasungen und Sandstrahl-Designs. Auch bei Glasbruch und Sturmschäden sind wir schnell zur Stelle."
+    },
+    "facade": {
+      "title": "Fassade",
+      "shortDescription": "Fassaden aus Metall, Holzoptik oder Eternit – modern, langlebig und energieeffizient. Ideal für Neubau und Sanierung.",
+      "heroTitle": "Fassaden – Schutz, Design und Funktion in Perfektion",
+      "heroDescription": "Die Fassade ist die Visitenkarte Ihres Gebäudes – und entscheidend für Witterungsschutz, Energieeffizienz und optische Wirkung.",
+      "sectionTitle": "Fassadenarbeiten mit System und Stil",
+      "sectionText": "Wir bieten Metallfassaden, Holzoptik-Fassaden und Eternit-Fassaden für Neubau und Sanierung – inklusive integrierter Wärmedämmung und Brandschutzelemente."
+    },
+    "sealing": {
+      "title": "Abdichtungsarbeiten",
+      "shortDescription": "Abdichtungen mit Bitumen oder Kunststoff – zuverlässig, dicht und dauerhaft. Perfekt für Flachdächer, Terrassen und Garagen.",
+      "heroTitle": "Abdichtungsarbeiten – Zuverlässiger Schutz für jedes Bauwerk",
+      "heroDescription": "Eine fachgerechte Abdichtung ist entscheidend, um Gebäude dauerhaft vor Feuchtigkeit und Witterungseinflüssen zu schützen. Wir bieten Abdichtungslösungen für Dächer, Terrassen, Balkone und mehr – sicher, langlebig und präzise ausgeführt.",
+      "sectionTitle": "Flachdach- und Bauwerksabdichtungen vom Fachbetrieb",
+      "sectionText": "Wir arbeiten mit hochwertigen Bitumenbahnen und modernen Kunststoff-Folien, die selbst extremen Wetterbedingungen standhalten. Ob bei Neubau, Sanierung oder Reparatur – wir sorgen für dichte und dauerhafte Lösungen, die optimal isolieren und Energieverluste minimieren.\n\nUnsere Fachkräfte führen Abdichtungen an Flachdächern, Garagen, Terrassen oder Brücken zuverlässig aus – mit besonderem Augenmerk auf Detailausbildung und langlebige Anschlüsse.\n\nDurch fachgerechte Ausführung und die Kombination mit Wärmedämmung entstehen Systeme, die sowohl funktional als auch wirtschaftlich überzeugen."
+    },
+    "greenRoofs": {
+      "title": "Gründächer",
+      "shortDescription": "Mit einem Gründach schaffen Sie zusätzlichen Lebensraum, verbessern das Raumklima und schützen gleichzeitig Ihre Dachabdichtung.",
+      "heroTitle": "Gründächer – Nachhaltige Dachlösungen vom Meisterbetrieb",
+      "heroDescription": "Ein Gründach ist mehr als nur ein architektonisches Highlight – es ist ein Stück Natur auf Ihrem Gebäude.",
+      "sectionTitle": "Dachbegrünung – ökologisch, langlebig und funktional",
+      "sectionText": "Durch die zusätzliche Begrünung wird Regenwasser gespeichert, die Umgebungstemperatur reguliert und der Schallschutz verbessert. Wir bieten sowohl extensive Begrünung mit Sedumpflanzen als auch intensive Systeme für begehbare Gartenflächen. Dabei kombinieren wir handwerkliches Können mit modernster Technik."
+    }
+  },
+  "about": {
+    "title": "Über uns",
+    "heroTitle": "Ihr Meisterbetrieb für Dach, Fassade und Glas in Saalfelden",
+    "heroDescription": "Unser Unternehmen steht auf einer soliden handwerklichen Grundlage. Wir vereinen jahrzehntelange Erfahrung mit moderner Technik und höchster Meisterqualität.",
+    "experienceTitle": "Erfahrung und Fachkompetenz, die Vertrauen schafft",
+    "experienceText": "Gegründet im Jahr 1972, arbeiten wir als Familienbetrieb in zweiter Generation. Alle Arbeiten – ob Dach, Fassade oder Glas – werden von ausgebildeten Fachkräften geplant und ausgeführt. Wir legen großen Wert auf präzises Arbeiten, hochwertige Materialien und fachgerechte Umsetzung bis ins kleinste Detail. Diese Kombination aus Wissen, Erfahrung und Leidenschaft für das Handwerk macht den Unterschied – und sorgt dafür, dass unsere Kunden langlebige Ergebnisse erhalten, auf die sie sich verlassen können.",
+    "teamTitle": "Unser Team – Handwerk mit Leidenschaft",
+    "teamDescription": "Jedes erfolgreiche Projekt hängt von gut ausgebildeten Spezialisten mit Erfahrung und technischer Kompetenz ab.",
+    "stats": {
+      "masters": "Meister",
+      "mastersCount": "3",
+      "experience": "Jahre Erfahrung",
+      "experienceCount": "50+",
+      "employees": "Mitarbeiter",
+      "employeesCount": "49",
+      "vehicles": "Fahrzeuge",
+      "vehiclesCount": "36",
+      "projects": "Projekte jährlich",
+      "projectsCount": "100+"
+    }
+  },
+  "projects": {
+    "title": "Abgeschlossene Projekte",
+    "subtitle": "Referenzen"
+  },
+  "contact": {
+    "title": "Kontakt & Anfahrt",
+    "subtitle": "Haben Sie Fragen? Zögern Sie nicht und nehmen Sie Kontakt mit uns auf – wir freuen uns auf Sie!",
+    "ctaTitle": "Nehmen Sie Kontakt mit uns auf!",
+    "ctaDescription": "Sie möchten mehr über unsere Leistungen erfahren oder ein persönliches Angebot erhalten? Wir beraten Sie gerne individuell und kompetent.",
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "address": "Adresse",
+    "fax": "Fax",
+    "hours": "Öffnungszeiten",
+    "hoursWeekday": "Montag – Freitag: 08:00 – 12:00, 13:00 – 17:00",
+    "hoursWeekend": "Samstag & Sonntag: Geschlossen",
+    "form": {
+      "name": "Name",
+      "phone": "Telefon",
+      "email": "E-Mail",
+      "message": "Nachricht",
+      "send": "Absenden",
+      "privacy": "Es werden personenbezogene Daten übermittelt und für die in der Datenschutzseite beschriebenen Zwecke verwendet."
+    }
+  },
+  "jobs": {
+    "title": "Jobs & Karriere bei uns in Saalfelden",
+    "subtitle": "Werden Sie Teil eines erfolgreichen Handwerksbetriebs, der auf Qualität, Teamwork und Fachkompetenz setzt.",
+    "applyNow": "Jetzt bewerben",
+    "applyVoice": "Per Sprachnachricht bewerben",
+    "workingTitle": "Arbeiten bei einem Meisterbetrieb mit Zukunft",
+    "workingText": "Wir bieten einen sicheren Arbeitsplatz in einem etablierten Handwerksbetrieb. Faire Bezahlung, gutes Arbeitsklima und langfristige Perspektiven.",
+    "quickApplyTitle": "Jetzt in 30 Sekunden bewerben – ohne Lebenslauf!",
+    "quickApplyText": "Erzählen Sie uns kurz, wer Sie sind – den Rest klären wir persönlich. Wir melden uns innerhalb von 24 Stunden.",
+    "employerTitle": "Was uns als Arbeitgeber besonders macht",
+    "development": {
+      "title": "Weiterentwicklung",
+      "description": "Bei uns können Sie wachsen: durch Weiterbildungen, neue Aufgaben und die Möglichkeit, Ihr Handwerk jeden Tag zu perfektionieren."
+    },
+    "teamSpirit": {
+      "title": "Teamgeist",
+      "description": "Wir ziehen an einem Strang – ein starkes, verlässliches Team, das sich gegenseitig unterstützt und gemeinsam Erfolge feiert."
+    },
+    "qualityWork": {
+      "title": "Qualität",
+      "description": "Ob in der Ausführung oder im Miteinander – wir legen Wert auf saubere Arbeit, Verantwortung und höchste Ansprüche."
+    }
+  },
+  "footer": {
+    "location": "Standort",
+    "contact": "Kontakt",
+    "partners": "Partner"
+  },
+  "common": {
+    "learnMore": "Mehr erfahren",
+    "callNow": "Jetzt anrufen",
+    "getInTouch": "Kontakt aufnehmen",
+    "references": "Referenzen",
+    "backToTop": "Nach oben",
+    "language": "Sprache"
+  }
+}

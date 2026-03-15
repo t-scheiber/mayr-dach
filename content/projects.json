@@ -1,0 +1,381 @@
+{
+  "projects": [
+    {
+      "id": "revier-boutique-hotel-kaprun",
+      "name": "Revier Boutique Hotel Kaprun",
+      "location": "Kaprun",
+      "categories": ["roofing", "metalwork"],
+      "featured": true,
+      "attribution": "Fotos \u00a9 h2-gallery.at und mab.at",
+      "images": [
+        "revier-kaprun-01.jpg",
+        "revier-kaprun-02.jpg",
+        "revier-kaprun-03.jpg"
+      ]
+    },
+    {
+      "id": "fort-kniepass-unken",
+      "name": "Fort Kniepass Unken",
+      "location": "Unken",
+      "categories": ["roofing", "facade"],
+      "featured": true,
+      "images": [
+        "fort-kniepass-01.jpg",
+        "fort-kniepass-02.jpg",
+        "fort-kniepass-03.jpg"
+      ]
+    },
+    {
+      "id": "forsthofgut-leogang",
+      "name": "Forsthofgut Leogang",
+      "location": "Leogang",
+      "categories": ["roofing", "metalwork"],
+      "featured": true,
+      "images": [
+        "forsthofgut-01.jpg",
+        "forsthofgut-02.jpg",
+        "forsthofgut-03.jpg",
+        "forsthofgut-04.jpg",
+        "forsthofgut-05.jpg"
+      ]
+    },
+    {
+      "id": "gemeindezentrum-maishofen",
+      "name": "Gemeindezentrum Maishofen",
+      "location": "Maishofen",
+      "categories": ["roofing", "facade"],
+      "featured": true,
+      "attribution": "Foto: Klaus Bauer / Gemeinde Maishofen",
+      "images": [
+        "gemeindezentrum-maishofen-01.jpg",
+        "gemeindezentrum-maishofen-02.jpg",
+        "gemeindezentrum-maishofen-03.jpg"
+      ]
+    },
+    {
+      "id": "zentrum-visionen-puch-urstein",
+      "name": "Zentrum f. Visionen Puch Urstein",
+      "location": "Puch Urstein",
+      "categories": ["roofing"],
+      "featured": true,
+      "images": [
+        "zentrum-visionen-01.jpg",
+        "zentrum-visionen-02.jpg"
+      ]
+    },
+    {
+      "id": "kirche-saalbach",
+      "name": "Kirche Saalbach",
+      "location": "Saalbach",
+      "categories": ["roofing", "metalwork"],
+      "featured": true,
+      "images": [
+        "kirche-saalbach-01.jpg",
+        "kirche-saalbach-02.jpg",
+        "kirche-saalbach-03.jpg",
+        "kirche-saalbach-04.jpg"
+      ]
+    },
+    {
+      "id": "kirche-neumarkt-wallersee",
+      "name": "Kirche Neumarkt am Wallersee",
+      "location": "Neumarkt am Wallersee",
+      "categories": ["roofing"],
+      "images": [
+        "kirche-neumarkt-01.jpg",
+        "kirche-neumarkt-02.jpg",
+        "kirche-neumarkt-03.jpg"
+      ]
+    },
+    {
+      "id": "hasenauer",
+      "name": "Hasenauer",
+      "location": "",
+      "categories": ["roofing"],
+      "images": [
+        "hasenauer-01.jpg"
+      ]
+    },
+    {
+      "id": "skiweltbahn-brixen",
+      "name": "Skiweltbahn Brixen im Thale",
+      "location": "Brixen im Thale",
+      "categories": ["roofing", "facade", "sealing"],
+      "images": [
+        "skiweltbahn-brixen-01.jpg"
+      ]
+    },
+    {
+      "id": "singer-kirchberg",
+      "name": "Singer Kirchberg i. Tirol",
+      "location": "Kirchberg i. Tirol",
+      "categories": ["roofing"],
+      "images": [
+        "singer-kirchberg-01.jpg"
+      ]
+    },
+    {
+      "id": "going-wilder-kaiser",
+      "name": "Going am Wilden Kaiser",
+      "location": "Going am Wilden Kaiser",
+      "categories": ["roofing"],
+      "images": [
+        "going-wilder-kaiser-01.jpg",
+        "going-wilder-kaiser-02.jpg",
+        "going-wilder-kaiser-03.jpg"
+      ]
+    },
+    {
+      "id": "schatzerhof-chalets-kirchberg",
+      "name": "Schatzerhof Chalets Kirchberg i. Tirol",
+      "location": "Kirchberg i. Tirol",
+      "categories": ["roofing", "greenRoofs"],
+      "images": [
+        "schatzerhof-chalets-01.jpg"
+      ]
+    },
+    {
+      "id": "krallerhof-leogang",
+      "name": "Krallerhof Leogang",
+      "location": "Leogang",
+      "categories": ["roofing", "metalwork"],
+      "featured": true,
+      "images": [
+        "krallerhof-01.jpg",
+        "krallerhof-02.jpg",
+        "krallerhof-03.jpg",
+        "krallerhof-04.jpg",
+        "krallerhof-05.jpg",
+        "krallerhof-06.jpg"
+      ]
+    },
+    {
+      "id": "alpenhotel-kitzbuehel",
+      "name": "Alpenhotel Kitzb\u00fchel a. Schwarzsee",
+      "location": "Kitzb\u00fchel",
+      "categories": ["roofing", "greenRoofs"],
+      "attribution": "Foto: Alpenhotel Kitzb\u00fchel, Jukka Pehkonen",
+      "images": [
+        "alpenhotel-kitzbuehel-01.jpg",
+        "alpenhotel-kitzbuehel-02.jpg",
+        "alpenhotel-kitzbuehel-03.jpg"
+      ]
+    },
+    {
+      "id": "residenzen-reithergasse-kirchberg",
+      "name": "Residenzen Reithergasse Kirchberg i. Tirol",
+      "location": "Kirchberg i. Tirol",
+      "categories": ["roofing", "metalwork"],
+      "attribution": "Foto: Albin Niederstrasser",
+      "images": [
+        "residenzen-reithergasse-01.jpg",
+        "residenzen-reithergasse-02.jpg",
+        "residenzen-reithergasse-03.jpg",
+        "residenzen-reithergasse-04.jpg"
+      ]
+    },
+    {
+      "id": "schlossalmbahn-bad-hofgastein",
+      "name": "Schlossalmbahn Bad Hofgastein",
+      "location": "Bad Hofgastein",
+      "categories": ["roofing", "facade"],
+      "images": [
+        "schlossalmbahn-01.jpg",
+        "schlossalmbahn-02.jpg",
+        "schlossalmbahn-03.jpg",
+        "schlossalmbahn-04.jpg"
+      ]
+    },
+    {
+      "id": "kvc-salzburg",
+      "name": "KVC Salzburg",
+      "location": "Salzburg",
+      "categories": ["facade"],
+      "images": [
+        "kvc-salzburg-01.jpg",
+        "kvc-salzburg-02.jpg"
+      ]
+    },
+    {
+      "id": "dick-saalfelden",
+      "name": "Dick Saalfelden",
+      "location": "Saalfelden",
+      "categories": ["roofing"],
+      "images": [
+        "dick-saalfelden-01.jpg"
+      ]
+    },
+    {
+      "id": "friedl-bonauweg-salzburg",
+      "name": "Friedl Oberer Bonauweg Salzburg",
+      "location": "Salzburg",
+      "categories": ["roofing", "metalwork"],
+      "images": [
+        "friedl-bonauweg-01.jpg"
+      ]
+    },
+    {
+      "id": "schulzentrum-taxenbach",
+      "name": "Schulzentrum Taxenbach",
+      "location": "Taxenbach",
+      "categories": ["roofing", "metalwork", "facade"],
+      "images": [
+        "schulzentrum-taxenbach-01.jpg",
+        "schulzentrum-taxenbach-02.jpg",
+        "schulzentrum-taxenbach-03.jpg",
+        "schulzentrum-taxenbach-04.jpg"
+      ]
+    },
+    {
+      "id": "wiesl-saalbach",
+      "name": "Wiesl Saalbach Hinterglemm",
+      "location": "Saalbach Hinterglemm",
+      "categories": ["roofing"],
+      "images": [
+        "wiesl-saalbach-01.jpg",
+        "wiesl-saalbach-02.jpg",
+        "wiesl-saalbach-03.jpg"
+      ]
+    },
+    {
+      "id": "gabler-braeu-linzergasse",
+      "name": "Gabler Br\u00e4u Linzergasse",
+      "location": "Salzburg",
+      "categories": ["roofing"],
+      "images": [
+        "gabler-braeu-01.jpg",
+        "gabler-braeu-02.jpg"
+      ]
+    },
+    {
+      "id": "nexus-saalfelden",
+      "name": "Nexus Saalfelden",
+      "location": "Saalfelden",
+      "categories": ["roofing"],
+      "images": [
+        "nexus-saalfelden-01.jpg"
+      ]
+    },
+    {
+      "id": "uebergossene-alm-dienten",
+      "name": "\u00dcbergossene Alm Dienten",
+      "location": "Dienten",
+      "categories": ["roofing"],
+      "images": [
+        "uebergossene-alm-01.jpg",
+        "uebergossene-alm-02.jpg"
+      ]
+    },
+    {
+      "id": "palais-von-andrae-salzburg",
+      "name": "Palais von Andr\u00e4 Salzburg",
+      "location": "Salzburg",
+      "categories": ["roofing"],
+      "images": [
+        "palais-von-andrae-01.jpg",
+        "palais-von-andrae-02.jpg",
+        "palais-von-andrae-03.jpg"
+      ]
+    },
+    {
+      "id": "interspar-saalfelden",
+      "name": "Interspar Saalfelden",
+      "location": "Saalfelden",
+      "categories": ["facade"],
+      "images": [
+        "interspar-saalfelden-01.jpg"
+      ]
+    },
+    {
+      "id": "eurotours-kitzbuehel",
+      "name": "Eurotours Kitzb\u00fchel",
+      "location": "Kitzb\u00fchel",
+      "categories": ["roofing"],
+      "images": [
+        "eurotours-kitzbuehel-01.jpg",
+        "eurotours-kitzbuehel-02.jpg",
+        "eurotours-kitzbuehel-03.jpg"
+      ]
+    },
+    {
+      "id": "club-kitzsteinhorn",
+      "name": "Club Kitzsteinhorn",
+      "location": "Kaprun",
+      "categories": ["sealing"],
+      "images": [
+        "club-kitzsteinhorn-01.jpg",
+        "club-kitzsteinhorn-02.jpg",
+        "club-kitzsteinhorn-03.jpg",
+        "club-kitzsteinhorn-04.jpg"
+      ]
+    },
+    {
+      "id": "kraftwerk-tauernmoos",
+      "name": "Kraftwerk Tauernmoos",
+      "location": "Tauernmoos",
+      "categories": ["sealing"],
+      "images": [
+        "kraftwerk-tauernmoos-01.jpg",
+        "kraftwerk-tauernmoos-02.jpg",
+        "kraftwerk-tauernmoos-03.jpg",
+        "kraftwerk-tauernmoos-04.jpg"
+      ]
+    },
+    {
+      "id": "hans-hunt-gasse",
+      "name": "Hans-Hunt-Gasse",
+      "location": "",
+      "categories": ["glazing"],
+      "images": [
+        "hans-hunt-gasse-01.jpg"
+      ]
+    },
+    {
+      "id": "johanneshof",
+      "name": "Johanneshof",
+      "location": "",
+      "categories": ["glazing"],
+      "images": [
+        "johanneshof-01.jpg"
+      ]
+    },
+    {
+      "id": "obersonnberg",
+      "name": "Obersonnberg",
+      "location": "",
+      "categories": ["glazing"],
+      "images": [
+        "obersonnberg-01.jpg"
+      ]
+    },
+    {
+      "id": "brandlhof",
+      "name": "Brandlhof",
+      "location": "",
+      "categories": ["greenRoofs"],
+      "images": [
+        "brandlhof-01.jpg",
+        "brandlhof-02.jpg",
+        "brandlhof-03.jpg"
+      ]
+    },
+    {
+      "id": "hochstaufenkaserne",
+      "name": "Hochstaufenkaserne",
+      "location": "",
+      "categories": ["roofing"],
+      "images": [
+        "hochstaufenkaserne-01.jpg"
+      ]
+    },
+    {
+      "id": "cappelen-aurach",
+      "name": "Cappelen Aurach",
+      "location": "Aurach",
+      "categories": ["roofing"],
+      "images": [
+        "cappelen-aurach-01.jpg"
+      ]
+    }
+  ]
+}

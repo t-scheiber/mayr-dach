@@ -1,0 +1,22 @@
+{
+  "partners": [
+    { "name": "BRAMAC", "url": "https://www.bmigroup.com/at/", "logo": "bramac.png" },
+    { "name": "Villas", "url": "https://www.bmigroup.com/at/", "logo": "villas.png" },
+    { "name": "Austrodach", "url": "https://shop.austrodach.at/", "logo": "austrodach.png" },
+    { "name": "Lagerhaus", "url": "https://www.salzburger-lagerhaus.at/standorte/saalfelden", "logo": "lagerhaus.png" },
+    { "name": "Steinbacher", "url": "https://www.steinbacher.at/", "logo": "steinbacher.png" },
+    { "name": "Swisspearl", "url": "https://www.swisspearl.com/at", "logo": "swisspearl.png" },
+    { "name": "Triflex", "url": "https://www.triflex.com/de-at", "logo": "triflex.png" },
+    { "name": "Velux", "url": "https://www.velux.at/", "logo": "velux.png" },
+    { "name": "Slama", "url": "https://www.slama-salzburg.at/", "logo": "slama.png" },
+    { "name": "Würth", "url": "https://www.wuerth.at/", "logo": "wuerth.png" },
+    { "name": "Amari", "url": "https://amari.at/loesungen/hinterlueftete-fassaden", "logo": "amari.png" },
+    { "name": "Bauder", "url": "https://www.bauder.at/at/bauder-oesterreich.html", "logo": "bauder.png" },
+    { "name": "Bauzentrum Hannak", "url": "https://bauzentrum.at/", "logo": "bauzentrum-hannak.png" },
+    { "name": "Eisen Wagner", "url": "https://eisenwagner-dw.at/", "logo": "eisen-wagner.png" },
+    { "name": "Flaga", "url": "https://www.flaga.at/", "logo": "flaga.png" },
+    { "name": "Kingspan", "url": "https://www.kingspan.com/at/de/", "logo": "kingspan.png" },
+    { "name": "Prefa", "url": "https://www.prefa.at/", "logo": "prefa.png" },
+    { "name": "Domico", "url": "https://www.domico.at/", "logo": "domico.png" }
+  ]
+}

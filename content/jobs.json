@@ -1,0 +1,162 @@
+{
+  "jobs": [
+    {
+      "id": "dachdecker-spengler",
+      "title": {
+        "de": "Dachdecker/Spengler (m/w/d)",
+        "en": "Roofer/Metalworker (m/f/d)"
+      },
+      "tasks": {
+        "de": [
+          "Steil- und Flachdacheindeckung und -sanierung",
+          "Dachfenster-, Abdichtungs- und Dämmungsarbeiten",
+          "Reparatur- und Wartungsarbeiten",
+          "Zusammenarbeit im Team mit Spenglern und Glasern"
+        ],
+        "en": [
+          "Pitched and flat roof installation and renovation",
+          "Skylight, sealing and insulation work",
+          "Repair and maintenance work",
+          "Team collaboration with metalworkers and glaziers"
+        ]
+      },
+      "requirements": {
+        "de": [
+          "Abgeschlossene Lehre als Dachdecker oder vergleichbare Qualifikation",
+          "Handwerkliches Geschick und technisches Verständnis",
+          "Zuverlässige, selbstständige und sorgfältige Arbeitsweise",
+          "Teamfähigkeit und Motivation"
+        ],
+        "en": [
+          "Completed roofing apprenticeship or comparable qualification",
+          "Craft skills and technical understanding",
+          "Reliable, independent and careful work approach",
+          "Team capability and motivation"
+        ]
+      },
+      "benefits": {
+        "de": [
+          "Sicherer Arbeitsplatz in einem etablierten Meisterbetrieb",
+          "Faire Entlohnung und langfristige Perspektiven",
+          "Eingespieltes Team mit kollegialem Arbeitsklima",
+          "Moderne Ausrüstung und vielfältige Projekte im Raum Saalfelden",
+          "Weiterbildungsmöglichkeiten"
+        ],
+        "en": [
+          "Secure employment in an established master craftsman workshop",
+          "Fair compensation and long-term perspectives",
+          "Established team with collegial workplace culture",
+          "Modern equipment and diverse projects in the Saalfelden area",
+          "Professional development opportunities"
+        ]
+      }
+    },
+    {
+      "id": "schwarzdecker",
+      "title": {
+        "de": "Schwarzdecker (m/w/d)",
+        "en": "Flat Roof Specialist (m/f/d)"
+      },
+      "tasks": {
+        "de": [
+          "Flachdacheindeckung und Abdichtung mit Bitumen oder Kunststoffbahnen",
+          "Dachsanierung und Instandhaltung",
+          "Aufbereitung und Verarbeitung von Dämmmaterialien",
+          "Sicheres Arbeiten auf dem Dach nach Sicherheitsrichtlinien"
+        ],
+        "en": [
+          "Flat roof installation and sealing with bitumen or plastic sheeting",
+          "Roof renovation and maintenance",
+          "Preparation and processing of insulation materials",
+          "Safe roof work following safety guidelines"
+        ]
+      },
+      "requirements": {
+        "de": [
+          "Abgeschlossene Lehre als Schwarzdecker, Dachdecker oder vergleichbare Ausbildung",
+          "Handwerkliches Geschick und Verantwortungsbewusstsein",
+          "Selbstständige und zuverlässige Arbeitsweise",
+          "Teamfähigkeit und Freude am Beruf"
+        ],
+        "en": [
+          "Completed flat roof specialist, roofer or comparable apprenticeship",
+          "Craft skills and responsibility",
+          "Independent and reliable work approach",
+          "Team capability and job enthusiasm"
+        ]
+      },
+      "benefits": {
+        "de": [
+          "Sicherer Arbeitsplatz in einem familiengeführten Meisterbetrieb",
+          "Leistungsgerechte Entlohnung und langfristige Perspektive",
+          "Modernes Werkzeug und qualitativ hochwertige Arbeitskleidung",
+          "Starkes Team mit fairem, kollegialem Miteinander",
+          "Projekte im Pinzgau, in Tirol, der Stadt Salzburg und in Oberbayern"
+        ],
+        "en": [
+          "Secure employment in a family-run master craftsman workshop",
+          "Performance-based compensation and long-term perspective",
+          "Modern tools and quality work clothing",
+          "Strong team with fair, collegial collaboration",
+          "Projects across Pinzgau, Tyrol, Salzburg city and Upper Bavaria"
+        ]
+      }
+    },
+    {
+      "id": "lehrstelle-dachdecker-spengler",
+      "title": {
+        "de": "Lehrstelle als Dachdecker/Spengler (m/w/d)",
+        "en": "Apprenticeship – Roofer/Metalworker (m/f/d)"
+      },
+      "isApprenticeship": true,
+      "duration": {
+        "de": "4-jährige Doppellehre",
+        "en": "4-year dual apprenticeship"
+      },
+      "tasks": {
+        "de": [
+          "Fundierte Ausbildung in zwei anerkannten Lehrberufen",
+          "Praxisnahes Arbeiten an Dächern, Fassaden und in der Metallverarbeitung",
+          "Mitarbeit bei Neubau-, Sanierungs- und Reparaturprojekten",
+          "Begleitung durch erfahrene Teammitglieder",
+          "Abwechslungsreiche Projekte im Pinzgau, in Tirol, der Stadt Salzburg und in Oberbayern"
+        ],
+        "en": [
+          "Foundational training in two recognized apprenticeship professions",
+          "Hands-on work on roofs, facades and metalwork",
+          "Participation in new construction, renovation and repair projects",
+          "Support from experienced team members",
+          "Diverse projects across Pinzgau, Tyrol, Salzburg city and Upper Bavaria"
+        ]
+      },
+      "requirements": {
+        "de": [
+          "Interesse an handwerklicher Arbeit und Arbeit im Freien",
+          "Technisches Verständnis und handwerkliches Geschick",
+          "Verlässlichkeit, Motivation und Teamgeist",
+          "Körperliche Fitness und Freude an Herausforderungen"
+        ],
+        "en": [
+          "Interest in crafts and outdoor work",
+          "Technical understanding and craft skills",
+          "Reliability, motivation and teamwork",
+          "Physical fitness and enthusiasm for challenges"
+        ]
+      },
+      "benefits": {
+        "de": [
+          "Spannende Lehre mit Zukunftsperspektive und Aufstiegschancen",
+          "Tolles Team und familiäre Arbeitsatmosphäre",
+          "Faire Entlohnung lt. KV inkl. Lehrlingsprämien",
+          "Gute Übernahmechancen nach erfolgreich abgelegter Lehrabschlussprüfung"
+        ],
+        "en": [
+          "Exciting apprenticeship with future prospects and advancement opportunities",
+          "Great team and familial work atmosphere",
+          "Fair compensation per collective agreement including apprentice bonuses",
+          "Strong chances of employment following successful apprenticeship exam"
+        ]
+      }
+    }
+  ]
+}
