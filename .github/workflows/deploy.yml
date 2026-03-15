@@ -10,15 +10,13 @@ jobs:
     steps:
       - name: Trigger deploy webhook
         run: |
-          response=$(curl -s -w "\n%{http_code}" -X POST \
+          http_code=$(curl -s -o /dev/null -w "%{http_code}" -X POST \
             https://mayr-dach.com/api/deploy-webhook \
             -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}" \
-            --max-time 120)
-          http_code=$(echo "$response" | tail -1)
-          body=$(echo "$response" | head -n -1)
-          echo "$body" | jq -r '.stdout // empty' 2>/dev/null
-          if [ "$http_code" != "200" ]; then
-            echo "Deploy failed with HTTP $http_code"
-            echo "$body" | jq -r '.stderr // empty' 2>/dev/null
+            --connect-timeout 90 --max-time 120)
+          if [ "$http_code" = "202" ]; then
+            echo "Deploy triggered successfully"
+          else
+            echo "Failed to trigger deploy (HTTP $http_code)"
             exit 1
           fi
