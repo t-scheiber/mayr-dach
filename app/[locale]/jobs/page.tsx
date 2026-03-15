@@ -6,10 +6,6 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animat
 
 export const dynamic = "force-dynamic";
 
-function asStrings(val: unknown): string[] {
-  return Array.isArray(val) ? val : [];
-}
-
 export default async function JobsPage({
   params,
 }: {
@@ -67,53 +63,44 @@ export default async function JobsPage({
                       </span>
                     )}
 
-                    {(() => {
-                      const tasks = isEn && asStrings(job.tasksEn).length > 0 ? asStrings(job.tasksEn) : asStrings(job.tasksDe);
-                      return tasks.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                            {isEn ? "Tasks" : "Aufgaben"}
-                          </h4>
-                          <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                            {tasks.map((task, i) => (
-                              <li key={i}>{task}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      );
-                    })()}
+                    {(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe).length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
+                          {isEn ? "Tasks" : "Aufgaben"}
+                        </h4>
+                        <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                          {(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe).map((task, i) => (
+                            <li key={i}>{task}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
-                    {(() => {
-                      const reqs = isEn && asStrings(job.requirementsEn).length > 0 ? asStrings(job.requirementsEn) : asStrings(job.requirementsDe);
-                      return reqs.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                            {isEn ? "Requirements" : "Anforderungen"}
-                          </h4>
-                          <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                            {reqs.map((req, i) => (
-                              <li key={i}>{req}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      );
-                    })()}
+                    {(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe).length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
+                          {isEn ? "Requirements" : "Anforderungen"}
+                        </h4>
+                        <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                          {(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe).map((req, i) => (
+                            <li key={i}>{req}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
-                    {(() => {
-                      const benefits = isEn && asStrings(job.benefitsEn).length > 0 ? asStrings(job.benefitsEn) : asStrings(job.benefitsDe);
-                      return benefits.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                            {isEn ? "We offer" : "Wir bieten"}
-                          </h4>
-                          <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                            {benefits.map((benefit, i) => (
-                              <li key={i}>{benefit}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      );
-                    })()}
+                    {(isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe).length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
+                          {isEn ? "We offer" : "Wir bieten"}
+                        </h4>
+                        <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                          {(isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe).map((benefit, i) => (
+                            <li key={i}>{benefit}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
 
                     <a
                       href={`?jobId=${job.slug}#bewerbung`}
