@@ -1,0 +1,49 @@
+{
+  "team": [
+    {
+      "name": "Karl Mayr",
+      "role": "Spenglermeister, Dachdeckermeister, Glasermeister",
+      "image": "karl-mayr.jpg"
+    },
+    {
+      "name": "Eva Mayr",
+      "role": "",
+      "image": "eva-mayr.jpg"
+    },
+    {
+      "name": "Andreas Mayr",
+      "role": "",
+      "image": "andreas-mayr.jpg"
+    },
+    {
+      "name": "Dominik Mayr",
+      "role": "",
+      "image": "dominik-mayr.jpg"
+    },
+    {
+      "name": "Philip Höllbacher, MBA",
+      "role": "",
+      "image": "philip-hoellbacher.jpg"
+    },
+    {
+      "name": "Mst. Adis Obralic",
+      "role": "",
+      "image": "adis-obralic.jpg"
+    },
+    {
+      "name": "Ing. Franz Wen",
+      "role": "",
+      "image": "franz-wen.jpg"
+    },
+    {
+      "name": "Karolin Löschenbrand",
+      "role": "",
+      "image": "karolin-loeschenbrand.jpg"
+    },
+    {
+      "name": "Sarah Danzer",
+      "role": "",
+      "image": "sarah-danzer.jpg"
+    }
+  ]
+}

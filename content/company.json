@@ -1,0 +1,42 @@
+{
+  "company": {
+    "name": "Karl Mayr GmbH & Co. KG",
+    "address": {
+      "street": "Georg-Scherer-Straße 6",
+      "zip": "5760",
+      "city": "Saalfelden",
+      "country": "AT"
+    },
+    "phone": "+43 6582 73366",
+    "fax": "+43 6582 75208",
+    "email": "office@mayr-dach.at",
+    "website": "https://www.mayr-dach.at",
+    "coordinates": {
+      "lat": 47.435292592352,
+      "lng": 12.851288786974
+    },
+    "hours": {
+      "weekday": "08:00-12:00, 13:00-17:00",
+      "saturday": "closed",
+      "sunday": "closed"
+    },
+    "legal": {
+      "uid": "ATU 33653702",
+      "legalForm": "GmbH & Co. KG",
+      "management": "Karl Mayr",
+      "registerNumber": "27952g",
+      "court": "Landesgericht Salzburg",
+      "trade": "Glaser, Glasbeleger und Flachglasschleifer; Dachdecker; Spengler",
+      "association": "Innung der Dachdecker und Spengler",
+      "authority": "Bezirkshauptmannschaft Zell am See"
+    },
+    "founded": 1972,
+    "stats": {
+      "masters": 3,
+      "yearsExperience": "50+",
+      "employees": 49,
+      "vehicles": 36,
+      "projectsAnnually": "100+"
+    }
+  }
+}
