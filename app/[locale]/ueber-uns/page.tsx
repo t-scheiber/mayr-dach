@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import team from "@/content/team.json";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations";
 
 export default async function AboutPage({
   params,
@@ -35,30 +36,30 @@ export default async function AboutPage({
       {/* Stats */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+          <StaggerContainer staggerDelay={0.1} className="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
             {stats.map((stat) => (
-              <div key={stat.key}>
+              <StaggerItem key={stat.key}>
                 <div className="text-3xl md:text-4xl font-bold text-primary">
                   {stat.count}
                 </div>
                 <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
 
       {/* Experience */}
       <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl">
+          <ScrollReveal direction="up" className="max-w-3xl">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
               {t("about.experienceTitle")}
             </h2>
             <p className="text-gray-700 leading-relaxed whitespace-pre-line">
               {t("about.experienceText")}
             </p>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -71,21 +72,23 @@ export default async function AboutPage({
           <p className="text-gray-600 mb-12">
             {t("about.teamDescription")}
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <StaggerContainer staggerDelay={0.08} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {team.team.map((member) => (
-              <div key={member.name} className="text-center">
-                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-3 flex items-center justify-center">
-                  <span className="text-2xl text-gray-500">
-                    {member.name.charAt(0)}
-                  </span>
+              <StaggerItem key={member.name}>
+                <div className="text-center">
+                  <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-2xl text-gray-500">
+                      {member.name.charAt(0)}
+                    </span>
+                  </div>
+                  <h3 className="font-semibold text-sm">{member.name}</h3>
+                  {member.role && (
+                    <p className="text-xs text-gray-500 mt-1">{member.role}</p>
+                  )}
                 </div>
-                <h3 className="font-semibold text-sm">{member.name}</h3>
-                {member.role && (
-                  <p className="text-xs text-gray-500 mt-1">{member.role}</p>
-                )}
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
     </>

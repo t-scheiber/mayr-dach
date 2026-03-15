@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { ScrollReveal, StaggerContainer, StaggerItem, TileFlip } from "@/components/animations";
 
 export default async function ServicesPage({
   params,
@@ -34,25 +35,28 @@ export default async function ServicesPage({
 
       <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <StaggerContainer staggerDelay={0.1} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
-              <Link
-                key={service.key}
-                href={service.href}
-                className="group block p-8 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary transition-all"
-              >
-                <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
-                  {t(`services.${service.key}.title`)}
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  {t(`services.${service.key}.shortDescription`)}
-                </p>
-                <span className="text-primary font-medium">
-                  {t("services.learnMore")} →
-                </span>
-              </Link>
+              <StaggerItem key={service.key}>
+                <TileFlip>
+                  <Link
+                    href={service.href}
+                    className="group block p-8 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary transition-all h-full"
+                  >
+                    <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                      {t(`services.${service.key}.title`)}
+                    </h3>
+                    <p className="text-gray-600 mb-4">
+                      {t(`services.${service.key}.shortDescription`)}
+                    </p>
+                    <span className="text-primary font-medium">
+                      {t("services.learnMore")} →
+                    </span>
+                  </Link>
+                </TileFlip>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
     </>

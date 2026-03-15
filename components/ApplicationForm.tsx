@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "next-intl";
+import { useSearchParams } from "next/navigation";
 
 const labels = {
   de: {
@@ -14,7 +15,7 @@ const labels = {
     phone: "Telefonnummer",
     phonePlaceholder: "+43 ...",
     position: "Gewünschte Position",
-    positionOptions: ["Dachdecker", "Spengler", "Schwarzdecker", "Lehrling", "Sonstiges"],
+    positionOther: "Sonstiges",
     cv: "Lebenslauf (PDF/Word)",
     cvRequired: "Pflichtfeld",
     motivation: "Motivationsschreiben (optional)",
@@ -36,7 +37,7 @@ const labels = {
     phone: "Phone Number",
     phonePlaceholder: "+43 ...",
     position: "Desired Position",
-    positionOptions: ["Roofer", "Metalworker", "Flat Roof Specialist", "Apprentice", "Other"],
+    positionOther: "Other",
     cv: "CV (PDF/Word)",
     cvRequired: "Required",
     motivation: "Cover Letter (optional)",
@@ -52,12 +53,41 @@ const labels = {
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-export default function ApplicationForm({ preselectedPosition }: { preselectedPosition?: string }) {
+interface JobOption {
+  slug: string;
+  titleDe: string;
+  titleEn: string | null;
+}
+
+export default function ApplicationForm() {
   const locale = useLocale() as "de" | "en";
   const t = labels[locale];
+  const searchParams = useSearchParams();
+  const jobId = searchParams.get("jobId");
 
+  const [jobOptions, setJobOptions] = useState<JobOption[]>([]);
+  const [position, setPosition] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  // Fetch active jobs for the position dropdown
+  useEffect(() => {
+    fetch("/api/jobs")
+      .then((res) => res.json())
+      .then((data) => {
+        const jobs: JobOption[] = data.jobs || [];
+        setJobOptions(jobs);
+
+        // Pre-select if jobId matches a slug
+        if (jobId) {
+          const match = jobs.find((j) => j.slug === jobId);
+          if (match) {
+            setPosition((locale === "en" && match.titleEn) ? match.titleEn : match.titleDe);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [jobId, locale]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -80,6 +110,7 @@ export default function ApplicationForm({ preselectedPosition }: { preselectedPo
       const res = await fetch("/api/applications", { method: "POST", body: formData });
       if (res.ok) {
         setStatus("success");
+        setPosition("");
         form.reset();
       } else {
         const data = await res.json();
@@ -130,12 +161,16 @@ export default function ApplicationForm({ preselectedPosition }: { preselectedPo
           </div>
           <div>
             <label htmlFor="app-position" className="block text-sm font-medium mb-1">{t.position}</label>
-            <select id="app-position" name="position" defaultValue={preselectedPosition || ""}
+            <select id="app-position" name="position" value={position} onChange={(e) => setPosition(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white">
               <option value="">—</option>
-              {t.positionOptions.map((opt) => (
-                <option key={opt} value={opt}>{opt}</option>
-              ))}
+              {jobOptions.map((job) => {
+                const title = (locale === "en" && job.titleEn) ? job.titleEn : job.titleDe;
+                return (
+                  <option key={job.slug} value={title}>{title}</option>
+                );
+              })}
+              <option value={t.positionOther}>{t.positionOther}</option>
             </select>
           </div>
         </div>

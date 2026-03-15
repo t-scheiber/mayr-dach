@@ -109,10 +109,10 @@ export default function ApplicationDetailPage() {
           </div>
 
           {/* Contact info */}
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div>
               <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">E-Mail</h3>
-              <a href={`mailto:${application.email}`} className="text-primary hover:underline">
+              <a href={`mailto:${application.email}`} className="text-primary hover:underline break-all">
                 {application.email}
               </a>
             </div>
@@ -123,7 +123,7 @@ export default function ApplicationDetailPage() {
               </a>
             </div>
             {application.position && (
-              <div>
+              <div className="sm:col-span-2">
                 <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">Position</h3>
                 <p>{application.position}</p>
               </div>
@@ -133,27 +133,27 @@ export default function ApplicationDetailPage() {
           {/* Documents */}
           <div className="mb-8">
             <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">Dokumente</h3>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href={`/api/applications/${id}/files/cv`}
                 target="_blank"
-                className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded hover:bg-primary-light transition-colors text-sm"
+                className="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded hover:bg-primary-light transition-colors text-sm truncate"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                {application.cvFilename}
+                <span className="truncate">{application.cvFilename}</span>
               </a>
               {application.motivationFilename && (
                 <a
                   href={`/api/applications/${id}/files/motivation`}
                   target="_blank"
-                  className="inline-flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors text-sm"
+                  className="inline-flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition-colors text-sm truncate"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  {application.motivationFilename}
+                  <span className="truncate">{application.motivationFilename}</span>
                 </a>
               )}
             </div>

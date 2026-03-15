@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import company from "@/content/company.json";
+import { ScrollReveal } from "@/components/animations";
 
 export default async function ContactPage({
   params,
@@ -29,7 +30,7 @@ export default async function ContactPage({
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Info */}
-            <div>
+            <ScrollReveal direction="left">
               <h2 className="text-xl font-bold mb-6">{company.company.name}</h2>
 
               <div className="space-y-4">
@@ -77,10 +78,10 @@ export default async function ContactPage({
                   <p>{t("contact.hoursWeekend")}</p>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Contact Form */}
-            <div>
+            <ScrollReveal direction="right" delay={0.15}>
               <form className="space-y-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-1">
@@ -91,7 +92,7 @@ export default async function ContactPage({
                     id="name"
                     name="name"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   />
                 </div>
                 <div>
@@ -103,7 +104,7 @@ export default async function ContactPage({
                     id="email"
                     name="email"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   />
                 </div>
                 <div>
@@ -114,7 +115,7 @@ export default async function ContactPage({
                     type="tel"
                     id="phone"
                     name="phone"
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   />
                 </div>
                 <div>
@@ -126,7 +127,7 @@ export default async function ContactPage({
                     name="message"
                     rows={5}
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-y"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-y"
                   />
                 </div>
                 <p className="text-xs text-gray-500">
@@ -134,12 +135,12 @@ export default async function ContactPage({
                 </p>
                 <button
                   type="submit"
-                  className="bg-primary hover:bg-primary-light text-white font-semibold px-8 py-3 rounded transition-colors"
+                  className="w-full sm:w-auto bg-primary hover:bg-primary-light text-white font-semibold px-8 py-3 rounded-lg transition-colors"
                 >
                   {t("contact.form.send")}
                 </button>
               </form>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
