@@ -17,6 +17,13 @@
 /.next/
 /out/
 
+# ide
+.vscode/
+.idea/
+.cursor/
+.cursorrules
+.playwright-mcp
+
 # production
 /build
 
