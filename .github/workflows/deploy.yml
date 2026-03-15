@@ -8,19 +8,17 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
-        with:
-          host: vps.mayr-dach.com
-          username: root
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            export BUN_INSTALL="/root/.bun"
-            export PATH="$BUN_INSTALL/bin:$PATH"
-            cd /opt/mayr-dach
-            git pull origin main
-            bun install --frozen-lockfile
-            bunx prisma generate
-            bunx prisma db push --accept-data-loss
-            bun run build
-            systemctl restart mayr-dach
+      - name: Trigger deploy webhook
+        run: |
+          response=$(curl -s -w "\n%{http_code}" -X POST \
+            https://mayr-dach.com/api/deploy-webhook \
+            -H "Authorization: Bearer ${{ secrets.DEPLOY_SECRET }}" \
+            --max-time 120)
+          http_code=$(echo "$response" | tail -1)
+          body=$(echo "$response" | head -n -1)
+          echo "$body" | jq -r '.stdout // empty' 2>/dev/null
+          if [ "$http_code" != "200" ]; then
+            echo "Deploy failed with HTTP $http_code"
+            echo "$body" | jq -r '.stderr // empty' 2>/dev/null
+            exit 1
+          fi
