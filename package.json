@@ -7,18 +7,16 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "doc": "npx -y react-doctor@latest .",
+    "doc": "bunx -y react-doctor@latest .",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "npx tsx prisma/seed.ts"
-  },
-  "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
+    "db:seed": "bun prisma/seed.ts"
   },
   "engines": {
     "node": ">=22.0.0"
   },
   "dependencies": {
-    "@prisma/client": "^6.19.2",
+    "@prisma/adapter-pg": "^7.5.0",
+    "@prisma/client": "^7.5.0",
     "better-auth": "^1.5.5",
     "dotenv": "^17.3.1",
     "framer-motion": "^12.36.0",
@@ -26,7 +24,8 @@
     "next": "16.1.6",
     "next-intl": "^4.8.3",
     "nodemailer": "^8.0.2",
-    "prisma": "^6.19.2",
+    "pg": "^8.20.0",
+    "prisma": "^7.5.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -34,6 +33,7 @@
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^25.5.0",
     "@types/nodemailer": "^7.0.11",
+    "@types/pg": "^8.18.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.0.3",
