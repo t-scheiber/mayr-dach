@@ -45,7 +45,7 @@ export default async function HomePage({
         <HeroVideoBackground />
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative w-full px-6 sm:px-12 md:px-16 lg:px-24 z-10 text-left">
-          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-script tracking-wide text-white drop-shadow-2xl sm:whitespace-nowrap pb-4 md:pb-8">
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-script tracking-wide text-primary drop-shadow-2xl sm:whitespace-nowrap pb-4 md:pb-8">
             Endlich ein richtiges Dach!
           </h1>
         </div>
