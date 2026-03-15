@@ -26,7 +26,7 @@ export function GlassShimmer({ children, intensity = "medium" }: GlassShimmerPro
       {children}
       {/* Light sweep overlay triggered by group-hover */}
       <motion.div
-        className={`absolute inset-0 bg-gradient-to-r from-transparent ${opacityMap[intensity]} to-transparent -skew-x-[30deg] w-1/2 opacity-0 group-hover:opacity-100 pointer-events-none z-10`}
+        className={`absolute inset-0 bg-linear-to-r from-transparent ${opacityMap[intensity]} to-transparent -skew-x-30 w-1/2 opacity-0 group-hover:opacity-100 pointer-events-none z-10`}
         initial={{ x: "-150%" }}
         whileHover={{
           x: "300%",

@@ -1,6 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import jobs from "@/content/jobs.json";
+import { prisma } from "@/lib/db";
 import ApplicationForm from "@/components/ApplicationForm";
+import { Suspense } from "react";
+import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations";
+
+export const dynamic = "force-dynamic";
 
 export default async function JobsPage({
   params,
@@ -10,6 +14,13 @@ export default async function JobsPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
+
+  const jobs = await prisma.job.findMany({
+    where: { active: true },
+    orderBy: { sortOrder: "asc" },
+  });
+
+  const isEn = locale === "en";
 
   return (
     <>
@@ -29,78 +40,94 @@ export default async function JobsPage({
           <h2 className="text-2xl font-bold mb-8">{t("jobs.workingTitle")}</h2>
           <p className="text-gray-600 mb-12">{t("jobs.workingText")}</p>
 
-          <div className="space-y-8">
-            {jobs.jobs.map((job) => (
-              <div
-                key={job.id}
-                className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-xl font-bold mb-4">
-                  {job.title[locale as "de" | "en"] ?? job.title.de}
-                </h3>
+          {jobs.length === 0 ? (
+            <div className="text-center py-12 bg-gray-50 rounded-lg">
+              <p className="text-gray-500">
+                {isEn
+                  ? "No open positions at the moment. Check back soon!"
+                  : "Derzeit keine offenen Stellen. Schauen Sie bald wieder vorbei!"}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {jobs.map((job, index) => (
+                <ScrollReveal key={job.id} direction="up" delay={index * 0.1}>
+                  <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                    <h3 className="text-xl font-bold mb-4">
+                      {(isEn && job.titleEn) || job.titleDe}
+                    </h3>
 
-                {"isApprenticeship" in job && job.isApprenticeship && (
-                  <span className="inline-block bg-primary text-white text-xs font-semibold px-3 py-1 rounded mb-4">
-                    {job.duration[locale as "de" | "en"] ?? job.duration.de}
-                  </span>
-                )}
-
-                <div className="mb-4">
-                  <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                    {locale === "de" ? "Aufgaben" : "Tasks"}
-                  </h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                    {(job.tasks[locale as "de" | "en"] ?? job.tasks.de).map(
-                      (task, i) => (
-                        <li key={i}>{task}</li>
-                      )
+                    {job.isApprenticeship && job.durationDe && (
+                      <span className="inline-block bg-primary text-white text-xs font-semibold px-3 py-1 rounded mb-4">
+                        {(isEn && job.durationEn) || job.durationDe}
+                      </span>
                     )}
-                  </ul>
-                </div>
 
-                <div className="mb-4">
-                  <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                    {locale === "de" ? "Anforderungen" : "Requirements"}
-                  </h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                    {(
-                      job.requirements[locale as "de" | "en"] ??
-                      job.requirements.de
-                    ).map((req, i) => (
-                      <li key={i}>{req}</li>
-                    ))}
-                  </ul>
-                </div>
+                    {((isEn ? job.tasksEn : job.tasksDe) || job.tasksDe).length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
+                          {isEn ? "Tasks" : "Aufgaben"}
+                        </h4>
+                        <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                          {((isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe)).map(
+                            (task, i) => (
+                              <li key={i}>{task}</li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
 
-                <div className="mb-6">
-                  <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                    {locale === "de" ? "Wir bieten" : "We offer"}
-                  </h4>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                    {(
-                      job.benefits[locale as "de" | "en"] ?? job.benefits.de
-                    ).map((benefit, i) => (
-                      <li key={i}>{benefit}</li>
-                    ))}
-                  </ul>
-                </div>
+                    {((isEn ? job.requirementsEn : job.requirementsDe) || job.requirementsDe).length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
+                          {isEn ? "Requirements" : "Anforderungen"}
+                        </h4>
+                        <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                          {((isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe)).map(
+                            (req, i) => (
+                              <li key={i}>{req}</li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
 
-                <a
-                  href="#bewerbung"
-                  className="inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors text-sm"
-                >
-                  {locale === "de" ? "Jetzt bewerben" : "Apply Now"} →
-                </a>
-              </div>
-            ))}
-          </div>
+                    {((isEn ? job.benefitsEn : job.benefitsDe) || job.benefitsDe).length > 0 && (
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
+                          {isEn ? "We offer" : "Wir bieten"}
+                        </h4>
+                        <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
+                          {((isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe)).map(
+                            (benefit, i) => (
+                              <li key={i}>{benefit}</li>
+                            )
+                          )}
+                        </ul>
+                      </div>
+                    )}
+
+                    <a
+                      href={`?jobId=${job.slug}#bewerbung`}
+                      className="inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors text-sm"
+                    >
+                      {isEn ? "Apply Now" : "Jetzt bewerben"} →
+                    </a>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* Application Form */}
       <section id="bewerbung" className="py-16 md:py-24 bg-white scroll-mt-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <ApplicationForm />
+          <Suspense fallback={<div>Laden...</div>}>
+            <ApplicationForm />
+          </Suspense>
         </div>
       </section>
 
@@ -110,20 +137,22 @@ export default async function JobsPage({
           <h2 className="text-2xl font-bold text-center mb-12">
             {t("jobs.employerTitle")}
           </h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-3 gap-8">
             {(["development", "teamSpirit", "qualityWork"] as const).map(
               (item) => (
-                <div key={item} className="text-center p-6">
-                  <h3 className="text-xl font-semibold mb-2">
-                    {t(`jobs.${item}.title`)}
-                  </h3>
-                  <p className="text-gray-600">
-                    {t(`jobs.${item}.description`)}
-                  </p>
-                </div>
+                <StaggerItem key={item}>
+                  <div className="text-center p-6">
+                    <h3 className="text-xl font-semibold mb-2">
+                      {t(`jobs.${item}.title`)}
+                    </h3>
+                    <p className="text-gray-600">
+                      {t(`jobs.${item}.description`)}
+                    </p>
+                  </div>
+                </StaggerItem>
               )
             )}
-          </div>
+          </StaggerContainer>
         </div>
       </section>
     </>

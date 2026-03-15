@@ -43,9 +43,9 @@ export default async function HomePage({
       {/* Hero Section */}
       <section className="relative bg-neutral-900 text-white overflow-hidden flex items-end min-h-[80vh] pb-16 md:pb-24">
         <HeroVideoBackground />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative w-full px-6 sm:px-12 md:px-16 lg:px-24 z-10 text-left">
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-script tracking-wide text-white drop-shadow-2xl sm:whitespace-nowrap pb-4 md:pb-8">
+          <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-script tracking-wide text-white drop-shadow-2xl sm:whitespace-nowrap pb-4 md:pb-8">
             Endlich ein richtiges Dach!
           </h1>
         </div>
@@ -59,7 +59,7 @@ export default async function HomePage({
           fill
           className="object-cover opacity-40 mix-blend-overlay"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-gray-900/40"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-gray-900/40"></div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 z-10">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">
             {t("hero.title")}
@@ -219,7 +219,7 @@ export default async function HomePage({
 
       {/* Contact CTA Section */}
       <section className="py-20 md:py-28 bg-primary text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary-dark opacity-90"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-primary via-primary to-primary-dark opacity-90"></div>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center z-10">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
             {t("contact.ctaTitle")}

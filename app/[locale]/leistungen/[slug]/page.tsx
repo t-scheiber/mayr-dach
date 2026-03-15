@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import company from "@/content/company.json";
 import projectsData from "@/content/projects.json";
 import ProjectCarousel from "@/components/ProjectCarousel";
+import { ScrollReveal, GlassShimmer } from "@/components/animations";
 
 const serviceMap = {
   dachdeckerei: "roofing",
@@ -80,12 +81,14 @@ export default async function ServiceDetailPage({
       {/* Content */}
       <section className="py-16 md:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6">
-            {t(`services.${serviceKey}.sectionTitle`)}
-          </h2>
-          <div className="prose prose-lg max-w-none text-gray-700 whitespace-pre-line">
-            {t(`services.${serviceKey}.sectionText`)}
-          </div>
+          <ScrollReveal direction="up">
+            <h2 className="text-2xl md:text-3xl font-bold mb-6">
+              {t(`services.${serviceKey}.sectionTitle`)}
+            </h2>
+            <div className="prose prose-lg max-w-none text-gray-700 whitespace-pre-line">
+              {t(`services.${serviceKey}.sectionText`)}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -120,18 +123,22 @@ export default async function ServiceDetailPage({
             {t("contact.ctaDescription")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={`tel:${company.company.phone}`}
-              className="inline-block bg-white text-primary font-semibold px-8 py-3 rounded hover:bg-gray-100 transition-colors"
-            >
-              {company.company.phone}
-            </a>
-            <a
-              href={`mailto:${company.company.email}`}
-              className="inline-block border-2 border-white text-white font-semibold px-8 py-3 rounded hover:bg-white hover:text-primary transition-colors"
-            >
-              {company.company.email}
-            </a>
+            <GlassShimmer intensity="bold">
+              <a
+                href={`tel:${company.company.phone}`}
+                className="inline-flex items-center justify-center w-full bg-white text-primary font-semibold px-8 py-3 rounded hover:bg-gray-100 transition-colors"
+              >
+                {company.company.phone}
+              </a>
+            </GlassShimmer>
+            <GlassShimmer intensity="subtle">
+              <a
+                href={`mailto:${company.company.email}`}
+                className="inline-flex items-center justify-center w-full border-2 border-white text-white font-semibold px-8 py-3 rounded hover:bg-white hover:text-primary transition-colors"
+              >
+                {company.company.email}
+              </a>
+            </GlassShimmer>
           </div>
         </div>
       </section>
