@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -34,6 +34,8 @@ model Session {
   updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Account {
@@ -41,9 +43,9 @@ model Account {
   userId                String
   accountId             String
   providerId            String
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
+  accessToken           String?   @db.Text
+  refreshToken          String?   @db.Text
+  idToken               String?   @db.Text
   accessTokenExpiresAt  DateTime?
   refreshTokenExpiresAt DateTime?
   scope                 String?
@@ -52,12 +54,14 @@ model Account {
   updatedAt             DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model Verification {
   id         String   @id @default(cuid())
   identifier String
-  value      String
+  value      String   @db.Text
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -76,7 +80,7 @@ model Application {
   motivationPath        String?
   position              String?
   status                ApplicationStatus @default(NEW)
-  notes                 String?
+  notes                 String?           @db.Text
   createdAt             DateTime          @default(now())
   updatedAt             DateTime          @updatedAt
 }
@@ -100,17 +104,17 @@ model Job {
   titleDe           String
   titleEn           String?
 
-  durationDe        String?   // e.g. "4-jährige Doppellehre"
+  durationDe        String?
   durationEn        String?
 
-  tasksDe           String[]
-  tasksEn           String[]
+  tasksDe           Json      @default("[]")
+  tasksEn           Json      @default("[]")
 
-  requirementsDe    String[]
-  requirementsEn    String[]
+  requirementsDe    Json      @default("[]")
+  requirementsEn    Json      @default("[]")
 
-  benefitsDe        String[]
-  benefitsEn        String[]
+  benefitsDe        Json      @default("[]")
+  benefitsEn        Json      @default("[]")
 
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
