@@ -1,4 +1,5 @@
 export * from "./BlueprintTransition";
+export * from "./MaterialSkeleton";
 export * from "./GlassShimmer";
 export * from "./RoofTileLoader";
 export * from "./ScrollReveal";

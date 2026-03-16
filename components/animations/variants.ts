@@ -6,6 +6,9 @@ export const brandColors = {
   gray: "#4b5563",
   glassBlue: "rgba(59, 130, 246, 0.15)", // Translucent blue for glass
   metalSilver: "linear-gradient(90deg, #d1d5db 0%, #f3f4f6 50%, #d1d5db 100%)", // Metallic sweep for Spenglerei
+  facadeWarm: "linear-gradient(180deg, #e8d5b7 0%, #d4a574 50%, #e8d5b7 100%)", // Warm stone/plaster
+  sealingDark: "linear-gradient(90deg, #374151 0%, #4b5563 50%, #374151 100%)", // Dark bitumen
+  greenRoof: "linear-gradient(180deg, #86efac 0%, #4ade80 30%, #166534 100%)", // Green gradient
 };
 
 export const durations = {
