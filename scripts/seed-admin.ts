@@ -1,37 +1,36 @@
 /**
- * Seed script to create the initial admin user.
+ * Seed script to create the initial admin user (passwordless / email OTP).
  *
  * Usage:
  *   1. Make sure DATABASE_URL is set in .env
  *   2. Run: npx prisma migrate dev
  *   3. Run: npx tsx scripts/seed-admin.ts
- *
- * Or change the email/password below before running.
  */
 
-import { auth } from "../lib/auth";
+import { prisma } from "../lib/db";
 
 async function main() {
-  const email = "mail@thomascheiber.com";
-  const password = "changeme123"; // Change this!
-  const name = "Thomas Scheiber";
+  const email = "office@mayr-dach.com";
+  const name = "Mayr Dach Admin";
 
-  try {
-    const result = await auth.api.signUpEmail({
-      body: {
-        email,
-        password,
-        name,
-      },
-    });
-
-    console.log("Admin user created successfully!");
-    console.log(`Email: ${email}`);
-    console.log(`Password: ${password}`);
-    console.log("⚠️  Please change the password after first login.");
-  } catch (error) {
-    console.error("Failed to create admin user:", error);
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    console.log(`Admin user already exists: ${email}`);
+    process.exit(0);
   }
+
+  await prisma.user.create({
+    data: {
+      email,
+      name,
+      emailVerified: true,
+      role: "admin",
+    },
+  });
+
+  console.log("Admin user created successfully!");
+  console.log(`Email: ${email}`);
+  console.log("Login via one-time code sent to this email address.");
 
   process.exit(0);
 }
