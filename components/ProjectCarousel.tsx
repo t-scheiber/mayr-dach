@@ -488,16 +488,19 @@ export default function ProjectCarousel({
       </div>
 
       {/* Lightbox */}
-      <ProjectLightbox
-        images={images}
-        name={name}
-        location={location}
-        attribution={attribution}
-        websiteUrl={websiteUrl}
-        isOpen={lightboxOpen}
-        initialIndex={currentIndex}
-        onClose={closeLightbox}
-      />
+      {lightboxOpen && (
+        <ProjectLightbox
+          key={currentIndex}
+          images={images}
+          name={name}
+          location={location}
+          attribution={attribution}
+          websiteUrl={websiteUrl}
+          isOpen
+          initialIndex={currentIndex}
+          onClose={closeLightbox}
+        />
+      )}
     </>
   );
 }
