@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import team from "@/content/team.json";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations";
+import CountUp from "@/components/CountUp";
 
 export async function generateMetadata({
   params,
@@ -57,7 +58,7 @@ export default async function AboutPage({
             {stats.map((stat) => (
               <StaggerItem key={stat.key}>
                 <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
-                  {stat.count}
+                  <CountUp value={stat.count} />
                 </div>
                 <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
               </StaggerItem>
