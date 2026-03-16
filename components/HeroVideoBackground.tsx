@@ -2,17 +2,18 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
+// Sorted smallest-first so the initial video loads fast during the loader animation
 const videos = [
+  "/hero-videos/ai_video_10.mp4",
+  "/hero-videos/ai_video_09.mp4",
+  "/hero-videos/ai_video_08.mp4",
+  "/hero-videos/ai_video_06.mp4",
+  "/hero-videos/ai_video_07.mp4",
+  "/hero-videos/ai_video_05.mp4",
+  "/hero-videos/ai_video_04.mp4",
   "/hero-videos/ai_video_01.mp4",
   "/hero-videos/ai_video_02.mp4",
   "/hero-videos/ai_video_03.mp4",
-  "/hero-videos/ai_video_04.mp4",
-  "/hero-videos/ai_video_05.mp4",
-  "/hero-videos/ai_video_06.mp4",
-  "/hero-videos/ai_video_07.mp4",
-  "/hero-videos/ai_video_08.mp4",
-  "/hero-videos/ai_video_09.mp4",
-  "/hero-videos/ai_video_10.mp4",
 ];
 
 function pickRandom(exclude: number) {
@@ -55,6 +56,7 @@ export default function HeroVideoBackground({ randomize = false }: { randomize?:
       muted
       playsInline
       preload="auto"
+      poster="/images/hero/video-poster.jpg"
       className="absolute inset-0 w-full h-full object-cover"
       src={videos[currentIndex]}
     />

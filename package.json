@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "doc": "git add -A && (git diff --cached --quiet || git commit -m 'Update') && git push && bunx -y react-doctor@latest . --verbose",
+    "lh": "node scripts/lighthouse.mjs",
     "db:migrate": "prisma migrate dev",
     "db:seed": "bun prisma/seed.ts"
   },
