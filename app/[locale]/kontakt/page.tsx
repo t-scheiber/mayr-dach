@@ -27,9 +27,9 @@ export default async function ContactPage({
         </div>
       </section>
 
-      <section className="py-16 md:py-24">
+      <section className="py-10 sm:py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12">
             {/* Contact Info */}
             <ScrollReveal direction="left">
               <h2 className="text-xl font-bold mb-6">{company.company.name}</h2>
