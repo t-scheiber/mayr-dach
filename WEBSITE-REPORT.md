@@ -81,6 +81,8 @@ pdf_options:
 
 # Website-Bericht: Neuer Webauftritt
 
+<!-- markdownlint-disable MD033 MD036 -->
+
 **Karl Mayr GmbH & Co. KG**
 
 <div class="subtitle">
@@ -89,6 +91,8 @@ Erstellt am 16. März 2026 · Thomas Scheiber
 Alt: [www.mayr-dach.at](https://www.mayr-dach.at) (HEROLD Website-Baukasten) · Neu: [mayr-dach.com](https://mayr-dach.com) (Eigenentwicklung)
 
 </div>
+
+<!-- markdownlint-enable MD033 MD036 -->
 
 ---
 
