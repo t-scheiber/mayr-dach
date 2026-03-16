@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "doc": "bunx -y react-doctor@latest . --verbose",
+    "doc": "bunx -y react-doctor@latest . --verbose -noconfirm",
     "db:migrate": "prisma migrate dev",
     "db:seed": "bun prisma/seed.ts"
   },
