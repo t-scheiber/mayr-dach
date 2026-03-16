@@ -144,10 +144,10 @@ export default function Footer() {
       {/* Copyright */}
       <div className="border-t border-slate-800 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-400">
             &copy; {new Date().getFullYear()} {company.company.name}. {t("footer.copyright")}
           </p>
-          <div className="text-xs text-slate-600">
+          <div className="text-xs text-slate-400">
             {t("footer.credits")}{" "}
             <a href="https://thomasscheiber.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
               Thomas Scheiber
