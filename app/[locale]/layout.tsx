@@ -72,7 +72,7 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${inter.variable} ${greatVibes.variable}`}>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased overflow-x-hidden">
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main>

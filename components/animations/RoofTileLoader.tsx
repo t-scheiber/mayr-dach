@@ -75,7 +75,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                     {row.map((_, colIndex) => (
                       <motion.div
                         key={`${rowIndex}-${colIndex}`}
-                        className="w-12 h-16 rounded-b-xl shadow-sm"
+                        className="w-8 h-12 sm:w-12 sm:h-16 rounded-b-xl shadow-sm"
                         style={{ backgroundColor: brandColors.primary }}
                         initial={{ opacity: 0, y: -50, rotate: -10 }}
                         animate={{ opacity: 1, y: 0, rotate: 0 }}
@@ -112,7 +112,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                   duration: 0.6,
                   ease: easings.smooth,
                 }}
-                className="font-script text-4xl text-gray-900 tracking-wide"
+                className="font-script text-2xl sm:text-4xl text-gray-900 tracking-wide"
               >
                 Endlich ein richtiges Dach!
               </motion.p>

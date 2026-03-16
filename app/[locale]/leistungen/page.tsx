@@ -35,13 +35,13 @@ export default async function ServicesPage({
 
       <section className="py-16 md:py-24">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <StaggerContainer staggerDelay={0.1} className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <StaggerContainer staggerDelay={0.1} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {services.map((service) => (
               <StaggerItem key={service.key}>
                 <TileFlip>
                   <Link
                     href={service.href}
-                    className="group block p-8 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary transition-all h-full"
+                    className="group block p-6 sm:p-8 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary transition-all h-full"
                   >
                     <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
                       {t(`services.${service.key}.title`)}

@@ -131,7 +131,7 @@ export default async function JobsPage({
           <h2 className="text-2xl font-bold text-center mb-12">
             {t("jobs.employerTitle")}
           </h2>
-          <StaggerContainer staggerDelay={0.12} className="grid md:grid-cols-3 gap-8">
+          <StaggerContainer staggerDelay={0.12} className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {(["development", "teamSpirit", "qualityWork"] as const).map(
               (item) => (
                 <StaggerItem key={item}>
