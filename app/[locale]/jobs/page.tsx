@@ -6,7 +6,7 @@ import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animat
 import { JsonLd } from "@/components/JsonLd";
 import company from "@/content/company.json";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mayr-dach.com";
 
 export const dynamic = "force-dynamic";
 

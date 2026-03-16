@@ -12,7 +12,7 @@ import { JsonLd } from "@/components/JsonLd";
 import company from "@/content/company.json";
 import type { Metadata } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mayr-dach.com";
 
 export async function generateMetadata({
   params,
