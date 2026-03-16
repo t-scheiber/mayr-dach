@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter, useParams } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface ApplicationDetail {
@@ -20,18 +20,21 @@ interface ApplicationDetail {
   updatedAt: string;
 }
 
-const statusOptions = [
-  { value: "NEW", label: "Neu" },
-  { value: "REVIEWING", label: "In Prüfung" },
-  { value: "ACCEPTED", label: "Angenommen" },
-  { value: "REJECTED", label: "Abgelehnt" },
-];
-
 export default function ApplicationDetailPage() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const locale = useLocale();
   const params = useParams();
+  const t = useTranslations("admin.applicationDetail");
+  const td = useTranslations("admin.dashboard");
+  const tc = useTranslations("common");
+
+  const statusOptions = [
+    { value: "NEW", label: td("statusNew") },
+    { value: "REVIEWING", label: td("statusReviewing") },
+    { value: "ACCEPTED", label: td("statusAccepted") },
+    { value: "REJECTED", label: td("statusRejected") },
+  ];
   const id = params.id as string;
 
   const [application, setApplication] = useState<ApplicationDetail | null>(null);
@@ -73,7 +76,7 @@ export default function ApplicationDetailPage() {
   if (isPending || loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <p className="text-gray-500">Laden...</p>
+        <p className="text-gray-500">{tc("loading")}</p>
       </div>
     );
   }
@@ -89,7 +92,7 @@ export default function ApplicationDetailPage() {
           href={`/${adminBase}admin`}
           className="text-sm text-gray-500 hover:text-gray-700 mb-6 inline-block"
         >
-          ← Zurück zur Übersicht
+          {t("back")}
         </Link>
 
         <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8">
@@ -97,7 +100,7 @@ export default function ApplicationDetailPage() {
             <div>
               <h1 className="text-2xl font-bold">{application.name}</h1>
               <p className="text-sm text-gray-500">
-                Beworben am {new Date(application.createdAt).toLocaleDateString("de-AT", {
+                {t("appliedOn")} {new Date(application.createdAt).toLocaleDateString("de-AT", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
@@ -111,20 +114,20 @@ export default function ApplicationDetailPage() {
           {/* Contact info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">E-Mail</h3>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">{t("email")}</h3>
               <a href={`mailto:${application.email}`} className="text-primary hover:underline break-all">
                 {application.email}
               </a>
             </div>
             <div>
-              <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">Telefon</h3>
+              <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">{t("phone")}</h3>
               <a href={`tel:${application.phone}`} className="text-primary hover:underline">
                 {application.phone}
               </a>
             </div>
             {application.position && (
               <div className="sm:col-span-2">
-                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">Position</h3>
+                <h3 className="text-xs font-semibold text-gray-500 uppercase mb-1">{t("position")}</h3>
                 <p>{application.position}</p>
               </div>
             )}
@@ -132,7 +135,7 @@ export default function ApplicationDetailPage() {
 
           {/* Documents */}
           <div className="mb-8">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">Dokumente</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase mb-2">{t("documents")}</h3>
             <div className="flex flex-col sm:flex-row gap-3">
               <a
                 href={`/api/applications/${id}/files/cv`}
@@ -163,7 +166,7 @@ export default function ApplicationDetailPage() {
           <div className="border-t border-gray-200 pt-6 space-y-4">
             <div>
               <label htmlFor="status" className="block text-xs font-semibold text-gray-500 uppercase mb-1">
-                Status
+                {t("status")}
               </label>
               <select
                 id="status"
@@ -181,14 +184,14 @@ export default function ApplicationDetailPage() {
 
             <div>
               <label htmlFor="notes" className="block text-xs font-semibold text-gray-500 uppercase mb-1">
-                Interne Notizen
+                {t("notes")}
               </label>
               <textarea
                 id="notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={4}
-                placeholder="Notizen zu dieser Bewerbung..."
+                placeholder={t("notesPlaceholder")}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-y"
               />
             </div>
@@ -198,7 +201,7 @@ export default function ApplicationDetailPage() {
               disabled={saving}
               className="bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors disabled:opacity-50"
             >
-              {saving ? "Speichern..." : "Speichern"}
+              {saving ? t("saving") : t("save")}
             </button>
           </div>
         </div>

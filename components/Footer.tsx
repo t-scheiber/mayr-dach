@@ -78,7 +78,7 @@ export default function Footer() {
               />
             </Link>
             <p className="text-sm text-slate-400 leading-relaxed">
-              Ihr zuverlässiger Partner für Dach, Fassade und Glas in Saalfelden und Umgebung. Meisterhafte Handwerkskunst seit 1972.
+              {t("footer.brandDescription")}
             </p>
           </div>
 
@@ -118,7 +118,7 @@ export default function Footer() {
           {/* Links */}
           <div>
             <h3 className="text-sm font-bold tracking-wider uppercase text-white mb-6">
-              Links
+              {t("footer.links")}
             </h3>
             <ul className="space-y-3 text-sm text-slate-400">
               <li>
@@ -133,7 +133,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/admin/login" className="hover:text-white hover:underline transition-all">
-                  Admin Login
+                  {t("footer.adminLogin")}
                 </Link>
               </li>
             </ul>
@@ -145,10 +145,10 @@ export default function Footer() {
       <div className="border-t border-slate-800 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-xs text-slate-500">
-            &copy; {new Date().getFullYear()} {company.company.name}. Alle Rechte vorbehalten.
+            &copy; {new Date().getFullYear()} {company.company.name}. {t("footer.copyright")}
           </p>
           <div className="text-xs text-slate-600">
-            Designed, created, implemented, and maintained by{" "}
+            {t("footer.credits")}{" "}
             <a href="https://thomasscheiber.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
               Thomas Scheiber
             </a>

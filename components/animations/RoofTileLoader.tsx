@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { useReducedAnimations } from "./useReducedAnimations";
 import { brandColors, easings, defaultVariants } from "./variants";
 
@@ -12,6 +13,7 @@ interface RoofTileLoaderProps {
 }
 
 export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps) {
+  const t = useTranslations("hero");
   const { shouldReduce } = useReducedAnimations();
   const [isVisible, setIsVisible] = useState(true);
 
@@ -64,7 +66,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
               className="flex flex-col items-center"
             >
               <Image src="/images/logo/logo.png" alt="Mayr Dach" width={120} height={120} />
-              <p className="mt-4 font-script text-3xl text-primary">Endlich ein richtiges Dach!</p>
+              <p className="mt-4 font-script text-3xl text-primary">{t("slogan")}</p>
             </motion.div>
           ) : (
             <div className="flex flex-col items-center gap-1">
@@ -114,7 +116,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                 }}
                 className="font-script text-2xl sm:text-4xl text-gray-900 tracking-wide"
               >
-                Endlich ein richtiges Dach!
+                {t("slogan")}
               </motion.p>
             </div>
           )}

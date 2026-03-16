@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { createMagicLinkUrl } from "./magic-link";
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -162,7 +163,8 @@ export async function sendApplicationNotification(application: {
   position?: string | null;
   id: string;
 }) {
-  const adminUrl = `${process.env.BETTER_AUTH_URL}/admin/applications/${application.id}`;
+  const adminPath = `/admin/applications/${application.id}`;
+  const adminUrl = createMagicLinkUrl(NOTIFICATION_EMAIL, adminPath);
 
   const officeHtml = emailShell(
     "Neue Bewerbung eingegangen",

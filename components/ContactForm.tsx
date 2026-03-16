@@ -1,54 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   contactSchema,
   getContactMessages,
   type ContactLocale,
 } from "@/lib/contact-schema";
 
-const labels = {
-  de: {
-    name: "Name",
-    namePlaceholder: "Vor- und Nachname",
-    email: "E-Mail",
-    emailPlaceholder: "ihre@email.at",
-    phone: "Telefon",
-    phonePlaceholder: "+43 ...",
-    message: "Nachricht",
-    messagePlaceholder: "Wie können wir Ihnen helfen?",
-    send: "Absenden",
-    submitting: "Wird gesendet...",
-    success:
-      "Vielen Dank für Ihre Nachricht! Wir melden uns so schnell wie möglich bei Ihnen.",
-    privacy:
-      "Es werden personenbezogene Daten übermittelt und für die in der Datenschutzseite beschriebenen Zwecke verwendet.",
-  },
-  en: {
-    name: "Name",
-    namePlaceholder: "First and last name",
-    email: "Email",
-    emailPlaceholder: "your@email.com",
-    phone: "Phone",
-    phonePlaceholder: "+43 ...",
-    message: "Message",
-    messagePlaceholder: "How can we help you?",
-    send: "Send",
-    submitting: "Sending...",
-    success:
-      "Thank you for your message! We will get back to you as soon as possible.",
-    privacy:
-      "Personal data will be transmitted and used for the purposes described on the privacy page.",
-  },
-};
-
 const inputBase =
   "w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none";
 
 export default function ContactForm() {
   const locale = useLocale() as ContactLocale;
-  const t = labels[locale];
+  const t = useTranslations("contactForm");
   const msgs = getContactMessages(locale);
 
   const [status, setStatus] = useState<
@@ -139,7 +104,7 @@ export default function ContactForm() {
             d="M5 13l4 4L19 7"
           />
         </svg>
-        <p className="text-lg font-semibold text-green-800">{t.success}</p>
+        <p className="text-lg font-semibold text-green-800">{t("success")}</p>
       </div>
     );
   }
@@ -148,13 +113,13 @@ export default function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       <div>
         <label htmlFor="contact-name" className="block text-sm font-medium mb-1">
-          {t.name} *
+          {t("name")} *
         </label>
         <input
           type="text"
           id="contact-name"
           name="name"
-          placeholder={t.namePlaceholder}
+          placeholder={t("namePlaceholder")}
           onChange={() => clearFieldError("name")}
           className={`${inputBase} ${fieldErrors.name ? "border-red-400" : "border-gray-300"}`}
         />
@@ -164,13 +129,13 @@ export default function ContactForm() {
       </div>
       <div>
         <label htmlFor="contact-email" className="block text-sm font-medium mb-1">
-          {t.email} *
+          {t("email")} *
         </label>
         <input
           type="email"
           id="contact-email"
           name="email"
-          placeholder={t.emailPlaceholder}
+          placeholder={t("emailPlaceholder")}
           onChange={() => clearFieldError("email")}
           className={`${inputBase} ${fieldErrors.email ? "border-red-400" : "border-gray-300"}`}
         />
@@ -180,25 +145,25 @@ export default function ContactForm() {
       </div>
       <div>
         <label htmlFor="contact-phone" className="block text-sm font-medium mb-1">
-          {t.phone}
+          {t("phone")}
         </label>
         <input
           type="tel"
           id="contact-phone"
           name="phone"
-          placeholder={t.phonePlaceholder}
+          placeholder={t("phonePlaceholder")}
           className={`${inputBase} border-gray-300`}
         />
       </div>
       <div>
         <label htmlFor="contact-message" className="block text-sm font-medium mb-1">
-          {t.message} *
+          {t("message")} *
         </label>
         <textarea
           id="contact-message"
           name="message"
           rows={5}
-          placeholder={t.messagePlaceholder}
+          placeholder={t("messagePlaceholder")}
           onChange={() => clearFieldError("message")}
           className={`${inputBase} resize-y ${fieldErrors.message ? "border-red-400" : "border-gray-300"}`}
         />
@@ -213,13 +178,13 @@ export default function ContactForm() {
         </div>
       )}
 
-      <p className="text-xs text-gray-500">{t.privacy}</p>
+      <p className="text-xs text-gray-500">{t("privacy")}</p>
       <button
         type="submit"
         disabled={status === "submitting"}
         className="w-full sm:w-auto bg-primary hover:bg-primary-light text-white font-semibold px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {status === "submitting" ? t.submitting : t.send}
+        {status === "submitting" ? t("submitting") : t("send")}
       </button>
     </form>
   );
