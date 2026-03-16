@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface JobData {
@@ -55,6 +55,8 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("admin.jobEditor");
+  const tc = useTranslations("common");
   const adminBase = locale === "de" ? "" : locale + "/";
 
   const isNew = !jobId;
@@ -145,10 +147,10 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
         router.push(`/${adminBase}admin`);
       } else {
         const data = await res.json();
-        setError(data.error || "Fehler beim Speichern");
+        setError(data.error || t("saveError"));
       }
     } catch {
-      setError("Fehler beim Speichern");
+      setError(t("saveError"));
     }
     setSaving(false);
   }
@@ -156,7 +158,7 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
   if (isPending || loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <p className="text-gray-500">Laden...</p>
+        <p className="text-gray-500">{tc("loading")}</p>
       </div>
     );
   }
@@ -174,36 +176,36 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           href={`/${adminBase}admin`}
           className="text-sm text-gray-500 hover:text-gray-700 mb-6 inline-block"
         >
-          ← Zurück zur Übersicht
+          {t("back")}
         </Link>
 
         <h1 className="text-2xl font-bold mb-6">
-          {isNew ? "Neues Stellenangebot" : "Stellenangebot bearbeiten"}
+          {isNew ? t("newTitle") : t("editTitle")}
         </h1>
 
         <div className="bg-white border border-gray-200 rounded-lg p-6 md:p-8 space-y-6">
           {/* Basic info */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="job-titleDe" className={labelCls}>Titel (Deutsch) *</label>
+              <label htmlFor="job-titleDe" className={labelCls}>{t("titleDe")}</label>
               <input
                 id="job-titleDe"
                 type="text"
                 value={form.titleDe}
                 onChange={(e) => update("titleDe", e.target.value)}
-                placeholder="z.B. Dachdecker/Spengler (m/w/d)"
+                placeholder={t("titleDePlaceholder")}
                 className={inputCls}
                 required
               />
             </div>
             <div>
-              <label htmlFor="job-titleEn" className={labelCls}>Title (English)</label>
+              <label htmlFor="job-titleEn" className={labelCls}>{t("titleEn")}</label>
               <input
                 id="job-titleEn"
                 type="text"
                 value={form.titleEn}
                 onChange={(e) => update("titleEn", e.target.value)}
-                placeholder="e.g. Roofer/Metalworker (m/f/d)"
+                placeholder={t("titleEnPlaceholder")}
                 className={inputCls}
               />
             </div>
@@ -211,7 +213,7 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
 
           <div className="grid md:grid-cols-3 gap-4">
             <div>
-              <label htmlFor="job-slug" className={labelCls}>Slug</label>
+              <label htmlFor="job-slug" className={labelCls}>{t("slug")}</label>
               <input
                 id="job-slug"
                 type="text"
@@ -221,11 +223,11 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
                 className={`${inputCls} font-mono text-sm`}
               />
               <p className="text-xs text-gray-400 mt-1">
-                Leer lassen für Auto-Generierung
+                {t("slugHint")}
               </p>
             </div>
             <div>
-              <label htmlFor="job-sortOrder" className={labelCls}>Reihenfolge</label>
+              <label htmlFor="job-sortOrder" className={labelCls}>{t("sortOrder")}</label>
               <input
                 id="job-sortOrder"
                 type="number"
@@ -245,7 +247,7 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
                   onChange={(e) => update("active", e.target.checked)}
                   className="w-4 h-4 accent-primary"
                 />
-                <span className="text-sm">Aktiv</span>
+                <span className="text-sm">{t("active")}</span>
               </label>
               <label htmlFor="job-apprenticeship" className="flex items-center gap-2 cursor-pointer">
                 <input
@@ -257,7 +259,7 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
                   }
                   className="w-4 h-4 accent-primary"
                 />
-                <span className="text-sm">Lehrstelle</span>
+                <span className="text-sm">{t("apprenticeship")}</span>
               </label>
             </div>
           </div>
@@ -266,24 +268,24 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {form.isApprenticeship && (
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="job-durationDe" className={labelCls}>Dauer (Deutsch)</label>
+                <label htmlFor="job-durationDe" className={labelCls}>{t("durationDe")}</label>
                 <input
                   id="job-durationDe"
                   type="text"
                   value={form.durationDe}
                   onChange={(e) => update("durationDe", e.target.value)}
-                  placeholder="z.B. 4-jährige Doppellehre"
+                  placeholder={t("durationDePlaceholder")}
                   className={inputCls}
                 />
               </div>
               <div>
-                <label htmlFor="job-durationEn" className={labelCls}>Duration (English)</label>
+                <label htmlFor="job-durationEn" className={labelCls}>{t("durationEn")}</label>
                 <input
                   id="job-durationEn"
                   type="text"
                   value={form.durationEn}
                   onChange={(e) => update("durationEn", e.target.value)}
-                  placeholder="e.g. 4-year dual apprenticeship"
+                  placeholder={t("durationEnPlaceholder")}
                   className={inputCls}
                 />
               </div>
@@ -293,24 +295,24 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Tasks */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="job-tasksDe" className={labelCls}>Aufgaben (Deutsch)</label>
+              <label htmlFor="job-tasksDe" className={labelCls}>{t("tasksDe")}</label>
               <textarea
                 id="job-tasksDe"
                 value={form.tasksDe}
                 onChange={(e) => update("tasksDe", e.target.value)}
                 rows={4}
-                placeholder="Eine Aufgabe pro Zeile"
+                placeholder={t("tasksDePlaceholder")}
                 className={`${inputCls} resize-y`}
               />
             </div>
             <div>
-              <label htmlFor="job-tasksEn" className={labelCls}>Tasks (English)</label>
+              <label htmlFor="job-tasksEn" className={labelCls}>{t("tasksEn")}</label>
               <textarea
                 id="job-tasksEn"
                 value={form.tasksEn}
                 onChange={(e) => update("tasksEn", e.target.value)}
                 rows={4}
-                placeholder="One task per line"
+                placeholder={t("tasksEnPlaceholder")}
                 className={`${inputCls} resize-y`}
               />
             </div>
@@ -319,24 +321,24 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Requirements */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="job-requirementsDe" className={labelCls}>Anforderungen (Deutsch)</label>
+              <label htmlFor="job-requirementsDe" className={labelCls}>{t("requirementsDe")}</label>
               <textarea
                 id="job-requirementsDe"
                 value={form.requirementsDe}
                 onChange={(e) => update("requirementsDe", e.target.value)}
                 rows={4}
-                placeholder="Eine Anforderung pro Zeile"
+                placeholder={t("requirementsDePlaceholder")}
                 className={`${inputCls} resize-y`}
               />
             </div>
             <div>
-              <label htmlFor="job-requirementsEn" className={labelCls}>Requirements (English)</label>
+              <label htmlFor="job-requirementsEn" className={labelCls}>{t("requirementsEn")}</label>
               <textarea
                 id="job-requirementsEn"
                 value={form.requirementsEn}
                 onChange={(e) => update("requirementsEn", e.target.value)}
                 rows={4}
-                placeholder="One requirement per line"
+                placeholder={t("requirementsEnPlaceholder")}
                 className={`${inputCls} resize-y`}
               />
             </div>
@@ -345,24 +347,24 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Benefits */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="job-benefitsDe" className={labelCls}>Wir bieten (Deutsch)</label>
+              <label htmlFor="job-benefitsDe" className={labelCls}>{t("benefitsDe")}</label>
               <textarea
                 id="job-benefitsDe"
                 value={form.benefitsDe}
                 onChange={(e) => update("benefitsDe", e.target.value)}
                 rows={4}
-                placeholder="Ein Vorteil pro Zeile"
+                placeholder={t("benefitsDePlaceholder")}
                 className={`${inputCls} resize-y`}
               />
             </div>
             <div>
-              <label htmlFor="job-benefitsEn" className={labelCls}>We offer (English)</label>
+              <label htmlFor="job-benefitsEn" className={labelCls}>{t("benefitsEn")}</label>
               <textarea
                 id="job-benefitsEn"
                 value={form.benefitsEn}
                 onChange={(e) => update("benefitsEn", e.target.value)}
                 rows={4}
-                placeholder="One benefit per line"
+                placeholder={t("benefitsEnPlaceholder")}
                 className={`${inputCls} resize-y`}
               />
             </div>
@@ -381,13 +383,13 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               disabled={saving || !form.titleDe}
               className="bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors disabled:opacity-50"
             >
-              {saving ? "Speichern..." : "Speichern"}
+              {saving ? t("saving") : t("save")}
             </button>
             <Link
               href={`/${adminBase}admin`}
               className="text-gray-500 hover:text-gray-700 py-2 px-6 border border-gray-300 rounded"
             >
-              Abbrechen
+              {t("cancel")}
             </Link>
           </div>
         </div>

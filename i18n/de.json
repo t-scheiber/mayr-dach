@@ -17,7 +17,8 @@
     "title": "Ihr zuverlässiger Dachdecker, Spengler und Glaser in Saalfelden",
     "description": "Willkommen bei der Karl Mayr GmbH & Co. KG – Ihrem zuverlässigen Partner für Dach, Fassade und Glas in Saalfelden. Wir stehen für hochwertige Handwerksarbeit, präzise Ausführung und ehrliche Beratung. Als Meisterbetrieb verbinden wir moderne Technik mit traditioneller Handwerkskunst – für langlebige, sichere und optisch ansprechende Lösungen rund ums Dach.",
     "subtitle": "Unsere Einsatzgebiete erstrecken sich weit über Saalfelden hinaus: Wir sind für unsere Kunden im gesamten Pinzgau, in Tirol, der Stadt Salzburg sowie in Oberbayern im Einsatz. Ob privates Wohnhaus, Gewerbebau oder Sanierungsprojekt – überall dort, wo Qualität gefragt ist, sind wir Ihr verlässlicher Ansprechpartner.",
-    "cta": "Jetzt anrufen"
+    "cta": "Jetzt anrufen",
+    "slogan": "Endlich ein richtiges Dach!"
   },
   "values": {
     "title": "Unsere Werte – Das Fundament unserer Arbeit",
@@ -133,6 +134,42 @@
       "privacy": "Es werden personenbezogene Daten übermittelt und für die in der Datenschutzseite beschriebenen Zwecke verwendet."
     }
   },
+  "contactForm": {
+    "name": "Name",
+    "namePlaceholder": "Vor- und Nachname",
+    "email": "E-Mail",
+    "emailPlaceholder": "ihre@email.at",
+    "phone": "Telefon",
+    "phonePlaceholder": "+43 ...",
+    "message": "Nachricht",
+    "messagePlaceholder": "Wie können wir Ihnen helfen?",
+    "send": "Absenden",
+    "submitting": "Wird gesendet...",
+    "success": "Vielen Dank für Ihre Nachricht! Wir melden uns so schnell wie möglich bei Ihnen.",
+    "privacy": "Es werden personenbezogene Daten übermittelt und für die in der Datenschutzseite beschriebenen Zwecke verwendet."
+  },
+  "applicationForm": {
+    "title": "Jetzt bewerben",
+    "subtitle": "Füllen Sie das Formular aus und wir melden uns innerhalb von 24 Stunden.",
+    "name": "Name",
+    "namePlaceholder": "Vor- und Nachname",
+    "email": "E-Mail",
+    "emailPlaceholder": "ihre@email.at",
+    "phone": "Telefonnummer",
+    "phonePlaceholder": "+43 ...",
+    "position": "Gewünschte Position",
+    "positionOther": "Sonstiges",
+    "cv": "Lebenslauf (PDF/Word)",
+    "cvRequired": "Pflichtfeld",
+    "motivation": "Motivationsschreiben (optional)",
+    "motivationOptional": "PDF/Word",
+    "submit": "Bewerbung absenden",
+    "submitting": "Wird gesendet...",
+    "success": "Ihre Bewerbung wurde erfolgreich übermittelt! Wir melden uns in Kürze bei Ihnen.",
+    "error": "Beim Senden ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+    "fileTooLarge": "Datei darf maximal 10 MB groß sein.",
+    "privacy": "Mit dem Absenden stimmen Sie der Verarbeitung Ihrer Daten gemäß unserer Datenschutzerklärung zu."
+  },
   "jobs": {
     "title": "Jobs & Karriere bei uns in Saalfelden",
     "subtitle": "Werden Sie Teil eines erfolgreichen Handwerksbetriebs, der auf Qualität, Teamwork und Fachkompetenz setzt.",
@@ -143,6 +180,10 @@
     "quickApplyTitle": "Jetzt in 30 Sekunden bewerben – ohne Lebenslauf!",
     "quickApplyText": "Erzählen Sie uns kurz, wer Sie sind – den Rest klären wir persönlich. Wir melden uns innerhalb von 24 Stunden.",
     "employerTitle": "Was uns als Arbeitgeber besonders macht",
+    "noPositions": "Derzeit keine offenen Stellen. Schauen Sie bald wieder vorbei!",
+    "tasks": "Aufgaben",
+    "requirements": "Anforderungen",
+    "benefits": "Wir bieten",
     "development": {
       "title": "Weiterentwicklung",
       "description": "Bei uns können Sie wachsen: durch Weiterbildungen, neue Aufgaben und die Möglichkeit, Ihr Handwerk jeden Tag zu perfektionieren."
@@ -156,10 +197,113 @@
       "description": "Ob in der Ausführung oder im Miteinander – wir legen Wert auf saubere Arbeit, Verantwortung und höchste Ansprüche."
     }
   },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "emailPrompt": "Geben Sie Ihre E-Mail-Adresse ein, um einen Anmeldecode zu erhalten.",
+      "email": "E-Mail",
+      "sendCode": "Code senden",
+      "codeSent": "Ein 6-stelliger Code wurde an",
+      "codeSentSuffix": "gesendet.",
+      "code": "Code",
+      "signIn": "Anmelden",
+      "changeEmail": "Andere E-Mail verwenden",
+      "sendError": "Fehler beim Senden des Codes.",
+      "codeError": "Ungültiger Code."
+    },
+    "dashboard": {
+      "title": "Administration",
+      "loggedInAs": "Angemeldet als",
+      "signOut": "Abmelden",
+      "applications": "Bewerbungen",
+      "jobListings": "Stellenangebote",
+      "noApplications": "Noch keine Bewerbungen eingegangen.",
+      "noJobs": "Noch keine Stellenangebote vorhanden.",
+      "newJob": "+ Neues Stellenangebot",
+      "name": "Name",
+      "position": "Position",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "status": "Status",
+      "date": "Datum",
+      "documents": "Dokumente",
+      "cv": "CV",
+      "motivation": "Motivation",
+      "details": "Details",
+      "titleCol": "Titel",
+      "slug": "Slug",
+      "type": "Typ",
+      "sortOrder": "Reihenfolge",
+      "actions": "Aktionen",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "apprenticeship": "Lehrstelle",
+      "jobType": "Stelle",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDelete": "Stellenangebot wirklich löschen?",
+      "statusNew": "Neu",
+      "statusReviewing": "In Prüfung",
+      "statusAccepted": "Angenommen",
+      "statusRejected": "Abgelehnt"
+    },
+    "applicationDetail": {
+      "back": "← Zurück zur Übersicht",
+      "appliedOn": "Beworben am",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "position": "Position",
+      "documents": "Dokumente",
+      "status": "Status",
+      "notes": "Interne Notizen",
+      "notesPlaceholder": "Notizen zu dieser Bewerbung...",
+      "save": "Speichern",
+      "saving": "Speichern..."
+    },
+    "jobEditor": {
+      "back": "← Zurück zur Übersicht",
+      "newTitle": "Neues Stellenangebot",
+      "editTitle": "Stellenangebot bearbeiten",
+      "titleDe": "Titel (Deutsch) *",
+      "titleDePlaceholder": "z.B. Dachdecker/Spengler (m/w/d)",
+      "titleEn": "Title (English)",
+      "titleEnPlaceholder": "e.g. Roofer/Metalworker (m/f/d)",
+      "slug": "Slug",
+      "slugHint": "Leer lassen für Auto-Generierung",
+      "sortOrder": "Reihenfolge",
+      "active": "Aktiv",
+      "apprenticeship": "Lehrstelle",
+      "durationDe": "Dauer (Deutsch)",
+      "durationDePlaceholder": "z.B. 4-jährige Doppellehre",
+      "durationEn": "Duration (English)",
+      "durationEnPlaceholder": "e.g. 4-year dual apprenticeship",
+      "tasksDe": "Aufgaben (Deutsch)",
+      "tasksDePlaceholder": "Eine Aufgabe pro Zeile",
+      "tasksEn": "Tasks (English)",
+      "tasksEnPlaceholder": "One task per line",
+      "requirementsDe": "Anforderungen (Deutsch)",
+      "requirementsDePlaceholder": "Eine Anforderung pro Zeile",
+      "requirementsEn": "Requirements (English)",
+      "requirementsEnPlaceholder": "One requirement per line",
+      "benefitsDe": "Wir bieten (Deutsch)",
+      "benefitsDePlaceholder": "Ein Vorteil pro Zeile",
+      "benefitsEn": "We offer (English)",
+      "benefitsEnPlaceholder": "One benefit per line",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "cancel": "Abbrechen",
+      "saveError": "Fehler beim Speichern"
+    }
+  },
   "footer": {
     "location": "Standort",
     "contact": "Kontakt",
-    "partners": "Partner"
+    "partners": "Partner",
+    "brandDescription": "Ihr zuverlässiger Partner für Dach, Fassade und Glas in Saalfelden und Umgebung. Meisterhafte Handwerkskunst seit 1972.",
+    "links": "Links",
+    "adminLogin": "Admin Login",
+    "copyright": "Alle Rechte vorbehalten.",
+    "credits": "Entworfen, erstellt, implementiert und gewartet von"
   },
   "common": {
     "learnMore": "Mehr erfahren",
@@ -167,6 +311,7 @@
     "getInTouch": "Kontakt aufnehmen",
     "references": "Referenzen",
     "backToTop": "Nach oben",
-    "language": "Sprache"
+    "language": "Sprache",
+    "loading": "Laden..."
   }
 }

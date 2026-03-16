@@ -43,9 +43,7 @@ export default async function JobsPage({
           {jobs.length === 0 ? (
             <div className="text-center py-12 bg-gray-50 rounded-lg">
               <p className="text-gray-500">
-                {isEn
-                  ? "No open positions at the moment. Check back soon!"
-                  : "Derzeit keine offenen Stellen. Schauen Sie bald wieder vorbei!"}
+                {t("jobs.noPositions")}
               </p>
             </div>
           ) : (
@@ -66,7 +64,7 @@ export default async function JobsPage({
                     {(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe).length > 0 && (
                       <div className="mb-4">
                         <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                          {isEn ? "Tasks" : "Aufgaben"}
+                          {t("jobs.tasks")}
                         </h4>
                         <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
                           {(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe).map((task) => (
@@ -79,7 +77,7 @@ export default async function JobsPage({
                     {(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe).length > 0 && (
                       <div className="mb-4">
                         <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                          {isEn ? "Requirements" : "Anforderungen"}
+                          {t("jobs.requirements")}
                         </h4>
                         <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
                           {(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe).map((req) => (
@@ -92,7 +90,7 @@ export default async function JobsPage({
                     {(isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe).length > 0 && (
                       <div className="mb-6">
                         <h4 className="font-semibold text-sm text-gray-500 uppercase mb-2">
-                          {isEn ? "We offer" : "Wir bieten"}
+                          {t("jobs.benefits")}
                         </h4>
                         <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
                           {(isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe).map((benefit) => (
@@ -106,7 +104,7 @@ export default async function JobsPage({
                       href={`?jobId=${job.slug}#bewerbung`}
                       className="inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors text-sm"
                     >
-                      {isEn ? "Apply Now" : "Jetzt bewerben"} →
+                      {t("jobs.applyNow")} →
                     </a>
                   </div>
                 </ScrollReveal>
@@ -119,7 +117,7 @@ export default async function JobsPage({
       {/* Application Form */}
       <section id="bewerbung" className="py-16 md:py-24 bg-white scroll-mt-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <Suspense fallback={<div>Laden...</div>}>
+          <Suspense fallback={<div>{t("common.loading")}</div>}>
             <ApplicationForm />
           </Suspense>
         </div>

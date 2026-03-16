@@ -9,16 +9,16 @@ import { User, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
-  const t = useTranslations("nav");
+  const t = useTranslations();
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: "/", label: t("home") },
-    { href: "/ueber-uns", label: t("about") },
-    { href: "/leistungen", label: t("services") },
-    { href: "/jobs", label: t("jobs") },
-    { href: "/kontakt", label: t("contact") },
+    { href: "/", label: t("nav.home") },
+    { href: "/ueber-uns", label: t("nav.about") },
+    { href: "/leistungen", label: t("nav.services") },
+    { href: "/jobs", label: t("nav.jobs") },
+    { href: "/kontakt", label: t("nav.contact") },
   ] as const;
 
   return (
@@ -47,38 +47,36 @@ export default function Header() {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            <div className="flex items-center gap-6 bg-gray-50/50 px-6 py-2 rounded-full border border-gray-100">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`relative text-sm font-semibold transition-colors duration-200 py-1 ${
-                      isActive ? "text-primary" : "text-gray-600 hover:text-gray-900"
-                    }`}
-                  >
-                    {item.label}
-                    {isActive && (
-                      <motion.div
-                        layoutId="activeNav"
-                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
-                        initial={false}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-            </div>
-            
-            <div className="flex items-center gap-4 border-l border-gray-200 pl-4">
+          <nav className="hidden md:flex items-center gap-10">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative text-base font-medium tracking-wide transition-colors duration-200 py-1 ${
+                    isActive ? "text-primary" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  {item.label}
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeNav"
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+
+            <div className="flex items-center gap-4 border-l border-gray-200 pl-6">
               <LanguageSwitcher />
               <Link
                 href="/admin/login"
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-gray-600 hover:bg-primary hover:text-white transition-all duration-300 border border-gray-100 hover:border-transparent shadow-sm hover:shadow-md"
-                title="Admin Login"
+                title={t("footer.adminLogin")}
               >
                 <User size={18} strokeWidth={2.5} />
               </Link>
@@ -131,7 +129,7 @@ export default function Header() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <User size={16} />
-                  <span>Admin</span>
+                  <span>{t("footer.adminLogin")}</span>
                 </Link>
               </div>
             </nav>

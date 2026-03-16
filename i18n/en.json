@@ -17,7 +17,8 @@
     "title": "Your Reliable Roofer, Metalworker and Glazier in Saalfelden",
     "description": "Welcome to Karl Mayr GmbH & Co. KG – your reliable partner for roofing, facades and glass in Saalfelden. We stand for high-quality craftsmanship, precise execution and honest consultation. As a master craftsman workshop, we combine modern technology with traditional craftsmanship – for durable, safe and visually appealing solutions for your roof.",
     "subtitle": "Our service areas extend far beyond Saalfelden: We serve our customers throughout the Pinzgau region, in Tyrol, the city of Salzburg and in Upper Bavaria. Whether private residential, commercial or renovation projects – wherever quality is required, we are your reliable contact.",
-    "cta": "Call Now"
+    "cta": "Call Now",
+    "slogan": "Finally a proper roof!"
   },
   "values": {
     "title": "Our Values – The Foundation of Our Work",
@@ -133,6 +134,42 @@
       "privacy": "Personal data will be transmitted and used for the purposes described on the privacy page."
     }
   },
+  "contactForm": {
+    "name": "Name",
+    "namePlaceholder": "First and last name",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "phone": "Phone",
+    "phonePlaceholder": "+43 ...",
+    "message": "Message",
+    "messagePlaceholder": "How can we help you?",
+    "send": "Send",
+    "submitting": "Sending...",
+    "success": "Thank you for your message! We will get back to you as soon as possible.",
+    "privacy": "Personal data will be transmitted and used for the purposes described on the privacy page."
+  },
+  "applicationForm": {
+    "title": "Apply Now",
+    "subtitle": "Fill out the form and we'll get back to you within 24 hours.",
+    "name": "Name",
+    "namePlaceholder": "First and last name",
+    "email": "Email",
+    "emailPlaceholder": "your@email.com",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+43 ...",
+    "position": "Desired Position",
+    "positionOther": "Other",
+    "cv": "CV (PDF/Word)",
+    "cvRequired": "Required",
+    "motivation": "Cover Letter (optional)",
+    "motivationOptional": "PDF/Word",
+    "submit": "Submit Application",
+    "submitting": "Submitting...",
+    "success": "Your application has been submitted successfully! We'll get back to you shortly.",
+    "error": "An error occurred while submitting. Please try again.",
+    "fileTooLarge": "File must be 10 MB or less.",
+    "privacy": "By submitting, you agree to the processing of your data in accordance with our privacy policy."
+  },
   "jobs": {
     "title": "Jobs & Careers with Us in Saalfelden",
     "subtitle": "Join a successful craft business that values quality, teamwork and professional competence.",
@@ -143,6 +180,10 @@
     "quickApplyTitle": "Apply in 30 Seconds – No Resume Needed!",
     "quickApplyText": "Tell us briefly who you are – we'll clarify the rest personally. We'll contact you within 24 hours.",
     "employerTitle": "What Makes Us Special as an Employer",
+    "noPositions": "No open positions at the moment. Check back soon!",
+    "tasks": "Tasks",
+    "requirements": "Requirements",
+    "benefits": "We offer",
     "development": {
       "title": "Professional Development",
       "description": "With us you can grow: through further training, new tasks and the opportunity to perfect your craft every day."
@@ -156,10 +197,113 @@
       "description": "Whether in execution or in working together – we value clean work, responsibility and the highest standards."
     }
   },
+  "admin": {
+    "login": {
+      "title": "Admin Login",
+      "emailPrompt": "Enter your email address to receive a login code.",
+      "email": "Email",
+      "sendCode": "Send Code",
+      "codeSent": "A 6-digit code was sent to",
+      "codeSentSuffix": ".",
+      "code": "Code",
+      "signIn": "Sign In",
+      "changeEmail": "Use a different email",
+      "sendError": "Error sending the code.",
+      "codeError": "Invalid code."
+    },
+    "dashboard": {
+      "title": "Administration",
+      "loggedInAs": "Logged in as",
+      "signOut": "Sign Out",
+      "applications": "Applications",
+      "jobListings": "Job Listings",
+      "noApplications": "No applications received yet.",
+      "noJobs": "No job listings yet.",
+      "newJob": "+ New Job Listing",
+      "name": "Name",
+      "position": "Position",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "date": "Date",
+      "documents": "Documents",
+      "cv": "CV",
+      "motivation": "Cover Letter",
+      "details": "Details",
+      "titleCol": "Title",
+      "slug": "Slug",
+      "type": "Type",
+      "sortOrder": "Sort Order",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "apprenticeship": "Apprenticeship",
+      "jobType": "Position",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Really delete this job listing?",
+      "statusNew": "New",
+      "statusReviewing": "Under Review",
+      "statusAccepted": "Accepted",
+      "statusRejected": "Rejected"
+    },
+    "applicationDetail": {
+      "back": "← Back to Overview",
+      "appliedOn": "Applied on",
+      "email": "Email",
+      "phone": "Phone",
+      "position": "Position",
+      "documents": "Documents",
+      "status": "Status",
+      "notes": "Internal Notes",
+      "notesPlaceholder": "Notes about this application...",
+      "save": "Save",
+      "saving": "Saving..."
+    },
+    "jobEditor": {
+      "back": "← Back to Overview",
+      "newTitle": "New Job Listing",
+      "editTitle": "Edit Job Listing",
+      "titleDe": "Title (German) *",
+      "titleDePlaceholder": "e.g. Dachdecker/Spengler (m/w/d)",
+      "titleEn": "Title (English)",
+      "titleEnPlaceholder": "e.g. Roofer/Metalworker (m/f/d)",
+      "slug": "Slug",
+      "slugHint": "Leave empty for auto-generation",
+      "sortOrder": "Sort Order",
+      "active": "Active",
+      "apprenticeship": "Apprenticeship",
+      "durationDe": "Duration (German)",
+      "durationDePlaceholder": "e.g. 4-jährige Doppellehre",
+      "durationEn": "Duration (English)",
+      "durationEnPlaceholder": "e.g. 4-year dual apprenticeship",
+      "tasksDe": "Tasks (German)",
+      "tasksDePlaceholder": "One task per line",
+      "tasksEn": "Tasks (English)",
+      "tasksEnPlaceholder": "One task per line",
+      "requirementsDe": "Requirements (German)",
+      "requirementsDePlaceholder": "One requirement per line",
+      "requirementsEn": "Requirements (English)",
+      "requirementsEnPlaceholder": "One requirement per line",
+      "benefitsDe": "Benefits (German)",
+      "benefitsDePlaceholder": "One benefit per line",
+      "benefitsEn": "Benefits (English)",
+      "benefitsEnPlaceholder": "One benefit per line",
+      "save": "Save",
+      "saving": "Saving...",
+      "cancel": "Cancel",
+      "saveError": "Error saving"
+    }
+  },
   "footer": {
     "location": "Location",
     "contact": "Contact",
-    "partners": "Partners"
+    "partners": "Partners",
+    "brandDescription": "Your reliable partner for roofing, facades and glass in Saalfelden and surrounding areas. Master craftsmanship since 1972.",
+    "links": "Links",
+    "adminLogin": "Admin Login",
+    "copyright": "All rights reserved.",
+    "credits": "Designed, created, implemented, and maintained by"
   },
   "common": {
     "learnMore": "Learn more",
@@ -167,6 +311,7 @@
     "getInTouch": "Get in touch",
     "references": "References",
     "backToTop": "Back to top",
-    "language": "Language"
+    "language": "Language",
+    "loading": "Loading..."
   }
 }

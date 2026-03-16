@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface Application {
@@ -35,6 +35,8 @@ export default function AdminDashboard() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("admin.dashboard");
+  const tc = useTranslations("common");
   const [tab, setTab] = useState<Tab>("bewerbungen");
   const [applications, setApplications] = useState<Application[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -71,7 +73,7 @@ export default function AdminDashboard() {
   }, [session]);
 
   async function handleDeleteJob(id: string) {
-    if (!confirm("Stellenangebot wirklich löschen?")) return;
+    if (!confirm(t("confirmDelete"))) return;
     setDeletingJob(id);
     const res = await fetch(`/api/jobs/${id}`, { method: "DELETE" });
     if (res.ok) {
@@ -96,7 +98,7 @@ export default function AdminDashboard() {
   if (isPending) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <p className="text-gray-500">Laden...</p>
+        <p className="text-gray-500">{tc("loading")}</p>
       </div>
     );
   }
@@ -111,10 +113,10 @@ export default function AdminDashboard() {
   };
 
   const statusLabels: Record<string, string> = {
-    NEW: "Neu",
-    REVIEWING: "In Prüfung",
-    ACCEPTED: "Angenommen",
-    REJECTED: "Abgelehnt",
+    NEW: t("statusNew"),
+    REVIEWING: t("statusReviewing"),
+    ACCEPTED: t("statusAccepted"),
+    REJECTED: t("statusRejected"),
   };
 
   return (
@@ -123,9 +125,9 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold">Administration</h1>
+            <h1 className="text-2xl font-bold">{t("title")}</h1>
             <p className="text-sm text-gray-500">
-              Angemeldet als {session.user.email}
+              {t("loggedInAs")} {session.user.email}
             </p>
           </div>
           <button
@@ -136,7 +138,7 @@ export default function AdminDashboard() {
             }
             className="text-sm text-gray-500 hover:text-gray-700 border border-gray-300 px-4 py-2 rounded"
           >
-            Abmelden
+            {t("signOut")}
           </button>
         </div>
 
@@ -150,7 +152,7 @@ export default function AdminDashboard() {
                 : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
           >
-            Bewerbungen
+            {t("applications")}
             {applications.length > 0 && (
               <span className="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">
                 {applications.length}
@@ -165,7 +167,7 @@ export default function AdminDashboard() {
                 : "border-transparent text-gray-500 hover:text-gray-700"
             }`}
           >
-            Stellenangebote
+            {t("jobListings")}
             {jobs.length > 0 && (
               <span className="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">
                 {jobs.length}
@@ -178,11 +180,11 @@ export default function AdminDashboard() {
         {tab === "bewerbungen" && (
           <>
             {loadingApps ? (
-              <p className="text-gray-500">Laden...</p>
+              <p className="text-gray-500">{tc("loading")}</p>
             ) : applications.length === 0 ? (
               <div className="text-center py-16 bg-gray-50 rounded-lg">
                 <p className="text-gray-500">
-                  Noch keine Bewerbungen eingegangen.
+                  {t("noApplications")}
                 </p>
               </div>
             ) : (
@@ -191,25 +193,25 @@ export default function AdminDashboard() {
                   <thead>
                     <tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-4 font-semibold text-gray-600">
-                        Name
+                        {t("name")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600">
-                        Position
+                        {t("position")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden md:table-cell">
-                        E-Mail
+                        {t("email")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden lg:table-cell">
-                        Telefon
+                        {t("phone")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600">
-                        Status
+                        {t("status")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden sm:table-cell">
-                        Datum
+                        {t("date")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden md:table-cell">
-                        Dokumente
+                        {t("documents")}
                       </th>
                       <th className="py-3 px-4"></th>
                     </tr>
@@ -259,7 +261,7 @@ export default function AdminDashboard() {
                               target="_blank"
                               className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
                             >
-                              CV
+                              {t("cv")}
                             </a>
                             {app.motivationFilename && (
                               <a
@@ -267,7 +269,7 @@ export default function AdminDashboard() {
                                 target="_blank"
                                 className="text-xs bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded"
                               >
-                                Motivation
+                                {t("motivation")}
                               </a>
                             )}
                           </div>
@@ -277,7 +279,7 @@ export default function AdminDashboard() {
                             href={`/${adminBase}admin/applications/${app.id}`}
                             className="text-primary hover:underline text-sm"
                           >
-                            Details
+                            {t("details")}
                           </Link>
                         </td>
                       </tr>
@@ -297,16 +299,16 @@ export default function AdminDashboard() {
                 href={`/${adminBase}admin/jobs/new`}
                 className="bg-primary hover:bg-primary-light text-white font-semibold text-sm px-4 py-2 rounded transition-colors"
               >
-                + Neues Stellenangebot
+                {t("newJob")}
               </Link>
             </div>
 
             {loadingJobs ? (
-              <p className="text-gray-500">Laden...</p>
+              <p className="text-gray-500">{tc("loading")}</p>
             ) : jobs.length === 0 ? (
               <div className="text-center py-16 bg-gray-50 rounded-lg">
                 <p className="text-gray-500">
-                  Noch keine Stellenangebote vorhanden.
+                  {t("noJobs")}
                 </p>
               </div>
             ) : (
@@ -315,22 +317,22 @@ export default function AdminDashboard() {
                   <thead>
                     <tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-4 font-semibold text-gray-600">
-                        Titel
+                        {t("titleCol")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden sm:table-cell">
-                        Slug
+                        {t("slug")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600">
-                        Status
+                        {t("status")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden md:table-cell">
-                        Typ
+                        {t("type")}
                       </th>
                       <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden md:table-cell">
-                        Reihenfolge
+                        {t("sortOrder")}
                       </th>
                       <th className="py-3 px-4 font-semibold text-gray-600 text-right">
-                        Aktionen
+                        {t("actions")}
                       </th>
                     </tr>
                   </thead>
@@ -357,11 +359,11 @@ export default function AdminDashboard() {
                                 : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                             }`}
                           >
-                            {job.active ? "Aktiv" : "Inaktiv"}
+                            {job.active ? t("active") : t("inactive")}
                           </button>
                         </td>
                         <td className="py-3 px-4 text-gray-600 hidden md:table-cell">
-                          {job.isApprenticeship ? "Lehrstelle" : "Stelle"}
+                          {job.isApprenticeship ? t("apprenticeship") : t("jobType")}
                         </td>
                         <td className="py-3 px-4 text-gray-600 hidden md:table-cell">
                           {job.sortOrder}
@@ -372,7 +374,7 @@ export default function AdminDashboard() {
                               href={`/${adminBase}admin/jobs/${job.id}`}
                               className="text-primary hover:underline text-sm"
                             >
-                              Bearbeiten
+                              {t("edit")}
                             </Link>
                             <button
                               onClick={() => handleDeleteJob(job.id)}
@@ -381,7 +383,7 @@ export default function AdminDashboard() {
                             >
                               {deletingJob === job.id
                                 ? "..."
-                                : "Löschen"}
+                                : t("delete")}
                             </button>
                           </div>
                         </td>
