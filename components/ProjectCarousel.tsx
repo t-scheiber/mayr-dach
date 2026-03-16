@@ -28,9 +28,21 @@ export default function ProjectCarousel({
   const [lightboxDirection, setLightboxDirection] = useState(0);
   const [mounted, setMounted] = useState(false);
 
+  const [hovered, setHovered] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Auto-rotate card carousel every 4 seconds (pause on hover or lightbox)
+  useEffect(() => {
+    if (images.length <= 1 || hovered || lightboxOpen) return;
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [images.length, hovered, lightboxOpen]);
 
   // Card carousel navigation
   const goToNext = (e: React.MouseEvent) => {
@@ -228,14 +240,14 @@ export default function ProjectCarousel({
                       <>
                         <button
                           onClick={() => lightboxPrev()}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm z-10"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary text-gray-800 hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-md backdrop-blur-md z-10"
                           aria-label="Previous image"
                         >
                           <ChevronLeft size={24} />
                         </button>
                         <button
                           onClick={() => lightboxNext()}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm z-10"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary text-gray-800 hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-md backdrop-blur-md z-10"
                           aria-label="Next image"
                         >
                           <ChevronRight size={24} />
@@ -312,6 +324,8 @@ export default function ProjectCarousel({
       <div
         className="group flex flex-col h-full bg-white text-gray-900 border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.03]"
         onClick={openLightbox}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
       >
         {/* Image area */}
         <div className="relative aspect-4/3 bg-gray-100 overflow-hidden shrink-0">
