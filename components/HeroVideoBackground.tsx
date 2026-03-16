@@ -23,8 +23,10 @@ function pickRandom(exclude: number) {
   return next;
 }
 
-export default function HeroVideoBackground({ initialVideoIndex = 0 }: { initialVideoIndex?: number }) {
-  const [currentIndex, setCurrentIndex] = useState(initialVideoIndex);
+export default function HeroVideoBackground({ randomize = false }: { randomize?: boolean }) {
+  const [currentIndex, setCurrentIndex] = useState(() =>
+    randomize ? Math.floor(Math.random() * videos.length) : 0
+  );
   const videoRef = useRef<HTMLVideoElement>(null);
   const isFirstRender = useRef(true);
 
