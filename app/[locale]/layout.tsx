@@ -1,11 +1,51 @@
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Inter, Great_Vibes } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BlueprintTransition } from "@/components/animations";
+import type { Metadata } from "next";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+
+  return {
+    title: {
+      default: t("metadata.title"),
+      template: `%s | Karl Mayr GmbH & Co. KG`,
+    },
+    description: t("metadata.description"),
+    metadataBase: new URL(BASE_URL),
+    alternates: {
+      canonical: locale === "de" ? "/" : `/${locale}`,
+      languages: {
+        de: "/",
+        en: "/en",
+      },
+    },
+    openGraph: {
+      type: "website",
+      locale: locale === "de" ? "de_AT" : "en_US",
+      siteName: "Karl Mayr GmbH & Co. KG",
+      title: t("metadata.title"),
+      description: t("metadata.description"),
+      url: locale === "de" ? "/" : `/${locale}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "--font-script" });

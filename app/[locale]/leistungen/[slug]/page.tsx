@@ -59,6 +59,7 @@ export default async function ServiceDetailPage({
           src={heroImages[slug] ?? "/images/hero/home-hero.jpg"}
           alt=""
           fill
+          sizes="100vw"
           className="object-cover opacity-30"
           priority
         />
