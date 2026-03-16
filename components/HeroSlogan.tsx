@@ -14,7 +14,7 @@ export default function HeroSlogan({ text, delay = 3000, charSpeed = 120 }: Hero
 
   return (
     <h1
-      className={`inline-block font-script font-normal tracking-wide text-white leading-[1.1] drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] whitespace-nowrap transition-all duration-1000 transform ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      className={`inline-block font-handwriting font-normal tracking-wide text-white leading-[1.1] drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] whitespace-nowrap transition-all duration-1000 transform ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
       style={{ fontSize: "clamp(2.5rem, 7vw, 6.5rem)", maxWidth: "90vw" }}
     >
       <TypewriterText text={text} delay={delay} charSpeed={charSpeed} onStart={() => setVisible(true)} />
