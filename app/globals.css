@@ -58,6 +58,27 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Loading animation keyframes */
+@keyframes tile-drop {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px) rotate(-5deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(1px) rotate(0.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0);
+  }
+}
+
+@keyframes tile-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+}
+
 /* Base custom styles for refined aesthetics */
 ::selection {
   background: var(--primary-light);
