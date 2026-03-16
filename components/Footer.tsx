@@ -149,7 +149,7 @@ export default function Footer() {
           </p>
           <div className="text-xs text-slate-600">
             Designed, created, implemented, and maintained by{" "}
-            <a href="https://thomascheiber.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+            <a href="https://thomasscheiber.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
               Thomas Scheiber
             </a>
           </div>
