@@ -3,6 +3,23 @@ import company from "@/content/company.json";
 import { ScrollReveal } from "@/components/animations";
 import ContactForm from "@/components/ContactForm";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "contact" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    openGraph: {
+      title: t("title"),
+      description: t("subtitle"),
+    },
+  };
+}
+
 export default async function ContactPage({
   params,
 }: {

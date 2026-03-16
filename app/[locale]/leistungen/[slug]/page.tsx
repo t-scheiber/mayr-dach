@@ -6,6 +6,9 @@ import company from "@/content/company.json";
 import projectsData from "@/content/projects.json";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import { ScrollReveal, GlassShimmer } from "@/components/animations";
+import { JsonLd } from "@/components/JsonLd";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
 
 const serviceMap = {
   dachdeckerei: "roofing",
@@ -16,6 +19,31 @@ const serviceMap = {
   gruendaecher: "greenRoofs",
 } as const;
 
+type ServiceSlugKey = keyof typeof serviceMap;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+
+  if (!(slug in serviceMap)) {
+    return {};
+  }
+
+  const serviceKey = serviceMap[slug as ServiceSlugKey];
+  const t = await getTranslations({ locale, namespace: `services.${serviceKey}` });
+  return {
+    title: t("heroTitle"),
+    description: t("heroDescription"),
+    openGraph: {
+      title: t("heroTitle"),
+      description: t("heroDescription"),
+    },
+  };
+}
+
 const heroImages: Record<string, string> = {
   dachdeckerei: "/images/hero/home-hero.jpg",
   spenglerei: "/images/hero/spenglerei-hero.jpg",
@@ -24,8 +52,6 @@ const heroImages: Record<string, string> = {
   abdichtungsarbeiten: "/images/hero/abdichtung-hero.jpg",
   gruendaecher: "/images/hero/gruendaecher-hero.jpg",
 };
-
-type ServiceSlug = keyof typeof serviceMap;
 
 export function generateStaticParams() {
   return Object.keys(serviceMap).map((slug) => ({ slug }));
@@ -44,15 +70,71 @@ export default async function ServiceDetailPage({
     notFound();
   }
 
-  const serviceKey = serviceMap[slug as ServiceSlug];
+  const serviceKey = serviceMap[slug as ServiceSlugKey];
 
   // Get relevant projects for this service
   const relevantProjects = projectsData.projects.filter((p) =>
     p.categories.includes(serviceKey)
   );
 
+  const serviceName = t(`services.${serviceKey}.title`);
+  const serviceDescription = t(`services.${serviceKey}.heroDescription`);
+  const servicesLabel = t("nav.services");
+  const homeLabel = t("nav.home");
+  const localePrefix = locale === "de" ? "" : `/${locale}`;
+
+  const serviceJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: serviceName,
+    description: serviceDescription,
+    provider: {
+      "@type": "LocalBusiness",
+      "@id": `${BASE_URL}/#organization`,
+      name: company.company.name,
+    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Saalfelden am Steinernen Meer",
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Pinzgau",
+      },
+    ],
+    url: `${BASE_URL}${localePrefix}/leistungen/${slug}`,
+  };
+
+  const breadcrumbJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: homeLabel,
+        item: `${BASE_URL}${localePrefix}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: servicesLabel,
+        item: `${BASE_URL}${localePrefix}/leistungen`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: serviceName,
+        item: `${BASE_URL}${localePrefix}/leistungen/${slug}`,
+      },
+    ],
+  };
+
   return (
     <>
+      <JsonLd data={serviceJsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
       {/* Hero */}
       <section className="relative bg-dark text-white py-20 md:py-28 overflow-hidden">
         <Image

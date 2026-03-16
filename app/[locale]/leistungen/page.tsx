@@ -2,6 +2,23 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ScrollReveal, StaggerContainer, StaggerItem, TileFlip } from "@/components/animations";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "services" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    openGraph: {
+      title: t("title"),
+      description: t("subtitle"),
+    },
+  };
+}
+
 export default async function ServicesPage({
   params,
 }: {
