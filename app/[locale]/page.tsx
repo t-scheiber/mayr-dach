@@ -45,7 +45,10 @@ export default async function HomePage({
         <HeroVideoBackground />
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative w-full px-4 sm:px-8 md:px-16 lg:px-24 z-10 text-left">
-          <h1 className="inline-block text-3xl sm:text-5xl md:text-7xl lg:text-9xl font-script tracking-wide text-primary leading-[1.3] px-4 sm:px-6 md:px-10 py-3 sm:py-4 md:py-6 rounded-xl sm:rounded-2xl bg-black/20 backdrop-blur-sm drop-shadow-2xl">
+          <h1
+            className="inline-block font-script tracking-wide text-primary leading-[1.3] px-4 sm:px-6 md:px-10 py-3 sm:py-4 md:py-6 rounded-xl sm:rounded-2xl bg-black/20 backdrop-blur-sm drop-shadow-2xl whitespace-nowrap"
+            style={{ fontSize: "clamp(1.75rem, 7vw, 8rem)" }}
+          >
             Endlich ein richtiges Dach!
           </h1>
         </div>
