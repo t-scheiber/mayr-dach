@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Link, usePathname } from "@/i18n/navigation";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { User, Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const t = useTranslations();
@@ -60,7 +60,7 @@ export default function Header() {
                 >
                   {item.label}
                   {isActive && (
-                    <motion.div
+                    <m.div
                       layoutId="activeNav"
                       className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full"
                       initial={false}
@@ -97,7 +97,7 @@ export default function Header() {
       {/* Mobile Nav Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -133,7 +133,7 @@ export default function Header() {
                 </Link>
               </div>
             </nav>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </header>

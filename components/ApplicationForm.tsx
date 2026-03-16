@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import useSWR from "swr";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 interface JobOption {
   slug: string;
@@ -12,35 +14,28 @@ interface JobOption {
   titleEn: string | null;
 }
 
-export default function ApplicationForm() {
+function ApplicationFormContent() {
   const locale = useLocale() as "de" | "en";
   const t = useTranslations("applicationForm");
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
 
-  const [jobOptions, setJobOptions] = useState<JobOption[]>([]);
+  const { data } = useSWR("/api/jobs", fetcher);
+  const jobOptions: JobOption[] = data?.jobs || [];
+
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Fetch active jobs for the position dropdown
+  // Pre-select position when jobs load and jobId is present
   useEffect(() => {
-    fetch("/api/jobs")
-      .then((res) => res.json())
-      .then((data) => {
-        const jobs: JobOption[] = data.jobs || [];
-        setJobOptions(jobs);
-
-        // Pre-select if jobId matches a slug
-        if (jobId) {
-          const match = jobs.find((j) => j.slug === jobId);
-          if (match) {
-            setPosition((locale === "en" && match.titleEn) ? match.titleEn : match.titleDe);
-          }
-        }
-      })
-      .catch(() => {});
-  }, [jobId, locale]);
+    if (jobId && jobOptions.length > 0 && !position) {
+      const match = jobOptions.find((j) => j.slug === jobId);
+      if (match) {
+        setPosition((locale === "en" && match.titleEn) ? match.titleEn : match.titleDe);
+      }
+    }
+  }, [jobId, jobOptions, locale, position]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -158,5 +153,13 @@ export default function ApplicationForm() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function ApplicationForm() {
+  return (
+    <Suspense>
+      <ApplicationFormContent />
+    </Suspense>
   );
 }

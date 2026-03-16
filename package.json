@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "doc": "bunx -y react-doctor@latest .",
+    "doc": "bunx -y react-doctor@latest . --verbose",
     "db:migrate": "prisma migrate dev",
     "db:seed": "bun prisma/seed.ts"
   },
@@ -28,6 +28,7 @@
     "prisma": "^7.5.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+    "swr": "^2.4.1",
     "zod": "^3.25"
   },
   "devDependencies": {

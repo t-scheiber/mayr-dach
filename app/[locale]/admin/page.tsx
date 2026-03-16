@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useReducer } from "react";
+import useSWR, { mutate } from "swr";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -42,76 +43,86 @@ interface Project {
 
 type Tab = "bewerbungen" | "stellenangebote" | "projekte";
 
+interface UIState {
+  tab: Tab;
+  deletingJob: string | null;
+  deletingProject: string | null;
+}
+
+type UIAction =
+  | { type: "SET_TAB"; tab: Tab }
+  | { type: "SET_DELETING_JOB"; id: string | null }
+  | { type: "SET_DELETING_PROJECT"; id: string | null };
+
+function uiReducer(state: UIState, action: UIAction): UIState {
+  switch (action.type) {
+    case "SET_TAB":
+      return { ...state, tab: action.tab };
+    case "SET_DELETING_JOB":
+      return { ...state, deletingJob: action.id };
+    case "SET_DELETING_PROJECT":
+      return { ...state, deletingProject: action.id };
+    default:
+      return state;
+  }
+}
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function AdminDashboard() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("admin.dashboard");
   const tc = useTranslations("common");
-  const [tab, setTab] = useState<Tab>("bewerbungen");
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [loadingApps, setLoadingApps] = useState(true);
-  const [loadingJobs, setLoadingJobs] = useState(true);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loadingProjects, setLoadingProjects] = useState(true);
-  const [deletingJob, setDeletingJob] = useState<string | null>(null);
-  const [deletingProject, setDeletingProject] = useState<string | null>(null);
+
+  const [state, dispatch] = useReducer(uiReducer, {
+    tab: "bewerbungen",
+    deletingJob: null,
+    deletingProject: null,
+  });
+
+  const { tab, deletingJob, deletingProject } = state;
 
   const adminBase = locale === "de" ? "" : locale + "/";
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push(`/${adminBase}admin/login`);
-    }
-  }, [session, isPending, router, adminBase]);
+  // SWR data fetching - only fetch when authenticated
+  const { data: appsData, isLoading: loadingApps } = useSWR(
+    session ? "/api/applications/list" : null,
+    fetcher
+  );
+  const { data: jobsData, isLoading: loadingJobs } = useSWR(
+    session ? "/api/jobs?all=true" : null,
+    fetcher
+  );
+  const { data: projectsData, isLoading: loadingProjects } = useSWR(
+    session ? "/api/projects?all=true" : null,
+    fetcher
+  );
 
-  useEffect(() => {
-    if (session) {
-      fetch("/api/applications/list")
-        .then((res) => res.json())
-        .then((data) => {
-          setApplications(data.applications || []);
-          setLoadingApps(false);
-        })
-        .catch(() => setLoadingApps(false));
+  const applications: Application[] = appsData?.applications || [];
+  const jobs: Job[] = jobsData?.jobs || [];
+  const projects: Project[] = projectsData?.projects || [];
 
-      fetch("/api/jobs?all=true")
-        .then((res) => res.json())
-        .then((data) => {
-          setJobs(data.jobs || []);
-          setLoadingJobs(false);
-        })
-        .catch(() => setLoadingJobs(false));
-
-      fetch("/api/projects?all=true")
-        .then((res) => res.json())
-        .then((data) => {
-          setProjects(data.projects || []);
-          setLoadingProjects(false);
-        })
-        .catch(() => setLoadingProjects(false));
-    }
-  }, [session]);
-
+  // Event handlers
   async function handleDeleteJob(id: string) {
     if (!confirm(t("confirmDelete"))) return;
-    setDeletingJob(id);
+    dispatch({ type: "SET_DELETING_JOB", id });
     const res = await fetch(`/api/jobs/${id}`, { method: "DELETE" });
     if (res.ok) {
-      setJobs((prev) => prev.filter((j) => j.id !== id));
+      mutate("/api/jobs?all=true");
     }
-    setDeletingJob(null);
+    dispatch({ type: "SET_DELETING_JOB", id: null });
   }
 
   async function handleDeleteProject(id: string) {
     if (!confirm(t("confirmDeleteProject"))) return;
-    setDeletingProject(id);
+    dispatch({ type: "SET_DELETING_PROJECT", id });
     const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
     if (res.ok) {
-      setProjects((prev) => prev.filter((p) => p.id !== id));
+      mutate("/api/projects?all=true");
     }
-    setDeletingProject(null);
+    dispatch({ type: "SET_DELETING_PROJECT", id: null });
   }
 
   async function handleToggleProject(id: string, currentActive: boolean) {
@@ -121,9 +132,7 @@ export default function AdminDashboard() {
       body: JSON.stringify({ active: !currentActive }),
     });
     if (res.ok) {
-      setProjects((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, active: !currentActive } : p))
-      );
+      mutate("/api/projects?all=true");
     }
   }
 
@@ -134,12 +143,11 @@ export default function AdminDashboard() {
       body: JSON.stringify({ active: !currentActive }),
     });
     if (res.ok) {
-      setJobs((prev) =>
-        prev.map((j) => (j.id === id ? { ...j, active: !currentActive } : j))
-      );
+      mutate("/api/jobs?all=true");
     }
   }
 
+  // Auth loading state
   if (isPending) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
@@ -148,7 +156,11 @@ export default function AdminDashboard() {
     );
   }
 
-  if (!session) return null;
+  // Redirect unauthenticated users (render-time check, not useEffect)
+  if (!session) {
+    router.push(`/${adminBase}admin/login`);
+    return null;
+  }
 
   const statusColors: Record<string, string> = {
     NEW: "bg-blue-100 text-blue-800",
@@ -190,7 +202,7 @@ export default function AdminDashboard() {
         {/* Tabs */}
         <div className="flex border-b border-gray-200 mb-6">
           <button
-            onClick={() => setTab("bewerbungen")}
+            onClick={() => dispatch({ type: "SET_TAB", tab: "bewerbungen" })}
             className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
               tab === "bewerbungen"
                 ? "border-primary text-primary"
@@ -205,7 +217,7 @@ export default function AdminDashboard() {
             )}
           </button>
           <button
-            onClick={() => setTab("stellenangebote")}
+            onClick={() => dispatch({ type: "SET_TAB", tab: "stellenangebote" })}
             className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
               tab === "stellenangebote"
                 ? "border-primary text-primary"
@@ -220,7 +232,7 @@ export default function AdminDashboard() {
             )}
           </button>
           <button
-            onClick={() => setTab("projekte")}
+            onClick={() => dispatch({ type: "SET_TAB", tab: "projekte" })}
             className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
               tab === "projekte"
                 ? "border-primary text-primary"
@@ -284,7 +296,7 @@ export default function AdminDashboard() {
                       >
                         <td className="py-3 px-4 font-medium">{app.name}</td>
                         <td className="py-3 px-4 text-gray-600">
-                          {app.position || "—"}
+                          {app.position || "\u2014"}
                         </td>
                         <td className="py-3 px-4 hidden md:table-cell">
                           <a
@@ -508,7 +520,7 @@ export default function AdminDashboard() {
                           {project.name}
                         </td>
                         <td className="py-3 px-4 text-gray-500 hidden sm:table-cell">
-                          {project.location || "—"}
+                          {project.location || "\u2014"}
                         </td>
                         <td className="py-3 px-4 text-gray-500 hidden md:table-cell">
                           {project.images.length}

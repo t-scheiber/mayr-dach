@@ -1,25 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useReducer } from "react";
 import { emailOtp, signIn } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+
+interface LoginState {
+  step: "email" | "otp";
+  email: string;
+  otp: string;
+  error: string;
+  loading: boolean;
+}
+
+type LoginAction =
+  | { type: "SET_EMAIL"; email: string }
+  | { type: "SET_OTP"; otp: string }
+  | { type: "SET_ERROR"; error: string }
+  | { type: "SET_LOADING"; loading: boolean }
+  | { type: "ADVANCE_TO_OTP" }
+  | { type: "BACK_TO_EMAIL" };
+
+function loginReducer(state: LoginState, action: LoginAction): LoginState {
+  switch (action.type) {
+    case "SET_EMAIL": return { ...state, email: action.email };
+    case "SET_OTP": return { ...state, otp: action.otp };
+    case "SET_ERROR": return { ...state, error: action.error };
+    case "SET_LOADING": return { ...state, loading: action.loading };
+    case "ADVANCE_TO_OTP": return { ...state, step: "otp", loading: false };
+    case "BACK_TO_EMAIL": return { ...state, step: "email", otp: "", error: "" };
+    default: return state;
+  }
+}
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("admin.login");
 
-  const [step, setStep] = useState<"email" | "otp">("email");
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(loginReducer, {
+    step: "email",
+    email: "",
+    otp: "",
+    error: "",
+    loading: false,
+  });
+
+  const { step, email, otp, error, loading } = state;
 
   async function handleSendOTP(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    dispatch({ type: "SET_LOADING", loading: true });
+    dispatch({ type: "SET_ERROR", error: "" });
 
     const { error } = await emailOtp.sendVerificationOtp({
       email,
@@ -27,24 +59,23 @@ export default function AdminLoginPage() {
     });
 
     if (error) {
-      setError(error.message || t("sendError"));
-      setLoading(false);
+      dispatch({ type: "SET_ERROR", error: error.message || t("sendError") });
+      dispatch({ type: "SET_LOADING", loading: false });
     } else {
-      setStep("otp");
-      setLoading(false);
+      dispatch({ type: "ADVANCE_TO_OTP" });
     }
   }
 
   async function handleVerifyOTP(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    dispatch({ type: "SET_LOADING", loading: true });
+    dispatch({ type: "SET_ERROR", error: "" });
 
     const { error } = await signInWithOtp();
 
     if (error) {
-      setError(error.message || t("codeError"));
-      setLoading(false);
+      dispatch({ type: "SET_ERROR", error: error.message || t("codeError") });
+      dispatch({ type: "SET_LOADING", loading: false });
     } else {
       router.push(`/${locale === "de" ? "" : locale + "/"}admin`);
     }
@@ -77,7 +108,7 @@ export default function AdminLoginPage() {
                     type="email"
                     id="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => dispatch({ type: "SET_EMAIL", email: e.target.value })}
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   />
@@ -113,7 +144,7 @@ export default function AdminLoginPage() {
                     type="text"
                     id="otp"
                     value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    onChange={(e) => dispatch({ type: "SET_OTP", otp: e.target.value.replace(/\D/g, "").slice(0, 6) })}
                     required
                     inputMode="numeric"
                     autoComplete="one-time-code"
@@ -139,11 +170,7 @@ export default function AdminLoginPage() {
 
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep("email");
-                    setOtp("");
-                    setError("");
-                  }}
+                  onClick={() => dispatch({ type: "BACK_TO_EMAIL" })}
                   className="w-full text-sm text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   {t("changeEmail")}
