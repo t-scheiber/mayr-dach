@@ -94,7 +94,7 @@ Alt: [www.mayr-dach.at](https://www.mayr-dach.at) (HEROLD Website-Baukasten) · 
 
 ## Zusammenfassung
 
-Die neue Website **mayr-dach.com** ersetzt den bestehenden HEROLD-Webauftritt durch eine moderne, maßgeschneiderte Lösung. Sie ist schneller, sicherer, barrierefreier und besser für Suchmaschinen und KI-Assistenten optimiert. Drei von vier Google-Lighthouse-Kategorien erreichen die **Bestnote 100/100**.
+Die neue Website **mayr-dach.com** ersetzt den bestehenden HEROLD-Webauftritt durch eine moderne, maßgeschneiderte Lösung. Sie ist schneller, sicherer, barrierefreier und besser für Suchmaschinen und KI-Assistenten optimiert. Alle vier Google-Lighthouse-Kategorien erreichen **Bestwerte: 93 / 100 / 100 / 100**.
 
 ---
 
@@ -104,7 +104,7 @@ Google Lighthouse ist der Industriestandard für die Bewertung von Webseiten (Sk
 
 | Kategorie | Alt (mayr-dach.at) | Neu (mayr-dach.com) | Verbesserung |
 |---|---|---|---|
-| **Leistung (Performance)** | 71 | **89** | +18 Punkte |
+| **Leistung (Performance)** | 71 | **93** | +22 Punkte |
 | **Barrierefreiheit** | 95 | **100** | +5 Punkte |
 | **Best Practices** | 92 | **100** | +8 Punkte |
 | **SEO** | 92 | **100** | +8 Punkte |

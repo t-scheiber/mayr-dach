@@ -28,37 +28,35 @@ export default function HeroVideoBackground({ randomize = false }: { randomize?:
     randomize ? Math.floor(Math.random() * videos.length) : 0
   );
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isFirstRender = useRef(true);
 
   const handleEnded = useCallback(() => {
-    setCurrentIndex((prev) => pickRandom(prev));
-  }, []);
+    const nextIndex = pickRandom(currentIndex);
+    setCurrentIndex(nextIndex);
 
-  // Ensure autoplay works after source change
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
     if (videoRef.current) {
+      videoRef.current.src = videos[nextIndex];
       videoRef.current.load();
       videoRef.current.play().catch(() => {});
     }
   }, [currentIndex]);
 
+  // Keep the handler fresh on the video element
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.addEventListener("ended", handleEnded);
+    return () => video.removeEventListener("ended", handleEnded);
+  }, [handleEnded]);
+
   return (
     <video
       ref={videoRef}
-      key={currentIndex}
       autoPlay
       muted
-      loop={false}
       playsInline
       preload="auto"
-      onEnded={handleEnded}
       className="absolute inset-0 w-full h-full object-cover"
-    >
-      <source src={videos[currentIndex]} type="video/mp4" />
-    </video>
+      src={videos[currentIndex]}
+    />
   );
 }
