@@ -51,7 +51,7 @@ export default async function HomePage({
       <RoofTileLoader size="md" />
       {/* Hero Section */}
       <section className="relative bg-neutral-900 text-white overflow-hidden flex items-end min-h-[80vh] pb-16 md:pb-24">
-        <HeroVideoBackground />
+        <HeroVideoBackground initialVideoIndex={Math.floor(Math.random() * 10)} />
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative w-full px-4 sm:px-8 md:px-16 lg:px-24 z-10 text-center">
           <HeroSlogan text={t("hero.slogan")} delay={3000} charSpeed={120} />
