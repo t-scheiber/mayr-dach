@@ -346,6 +346,18 @@
     "copyright": "All rights reserved.",
     "credits": "Designed, created, implemented, and maintained by"
   },
+  "faq": {
+    "q1": "Where is Karl Mayr located?",
+    "a1": "Karl Mayr GmbH & Co. KG is located at Georg-Scherer-Straße 6, 5760 Saalfelden am Steinernen Meer, in the Pinzgau region of Salzburg, Austria.",
+    "q2": "What services does Karl Mayr offer?",
+    "a2": "We offer six core services: roofing, metalwork/tinsmithing, glazing, facade construction, waterproofing/sealing, and green roofs. As a certified master craftsman business with over 50 years of experience, we cover all building envelope needs.",
+    "q3": "Does Karl Mayr offer emergency roof repairs?",
+    "a3": "Yes, as a full-service roofing company we handle emergency roof repairs. Contact us at +43 6582 73366.",
+    "q4": "Does Karl Mayr offer apprenticeships?",
+    "a4": "Yes, we offer apprenticeship positions in roofing and tinsmithing. Check our careers page for current openings and apply online.",
+    "q5": "How can I get a quote from Karl Mayr?",
+    "a5": "Contact us by phone at +43 6582 73366, by email at office@mayr-dach.at, or through the contact form on our website."
+  },
   "common": {
     "learnMore": "Learn more",
     "callNow": "Call now",

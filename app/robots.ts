@@ -10,6 +10,22 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: ["/admin", "/api/"],
       },
+      {
+        // Explicitly allow AI crawlers
+        userAgent: [
+          "GPTBot",
+          "ChatGPT-User",
+          "Google-Extended",
+          "PerplexityBot",
+          "Amazonbot",
+          "ClaudeBot",
+          "anthropic-ai",
+          "Bytespider",
+          "CCBot",
+        ],
+        allow: ["/", "/llms.txt", "/llms-full.txt"],
+        disallow: ["/admin", "/api/"],
+      },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
   };
