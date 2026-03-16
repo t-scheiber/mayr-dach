@@ -46,7 +46,7 @@ export default async function HomePage({
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative w-full px-4 sm:px-8 md:px-16 lg:px-24 z-10 text-left">
           <h1
-            className="inline-block font-script tracking-wide text-primary leading-[1.3] px-4 sm:px-6 md:px-10 py-3 sm:py-4 md:py-6 rounded-xl sm:rounded-2xl bg-black/20 backdrop-blur-sm drop-shadow-2xl whitespace-nowrap"
+            className="inline-block font-script tracking-wide text-primary leading-[1.3] px-4 sm:px-6 md:px-10 py-3 sm:py-4 md:py-6 rounded-xl sm:rounded-2xl bg-black/15 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] drop-shadow-2xl whitespace-nowrap"
             style={{ fontSize: "clamp(1.75rem, 5vw, 7rem)" }}
           >
             Endlich ein richtiges Dach!
