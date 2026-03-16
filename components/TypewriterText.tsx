@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useReducer, useEffect, useSyncExternalStore } from "react";
 
 interface TypewriterTextProps {
   text: string;
@@ -9,28 +9,50 @@ interface TypewriterTextProps {
   onStart?: () => void;
 }
 
+interface State {
+  started: boolean;
+  displayCount: number;
+}
+
+type Action = { type: "START" } | { type: "TICK" };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "START":
+      return { ...state, started: true };
+    case "TICK":
+      return { ...state, displayCount: state.displayCount + 1 };
+    default:
+      return state;
+  }
+}
+
 export default function TypewriterText({
   text,
   delay = 800,
   charSpeed = 80,
   onStart,
 }: TypewriterTextProps) {
-  const [displayCount, setDisplayCount] = useState(0);
-  const [started, setStarted] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [state, dispatch] = useReducer(reducer, { started: false, displayCount: 0 });
+  const { started, displayCount } = state;
+
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   useEffect(() => {
-    setMounted(true);
     const timer = setTimeout(() => {
-      setStarted(true);
+      dispatch({ type: "START" });
       onStart?.();
     }, delay);
     return () => clearTimeout(timer);
-  }, [delay]);
+  }, [delay, onStart]);
 
   useEffect(() => {
     if (!started || displayCount >= text.length) return;
-    const timer = setTimeout(() => setDisplayCount((c) => c + 1), charSpeed);
+    const timer = setTimeout(() => dispatch({ type: "TICK" }), charSpeed);
     return () => clearTimeout(timer);
   }, [started, displayCount, text.length, charSpeed]);
 
