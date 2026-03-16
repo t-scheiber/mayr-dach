@@ -44,15 +44,15 @@ export default async function HomePage({
       <section className="relative bg-neutral-900 text-white overflow-hidden flex items-end min-h-[80vh] pb-16 md:pb-24">
         <HeroVideoBackground />
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
-        <div className="relative w-full px-6 sm:px-12 md:px-16 lg:px-24 z-10 text-left">
-          <h1 className="inline-block text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-script tracking-wide text-primary sm:whitespace-nowrap pb-4 md:pb-8 px-6 py-2 rounded-2xl bg-black/20 backdrop-blur-sm drop-shadow-2xl">
+        <div className="relative w-full px-4 sm:px-8 md:px-16 lg:px-24 z-10 text-left">
+          <h1 className="inline-block text-3xl sm:text-5xl md:text-7xl lg:text-9xl font-script tracking-wide text-primary leading-[1.3] px-4 sm:px-6 md:px-10 py-3 sm:py-4 md:py-6 rounded-xl sm:rounded-2xl bg-black/20 backdrop-blur-sm drop-shadow-2xl">
             Endlich ein richtiges Dach!
           </h1>
         </div>
       </section>
 
       {/* Intro Section */}
-      <section className="relative py-20 md:py-28 bg-gray-900 text-white text-center overflow-hidden">
+      <section className="relative py-12 sm:py-20 md:py-28 bg-gray-900 text-white text-center overflow-hidden">
         <Image
           src="/images/hero/home-hero.jpg"
           alt=""
@@ -62,13 +62,13 @@ export default async function HomePage({
         />
         <div className="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-gray-900/40"></div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 z-10">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight text-white mb-4 sm:mb-6">
             {t("hero.title")}
           </h2>
-          <p className="text-xl md:text-2xl text-gray-200 font-light mb-4 leading-relaxed">
+          <p className="text-base sm:text-xl md:text-2xl text-gray-200 font-light mb-3 sm:mb-4 leading-relaxed">
             {t("hero.description")}
           </p>
-          <p className="text-lg md:text-xl text-gray-300 mb-10">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-10">
             {t("hero.subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -89,19 +89,19 @@ export default async function HomePage({
       </section>
 
       {/* Values Section */}
-      <section className="py-20 md:py-28 bg-gray-50">
+      <section className="py-12 sm:py-20 md:py-28 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">
               {t("values.title")}
             </h2>
             <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {(["expertise", "team", "quality"] as const).map((value) => {
               const Icon = value === "expertise" ? Award : value === "team" ? Users : CheckCircle;
               return (
-                <div key={value} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 group">
+                <div key={value} className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 group">
                   <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
                     <Icon className="w-8 h-8 text-primary group-hover:text-white transition-colors duration-300" />
                   </div>
@@ -119,24 +119,24 @@ export default async function HomePage({
       </section>
 
       {/* Services Section */}
-      <section className="py-20 md:py-28 bg-white">
+      <section className="py-12 sm:py-20 md:py-28 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4">
               {t("services.title")}
             </h2>
             <p className="text-lg text-gray-600">
               {t("services.subtitle")}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {services.map((service) => {
               const Icon = service.icon;
               return (
                 <TileFlip key={service.key}>
                   <Link
                     href={service.href}
-                    className="group block p-8 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 h-full"
+                    className="group block p-6 sm:p-8 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 h-full"
                   >
                     <div className="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
                       <Icon className="w-7 h-7" strokeWidth={1.5} />
@@ -159,17 +159,17 @@ export default async function HomePage({
       </section>
 
       {/* Projects Section */}
-      <section className="py-20 md:py-28 bg-gray-900 text-white">
+      <section className="py-12 sm:py-20 md:py-28 bg-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-4">
               {t("projects.title")}
             </h2>
             <p className="text-lg text-gray-400">
               {t("projects.subtitle")}
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             {projectsData.projects.map((project) => (
                 <ProjectCarousel
                   key={project.id}
@@ -184,9 +184,9 @@ export default async function HomePage({
       </section>
 
       {/* About Preview Section */}
-      <section className="py-20 md:py-28 bg-white">
+      <section className="py-12 sm:py-20 md:py-28 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
             <div className="relative aspect-4/3 rounded-3xl overflow-hidden shadow-2xl">
               <Image
                 src="/images/hero/about-hero.jpg"
@@ -198,10 +198,10 @@ export default async function HomePage({
               <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl"></div>
             </div>
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-6">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-gray-900 mb-4 sm:mb-6">
                 {t("about.title")}
               </h2>
-              <p className="text-xl text-primary font-medium mb-6">
+              <p className="text-lg sm:text-xl text-primary font-medium mb-4 sm:mb-6">
                 {t("about.experienceTitle")}
               </p>
               <p className="text-gray-600 text-lg leading-relaxed mb-8">
@@ -219,13 +219,13 @@ export default async function HomePage({
       </section>
 
       {/* Contact CTA Section */}
-      <section className="py-20 md:py-28 bg-primary text-white relative overflow-hidden">
+      <section className="py-12 sm:py-20 md:py-28 bg-primary text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-br from-primary via-primary to-primary-dark opacity-90"></div>
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center z-10">
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-4 sm:mb-6">
             {t("contact.ctaTitle")}
           </h2>
-          <p className="text-xl mb-12 opacity-90 max-w-2xl mx-auto font-light">
+          <p className="text-base sm:text-xl mb-8 sm:mb-12 opacity-90 max-w-2xl mx-auto font-light">
             {t("contact.ctaDescription")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

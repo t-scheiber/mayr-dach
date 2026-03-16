@@ -99,7 +99,7 @@ export default async function ServiceDetailPage({
           <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <h2 className="text-2xl font-bold mb-2">{t("projects.subtitle")}</h2>
             <p className="text-gray-600 mb-8">{t("projects.title")}</p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {relevantProjects.slice(0, 9).map((project) => (
                 <ProjectCarousel
                   key={project.id}

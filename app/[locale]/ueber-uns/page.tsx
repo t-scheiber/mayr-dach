@@ -36,10 +36,10 @@ export default async function AboutPage({
       {/* Stats */}
       <section className="py-12 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <StaggerContainer staggerDelay={0.1} className="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+          <StaggerContainer staggerDelay={0.1} className="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 text-center">
             {stats.map((stat) => (
               <StaggerItem key={stat.key}>
-                <div className="text-3xl md:text-4xl font-bold text-primary">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary">
                   {stat.count}
                 </div>
                 <div className="text-sm text-gray-600 mt-1">{stat.label}</div>
@@ -72,7 +72,7 @@ export default async function AboutPage({
           <p className="text-gray-600 mb-12">
             {t("about.teamDescription")}
           </p>
-          <StaggerContainer staggerDelay={0.08} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <StaggerContainer staggerDelay={0.08} className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
             {team.team.map((member) => (
               <StaggerItem key={member.name}>
                 <div className="text-center">
