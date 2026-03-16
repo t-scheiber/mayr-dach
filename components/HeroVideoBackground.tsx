@@ -23,15 +23,10 @@ function pickRandom(exclude: number) {
   return next;
 }
 
-export default function HeroVideoBackground() {
-  const [mounted, setMounted] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function HeroVideoBackground({ initialVideoIndex = 0 }: { initialVideoIndex?: number }) {
+  const [currentIndex, setCurrentIndex] = useState(initialVideoIndex);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    setCurrentIndex(Math.floor(Math.random() * videos.length));
-    setMounted(true);
-  }, []);
+  const isFirstRender = useRef(true);
 
   const handleEnded = useCallback(() => {
     setCurrentIndex((prev) => pickRandom(prev));
@@ -39,15 +34,15 @@ export default function HeroVideoBackground() {
 
   // Ensure autoplay works after source change
   useEffect(() => {
-    if (mounted && videoRef.current) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (videoRef.current) {
       videoRef.current.load();
       videoRef.current.play().catch(() => {});
     }
-  }, [currentIndex, mounted]);
-
-  if (!mounted) {
-    return <div className="absolute inset-0 bg-neutral-900 w-full h-full" />;
-  }
+  }, [currentIndex]);
 
   return (
     <video
@@ -55,7 +50,9 @@ export default function HeroVideoBackground() {
       key={currentIndex}
       autoPlay
       muted
+      loop={false}
       playsInline
+      preload="auto"
       onEnded={handleEnded}
       className="absolute inset-0 w-full h-full object-cover"
     >
