@@ -8,6 +8,8 @@ import Footer from "@/components/Footer";
 import { BlueprintTransition } from "@/components/animations";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import { MotionProvider } from "@/components/MotionProvider";
+import { JsonLd } from "@/components/JsonLd";
+import company from "@/content/company.json";
 import type { Metadata } from "next";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
@@ -71,10 +73,84 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  const t = await getTranslations({ locale });
+
+  const { company: c } = company;
+  const isEn = locale === "en";
+
+  const localBusinessJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "RoofingContractor"],
+    "@id": `${BASE_URL}/#organization`,
+    name: c.name,
+    description: t("metadata.description"),
+    url: BASE_URL,
+    telephone: c.phone,
+    email: c.email,
+    foundingDate: String(c.founded),
+    image: `${BASE_URL}/images/logo/logo.png`,
+    logo: {
+      "@type": "ImageObject",
+      url: `${BASE_URL}/images/logo/logo.png`,
+    },
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: c.address.street,
+      addressLocality: c.address.city,
+      postalCode: c.address.zip,
+      addressCountry: c.address.country,
+      addressRegion: "Salzburg",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: c.coordinates.lat,
+      longitude: c.coordinates.lng,
+    },
+    openingHoursSpecification: [
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "08:00",
+        closes: "12:00",
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        opens: "13:00",
+        closes: "17:00",
+      },
+    ],
+    areaServed: [
+      {
+        "@type": "City",
+        name: "Saalfelden am Steinernen Meer",
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "Pinzgau",
+      },
+      {
+        "@type": "State",
+        name: "Salzburg",
+      },
+    ],
+    priceRange: "$$",
+    numberOfEmployees: {
+      "@type": "QuantitativeValue",
+      value: c.stats.employees,
+    },
+    knowsAbout: isEn
+      ? ["Roofing", "Metalwork", "Glazing", "Facade Construction", "Sealing", "Green Roofs"]
+      : ["Dachdeckerei", "Spenglerei", "Glaserei", "Fassadenbau", "Abdichtungsarbeiten", "Gründächer"],
+    slogan: isEn
+      ? "Finally a proper roof!"
+      : "Endlich ein richtiges Dach!",
+  };
 
   return (
     <html lang={locale} className={`${inter.variable} ${greatVibes.variable}`}>
       <body className="font-sans antialiased overflow-x-hidden">
+        <JsonLd data={localBusinessJsonLd} />
         <NextIntlClientProvider messages={messages}>
           <MotionProvider>
             <NavigationProgress />

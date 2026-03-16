@@ -3,8 +3,29 @@ import { prisma } from "@/lib/db";
 import ApplicationForm from "@/components/ApplicationForm";
 import { Suspense } from "react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations";
+import { JsonLd } from "@/components/JsonLd";
+import company from "@/content/company.json";
+
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "jobs" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    openGraph: {
+      title: t("title"),
+      description: t("subtitle"),
+    },
+  };
+}
 
 export default async function JobsPage({
   params,
@@ -22,8 +43,54 @@ export default async function JobsPage({
 
   const isEn = locale === "en";
 
+  const { company: c } = company;
+
+  const jobPostingJsonLdItems = jobs.map((job) => {
+    const title = (isEn && job.titleEn) || job.titleDe;
+    const description = [
+      ...(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe),
+      ...(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe),
+    ].join(". ");
+
+    const jsonLd: Record<string, unknown> = {
+      "@context": "https://schema.org",
+      "@type": "JobPosting",
+      title,
+      description: description || title,
+      datePosted: job.createdAt.toISOString().split("T")[0],
+      hiringOrganization: {
+        "@type": "Organization",
+        "@id": `${BASE_URL}/#organization`,
+        name: c.name,
+        sameAs: BASE_URL,
+        logo: `${BASE_URL}/images/logo/logo.png`,
+      },
+      jobLocation: {
+        "@type": "Place",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: c.address.street,
+          addressLocality: c.address.city,
+          postalCode: c.address.zip,
+          addressCountry: c.address.country,
+          addressRegion: "Salzburg",
+        },
+      },
+      employmentType: job.isApprenticeship ? "INTERN" : "FULL_TIME",
+    };
+
+    if (job.isApprenticeship) {
+      jsonLd.occupationalCategory = "Apprenticeship";
+    }
+
+    return jsonLd;
+  });
+
   return (
     <>
+      {jobPostingJsonLdItems.map((jsonLd, index) => (
+        <JsonLd key={index} data={jsonLd} />
+      ))}
       <section className="bg-dark text-white py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
