@@ -6,6 +6,7 @@ import { Inter, Great_Vibes } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { BlueprintTransition } from "@/components/animations";
+import { NavigationProgress } from "@/components/NavigationProgress";
 import type { Metadata } from "next";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
@@ -74,6 +75,7 @@ export default async function LocaleLayout({
     <html lang={locale} className={`${inter.variable} ${greatVibes.variable}`}>
       <body className="font-sans antialiased overflow-x-hidden">
         <NextIntlClientProvider messages={messages}>
+          <NavigationProgress />
           <Header />
           <main>
             <BlueprintTransition>
