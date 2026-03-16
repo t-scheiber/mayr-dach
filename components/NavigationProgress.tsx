@@ -8,7 +8,7 @@ export function NavigationProgress() {
   const prevPath = useRef(pathname);
   const [visible, setVisible] = useState(false);
   const [width, setWidth] = useState(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   // Start progress bar on internal link click
   useEffect(() => {
@@ -61,7 +61,7 @@ export function NavigationProgress() {
   if (!visible) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[200] h-[3px] pointer-events-none">
+    <div className="fixed top-0 left-0 right-0 z-200 h-[3px] pointer-events-none">
       <div
         className="h-full bg-primary rounded-r-full"
         style={{
