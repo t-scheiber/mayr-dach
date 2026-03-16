@@ -7,7 +7,7 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "doc": "git add -A && git commit -m 'Update repo so we can test react-doctor' && git push && bunx -y react-doctor@latest . --verbose",
+    "doc": "git add -A && (git diff --cached --quiet || git commit -m 'Update') && git push && bunx -y react-doctor@latest . --verbose",
     "db:migrate": "prisma migrate dev",
     "db:seed": "bun prisma/seed.ts"
   },
