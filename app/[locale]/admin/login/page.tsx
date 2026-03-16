@@ -3,11 +3,12 @@
 import { useState } from "react";
 import { emailOtp, signIn } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("admin.login");
 
   const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ export default function AdminLoginPage() {
     });
 
     if (error) {
-      setError(error.message || "Fehler beim Senden des Codes.");
+      setError(error.message || t("sendError"));
       setLoading(false);
     } else {
       setStep("otp");
@@ -42,7 +43,7 @@ export default function AdminLoginPage() {
     const { error } = await signInWithOtp();
 
     if (error) {
-      setError(error.message || "Ungültiger Code.");
+      setError(error.message || t("codeError"));
       setLoading(false);
     } else {
       router.push(`/${locale === "de" ? "" : locale + "/"}admin`);
@@ -60,17 +61,17 @@ export default function AdminLoginPage() {
     <section className="min-h-[70vh] flex items-center justify-center py-16">
       <div className="w-full max-w-sm mx-auto px-4">
         <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
-          <h1 className="text-2xl font-bold text-center mb-2">Admin Login</h1>
+          <h1 className="text-2xl font-bold text-center mb-2">{t("title")}</h1>
 
           {step === "email" ? (
             <>
               <p className="text-gray-500 text-sm text-center mb-6">
-                Geben Sie Ihre E-Mail-Adresse ein, um einen Anmeldecode zu erhalten.
+                {t("emailPrompt")}
               </p>
               <form onSubmit={handleSendOTP} className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium mb-1">
-                    E-Mail
+                    {t("email")}
                   </label>
                   <input
                     type="email"
@@ -93,20 +94,20 @@ export default function AdminLoginPage() {
                   disabled={loading}
                   className="w-full bg-primary hover:bg-primary-light text-white font-semibold py-2 px-4 rounded transition-colors disabled:opacity-50"
                 >
-                  {loading ? "..." : "Code senden"}
+                  {loading ? "..." : t("sendCode")}
                 </button>
               </form>
             </>
           ) : (
             <>
               <p className="text-gray-500 text-sm text-center mb-6">
-                Ein 6-stelliger Code wurde an{" "}
-                <strong className="text-gray-700">{email}</strong> gesendet.
+                {t("codeSent")}{" "}
+                <strong className="text-gray-700">{email}</strong> {t("codeSentSuffix")}
               </p>
               <form onSubmit={handleVerifyOTP} className="space-y-4">
                 <div>
                   <label htmlFor="otp" className="block text-sm font-medium mb-1">
-                    Code
+                    {t("code")}
                   </label>
                   <input
                     type="text"
@@ -133,7 +134,7 @@ export default function AdminLoginPage() {
                   disabled={loading || otp.length < 6}
                   className="w-full bg-primary hover:bg-primary-light text-white font-semibold py-2 px-4 rounded transition-colors disabled:opacity-50"
                 >
-                  {loading ? "..." : "Anmelden"}
+                  {loading ? "..." : t("signIn")}
                 </button>
 
                 <button
@@ -145,7 +146,7 @@ export default function AdminLoginPage() {
                   }}
                   className="w-full text-sm text-gray-500 hover:text-gray-700 transition-colors"
                 >
-                  Andere E-Mail verwenden
+                  {t("changeEmail")}
                 </button>
               </form>
             </>
