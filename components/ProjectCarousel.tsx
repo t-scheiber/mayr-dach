@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useReducer, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react";
 
 interface ProjectCarouselProps {
@@ -14,6 +14,66 @@ interface ProjectCarouselProps {
   websiteUrl?: string;
 }
 
+interface State {
+  currentIndex: number;
+  direction: number;
+  lightboxOpen: boolean;
+  lightboxIndex: number;
+  lightboxDirection: number;
+  hovered: boolean;
+}
+
+type Action =
+  | { type: "GO_TO"; index: number; direction: number }
+  | { type: "LIGHTBOX_GO_TO"; index: number; direction: number }
+  | { type: "OPEN_LIGHTBOX"; index: number }
+  | { type: "CLOSE_LIGHTBOX" }
+  | { type: "SET_HOVERED"; hovered: boolean };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "GO_TO":
+      return { ...state, currentIndex: action.index, direction: action.direction };
+    case "LIGHTBOX_GO_TO":
+      return { ...state, lightboxIndex: action.index, lightboxDirection: action.direction };
+    case "OPEN_LIGHTBOX":
+      return { ...state, lightboxOpen: true, lightboxIndex: action.index, lightboxDirection: 0 };
+    case "CLOSE_LIGHTBOX":
+      return { ...state, lightboxOpen: false };
+    case "SET_HOVERED":
+      return { ...state, hovered: action.hovered };
+    default:
+      return state;
+  }
+}
+
+const initialState: State = {
+  currentIndex: 0,
+  direction: 0,
+  lightboxOpen: false,
+  lightboxIndex: 0,
+  lightboxDirection: 0,
+  hovered: false,
+};
+
+function ProjectName({ name, websiteUrl, className }: { name: string; websiteUrl?: string; className: string }) {
+  if (websiteUrl) {
+    return (
+      <a
+        href={websiteUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`${className} inline-flex items-center gap-1.5 hover:underline`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {name}
+        <ExternalLink size={14} className="shrink-0 opacity-60" />
+      </a>
+    );
+  }
+  return <span className={className}>{name}</span>;
+}
+
 export default function ProjectCarousel({
   name,
   location,
@@ -21,14 +81,10 @@ export default function ProjectCarousel({
   attribution,
   websiteUrl,
 }: ProjectCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [lightboxDirection, setLightboxDirection] = useState(0);
-  const [mounted, setMounted] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { currentIndex, direction, lightboxOpen, lightboxIndex, lightboxDirection, hovered } = state;
 
-  const [hovered, setHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -38,57 +94,48 @@ export default function ProjectCarousel({
   useEffect(() => {
     if (images.length <= 1 || hovered || lightboxOpen) return;
     const timer = setInterval(() => {
-      setDirection(1);
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      dispatch({ type: "GO_TO", index: (currentIndex + 1) % images.length, direction: 1 });
     }, 4000);
     return () => clearInterval(timer);
-  }, [images.length, hovered, lightboxOpen]);
+  }, [images.length, hovered, lightboxOpen, currentIndex]);
 
   // Card carousel navigation
   const goToNext = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    dispatch({ type: "GO_TO", index: (currentIndex + 1) % images.length, direction: 1 });
   };
 
   const goToPrev = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    dispatch({ type: "GO_TO", index: (currentIndex - 1 + images.length) % images.length, direction: -1 });
   };
 
   const goToSlide = (i: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    setDirection(i > currentIndex ? 1 : -1);
-    setCurrentIndex(i);
+    dispatch({ type: "GO_TO", index: i, direction: i > currentIndex ? 1 : -1 });
   };
 
   // Lightbox navigation
   const lightboxNext = useCallback(() => {
-    setLightboxDirection(1);
-    setLightboxIndex((prev) => (prev + 1) % images.length);
-  }, [images.length]);
+    dispatch({ type: "LIGHTBOX_GO_TO", index: (lightboxIndex + 1) % images.length, direction: 1 });
+  }, [images.length, lightboxIndex]);
 
   const lightboxPrev = useCallback(() => {
-    setLightboxDirection(-1);
-    setLightboxIndex((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
+    dispatch({ type: "LIGHTBOX_GO_TO", index: (lightboxIndex - 1 + images.length) % images.length, direction: -1 });
+  }, [images.length, lightboxIndex]);
 
   const lightboxGoToSlide = (i: number) => {
-    setLightboxDirection(i > lightboxIndex ? 1 : -1);
-    setLightboxIndex(i);
+    dispatch({ type: "LIGHTBOX_GO_TO", index: i, direction: i > lightboxIndex ? 1 : -1 });
   };
 
   // Open lightbox
   const openLightbox = () => {
-    setLightboxIndex(currentIndex);
-    setLightboxDirection(0);
-    setLightboxOpen(true);
+    dispatch({ type: "OPEN_LIGHTBOX", index: currentIndex });
   };
 
   // Close lightbox
   const closeLightbox = useCallback(() => {
-    setLightboxOpen(false);
+    dispatch({ type: "CLOSE_LIGHTBOX" });
   }, []);
 
   // Keyboard handling for lightbox
@@ -155,32 +202,13 @@ export default function ProjectCarousel({
     }),
   };
 
-  // Render project name, optionally as a link
-  const renderName = (className: string) => {
-    if (websiteUrl) {
-      return (
-        <a
-          href={websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`${className} inline-flex items-center gap-1.5 hover:underline`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {name}
-          <ExternalLink size={14} className="shrink-0 opacity-60" />
-        </a>
-      );
-    }
-    return <span className={className}>{name}</span>;
-  };
-
   // Lightbox portal
   const lightbox =
     mounted && lightboxOpen
       ? createPortal(
           <AnimatePresence>
             {lightboxOpen && (
-              <motion.div
+              <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -198,7 +226,7 @@ export default function ProjectCarousel({
                 </button>
 
                 {/* Lightbox content */}
-                <motion.div
+                <m.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   exit={{ scale: 0.9, opacity: 0 }}
@@ -210,7 +238,7 @@ export default function ProjectCarousel({
                   <div className="relative w-full aspect-auto overflow-hidden rounded-lg">
                     <div className="relative w-full aspect-4/3">
                       <AnimatePresence initial={false} custom={lightboxDirection}>
-                        <motion.div
+                        <m.div
                           key={lightboxIndex}
                           custom={lightboxDirection}
                           variants={lightboxVariants}
@@ -231,7 +259,7 @@ export default function ProjectCarousel({
                             sizes="(max-width: 1280px) 100vw, 1280px"
                             priority
                           />
-                        </motion.div>
+                        </m.div>
                       </AnimatePresence>
                     </div>
 
@@ -268,7 +296,7 @@ export default function ProjectCarousel({
                     <div className="flex gap-2 mt-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">
                       {images.map((_, i) => (
                         <button
-                          key={i}
+                          key={`lightbox-dot-${i}`}
                           onClick={() => lightboxGoToSlide(i)}
                           className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                             i === lightboxIndex
@@ -284,7 +312,7 @@ export default function ProjectCarousel({
                   {/* Project info */}
                   <div className="mt-4 text-center">
                     <h3 className="text-white text-xl font-bold">
-                      {renderName("text-white")}
+                      <ProjectName name={name} websiteUrl={websiteUrl} className="text-white" />
                     </h3>
                     {location && (
                       <p className="text-white/70 text-sm mt-1 flex items-center justify-center gap-1.5">
@@ -311,8 +339,8 @@ export default function ProjectCarousel({
                       </p>
                     )}
                   </div>
-                </motion.div>
-              </motion.div>
+                </m.div>
+              </m.div>
             )}
           </AnimatePresence>,
           document.body
@@ -322,15 +350,19 @@ export default function ProjectCarousel({
   return (
     <>
       <div
+        suppressHydrationWarning
         className="group flex flex-col h-full bg-white text-gray-900 border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer hover:scale-[1.03]"
         onClick={openLightbox}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLightbox(); } }}
+        role="button"
+        tabIndex={0}
+        onMouseEnter={() => dispatch({ type: "SET_HOVERED", hovered: true })}
+        onMouseLeave={() => dispatch({ type: "SET_HOVERED", hovered: false })}
       >
         {/* Image area */}
         <div className="relative aspect-4/3 bg-gray-100 overflow-hidden shrink-0">
           <AnimatePresence initial={false} custom={direction}>
-            <motion.div
+            <m.div
               key={currentIndex}
               custom={direction}
               variants={variants}
@@ -350,7 +382,7 @@ export default function ProjectCarousel({
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-            </motion.div>
+            </m.div>
           </AnimatePresence>
 
           {/* Navigation arrows (only if multiple images) */}
@@ -375,7 +407,7 @@ export default function ProjectCarousel({
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full">
                 {images.map((_, i) => (
                   <button
-                    key={i}
+                    key={`dot-${i}`}
                     onClick={(e) => goToSlide(i, e)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       i === currentIndex
@@ -400,7 +432,7 @@ export default function ProjectCarousel({
         {/* Info */}
         <div className="p-6 flex flex-col grow bg-white">
           <h3 className="font-bold text-xl text-gray-900 mb-2 leading-tight">
-            {renderName("text-gray-900")}
+            <ProjectName name={name} websiteUrl={websiteUrl} className="text-gray-900" />
           </h3>
           {location && (
             <p className="text-sm text-gray-500 font-medium mb-4 flex items-center gap-1.5">

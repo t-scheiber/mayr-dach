@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
@@ -52,14 +52,14 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <m.div
           className="fixed inset-0 z-100 flex flex-col items-center justify-center bg-white"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0, scale: 1.02 }}
           transition={{ duration: 0.6, ease: easings.smooth }}
         >
           {shouldReduce ? (
-            <motion.div
+            <m.div
               variants={defaultVariants.fadeIn}
               initial="hidden"
               animate="visible"
@@ -67,7 +67,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
             >
               <Image src="/images/logo/logo.png" alt="Mayr Dach" width={120} height={120} />
               <p className="mt-4 font-script text-3xl text-primary">{t("slogan")}</p>
-            </motion.div>
+            </m.div>
           ) : (
             <div className="flex flex-col items-center gap-1">
               {/* Roof Tiles Assembly */}
@@ -75,7 +75,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                 {tileRows.map((row, rowIndex) => (
                   <div key={rowIndex} className="flex gap-1">
                     {row.map((_, colIndex) => (
-                      <motion.div
+                      <m.div
                         key={`${rowIndex}-${colIndex}`}
                         className="w-8 h-12 sm:w-12 sm:h-16 rounded-b-xl shadow-sm"
                         style={{ backgroundColor: brandColors.primary }}
@@ -92,7 +92,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
               </div>
 
               {/* Logo — overlaps with last tiles settling */}
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
@@ -103,10 +103,10 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                 className="flex flex-col items-center"
               >
                 <Image src="/images/logo/logo.png" alt="Mayr Dach" width={150} height={150} className="mb-4" />
-              </motion.div>
+              </m.div>
 
               {/* Slogan — flows in right after logo starts */}
-              <motion.p
+              <m.p
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -117,10 +117,10 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                 className="font-script text-2xl sm:text-4xl text-gray-900 tracking-wide"
               >
                 {t("slogan")}
-              </motion.p>
+              </m.p>
             </div>
           )}
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

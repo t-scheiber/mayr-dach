@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useReducedAnimations } from "./useReducedAnimations";
 
 interface TileFlipProps {
@@ -16,12 +16,12 @@ export function TileFlip({ children, backContent }: TileFlipProps) {
   }
 
   return (
-    <motion.div
+    <m.div
       className="relative cursor-pointer [perspective:1000px]"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      <motion.div
+      <m.div
         className="w-full h-full [transform-style:preserve-3d]"
         whileHover={{ rotateY: 15 }} // Subtle 3D flip on hover
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -37,7 +37,7 @@ export function TileFlip({ children, backContent }: TileFlipProps) {
             {backContent}
           </div>
         )}
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }

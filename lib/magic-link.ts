@@ -9,7 +9,7 @@ interface MagicLinkPayload {
   exp: number;
 }
 
-export function createMagicLinkToken(email: string, redirectPath: string): string {
+function createMagicLinkToken(email: string, redirectPath: string): string {
   const payload: MagicLinkPayload = {
     email,
     redirect: redirectPath,

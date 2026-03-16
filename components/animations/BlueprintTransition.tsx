@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useReducedAnimations } from "./useReducedAnimations";
 
@@ -10,7 +10,7 @@ export function BlueprintTransition({ children }: { children: React.ReactNode })
 
   return (
     <AnimatePresence mode="wait">
-      <motion.div
+      <m.div
         key={pathname}
         initial="initial"
         animate="animate"
@@ -23,7 +23,7 @@ export function BlueprintTransition({ children }: { children: React.ReactNode })
         className="relative w-full h-full min-h-screen"
       >
         {children}
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   );
 }

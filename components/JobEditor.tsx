@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 interface JobData {
   slug: string;
@@ -61,45 +64,42 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
 
   const isNew = !jobId;
   const [form, setForm] = useState<JobData>(emptyJob);
-  const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push(`/${adminBase}admin/login`);
-    }
-  }, [session, isPending, router, adminBase]);
+  const { data, isLoading } = useSWR(
+    session && jobId ? `/api/jobs/${jobId}` : null,
+    fetcher
+  );
 
+  // Initialize form from fetched data
   useEffect(() => {
-    if (session && jobId) {
-      fetch(`/api/jobs/${jobId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.job) {
-            const j = data.job;
-            setForm({
-              slug: j.slug,
-              active: j.active,
-              isApprenticeship: j.isApprenticeship,
-              sortOrder: j.sortOrder,
-              titleDe: j.titleDe,
-              titleEn: j.titleEn || "",
-              durationDe: j.durationDe || "",
-              durationEn: j.durationEn || "",
-              tasksDe: (j.tasksDe || []).join("\n"),
-              tasksEn: (j.tasksEn || []).join("\n"),
-              requirementsDe: (j.requirementsDe || []).join("\n"),
-              requirementsEn: (j.requirementsEn || []).join("\n"),
-              benefitsDe: (j.benefitsDe || []).join("\n"),
-              benefitsEn: (j.benefitsEn || []).join("\n"),
-            });
-          }
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
+    if (data?.job) {
+      const j = data.job;
+      setForm({
+        slug: j.slug,
+        active: j.active,
+        isApprenticeship: j.isApprenticeship,
+        sortOrder: j.sortOrder,
+        titleDe: j.titleDe,
+        titleEn: j.titleEn || "",
+        durationDe: j.durationDe || "",
+        durationEn: j.durationEn || "",
+        tasksDe: (j.tasksDe || []).join("\n"),
+        tasksEn: (j.tasksEn || []).join("\n"),
+        requirementsDe: (j.requirementsDe || []).join("\n"),
+        requirementsEn: (j.requirementsEn || []).join("\n"),
+        benefitsDe: (j.benefitsDe || []).join("\n"),
+        benefitsEn: (j.benefitsEn || []).join("\n"),
+      });
     }
-  }, [session, jobId]);
+  }, [data]);
+
+  // Auth redirect (render-time)
+  if (!isPending && !session) {
+    router.push(`/${adminBase}admin/login`);
+    return null;
+  }
 
   function update(field: keyof JobData, value: string | boolean | number) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -154,6 +154,8 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
     }
     setSaving(false);
   }
+
+  const loading = !isNew && isLoading;
 
   if (isPending || loading) {
     return (
