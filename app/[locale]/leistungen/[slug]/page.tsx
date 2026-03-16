@@ -8,7 +8,7 @@ import ProjectCarousel from "@/components/ProjectCarousel";
 import { ScrollReveal, GlassShimmer } from "@/components/animations";
 import { JsonLd } from "@/components/JsonLd";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.mayr-dach.at";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mayr-dach.com";
 
 const serviceMap = {
   dachdeckerei: "roofing",
