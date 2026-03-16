@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const videos = [
   "/hero-videos/ai_video_01.mp4",
@@ -15,44 +15,51 @@ const videos = [
   "/hero-videos/ai_video_10.mp4",
 ];
 
+function pickRandom(exclude: number) {
+  let next;
+  do {
+    next = Math.floor(Math.random() * videos.length);
+  } while (next === exclude && videos.length > 1);
+  return next;
+}
+
 export default function HeroVideoBackground() {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    // Pick a random initial video on mount
-    setCurrentVideoIndex(Math.floor(Math.random() * videos.length));
+    setCurrentIndex(Math.floor(Math.random() * videos.length));
+    setMounted(true);
   }, []);
 
-  const handleVideoEnded = () => {
-    // When the video ends, pick another random video
-    let nextIndex;
-    do {
-      nextIndex = Math.floor(Math.random() * videos.length);
-    } while (nextIndex === currentVideoIndex && videos.length > 1); // Avoid playing the same video twice in a row if possible
-    
-    setCurrentVideoIndex(nextIndex);
-  };
+  const handleEnded = useCallback(() => {
+    setCurrentIndex((prev) => pickRandom(prev));
+  }, []);
 
-  if (currentVideoIndex === null) {
-    // Prevent rendering until we have randomly selected on the client
-    // This avoids hydration mismatch errors
-    return (
-       <div className="absolute inset-0 bg-neutral-900 w-full h-full"></div>
-    );
+  // Ensure autoplay works after source change
+  useEffect(() => {
+    if (mounted && videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [currentIndex, mounted]);
+
+  if (!mounted) {
+    return <div className="absolute inset-0 bg-neutral-900 w-full h-full" />;
   }
 
   return (
     <video
       ref={videoRef}
-      key={videos[currentVideoIndex]} // Forces element to remount/reload on source change
+      key={currentIndex}
       autoPlay
       muted
       playsInline
-      onEnded={handleVideoEnded}
-      className="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000"
+      onEnded={handleEnded}
+      className="absolute inset-0 w-full h-full object-cover"
     >
-      <source src={videos[currentVideoIndex]} type="video/mp4" />
+      <source src={videos[currentIndex]} type="video/mp4" />
     </video>
   );
 }
