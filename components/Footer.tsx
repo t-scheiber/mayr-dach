@@ -148,7 +148,10 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} {company.company.name}. Alle Rechte vorbehalten.
           </p>
           <div className="text-xs text-slate-600">
-            Designed with precision
+            Designed, created, implemented, and maintained by{" "}
+            <a href="https://thomascheiber.com" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
+              Thomas Scheiber
+            </a>
           </div>
         </div>
       </div>
