@@ -70,7 +70,7 @@ export default function TypewriterText({
       <span aria-hidden="true">
         {text.slice(0, displayCount)}
         {started && displayCount < text.length && (
-          <span className="animate-pulse">|</span>
+          <span className="animate-pulse font-thin">|</span>
         )}
       </span>
     </>
