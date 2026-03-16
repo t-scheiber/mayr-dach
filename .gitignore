@@ -19,7 +19,6 @@
 
 # ide
 .vscode/
-.idea/
 .cursor/
 .cursorrules
 .playwright-mcp
