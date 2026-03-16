@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useReducer, useEffect, useCallback } from "react";
+import { useReducer, useEffect, useCallback, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
@@ -84,11 +84,11 @@ export default function ProjectCarousel({
   const [state, dispatch] = useReducer(reducer, initialState);
   const { currentIndex, direction, lightboxOpen, lightboxIndex, lightboxDirection, hovered } = state;
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   // Auto-rotate card carousel every 4 seconds (pause on hover or lightbox)
   useEffect(() => {
@@ -294,9 +294,9 @@ export default function ProjectCarousel({
                   {/* Lightbox dots */}
                   {images.length > 1 && (
                     <div className="flex gap-2 mt-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">
-                      {images.map((_, i) => (
+                      {images.map((img, i) => (
                         <button
-                          key={`lightbox-dot-${i}`}
+                          key={img}
                           onClick={() => lightboxGoToSlide(i)}
                           className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                             i === lightboxIndex
@@ -405,9 +405,9 @@ export default function ProjectCarousel({
 
               {/* Dots */}
               <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full">
-                {images.map((_, i) => (
+                {images.map((img, i) => (
                   <button
-                    key={`dot-${i}`}
+                    key={img}
                     onClick={(e) => goToSlide(i, e)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
                       i === currentIndex
