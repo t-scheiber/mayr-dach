@@ -39,8 +39,6 @@ export function contactSchema(locale: ContactLocale = "de") {
   });
 }
 
-export type ContactFormData = z.infer<ReturnType<typeof contactSchema>>;
-
 export function getContactMessages(locale: ContactLocale = "de") {
   return messages[locale];
 }
