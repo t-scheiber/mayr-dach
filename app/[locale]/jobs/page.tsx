@@ -83,13 +83,13 @@ export default async function JobsPage({
       jsonLd.occupationalCategory = "Apprenticeship";
     }
 
-    return jsonLd;
+    return { id: job.id, data: jsonLd };
   });
 
   return (
     <>
-      {jobPostingJsonLdItems.map((jsonLd, index) => (
-        <JsonLd key={index} data={jsonLd} />
+      {jobPostingJsonLdItems.map((item) => (
+        <JsonLd key={item.id} data={item.data} />
       ))}
       <section className="bg-dark text-white py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
