@@ -79,14 +79,6 @@ function ProjectLightbox({
     () => false,
   );
 
-  // Reset index whenever the lightbox opens with a new initialIndex
-  useEffect(() => {
-    if (isOpen) {
-      setLightboxIndex(initialIndex);
-      setLightboxDirection(0);
-    }
-  }, [isOpen, initialIndex]);
-
   const lightboxNext = useCallback(() => {
     setLightboxIndex((prev) => (prev + 1) % images.length);
     setLightboxDirection(1);
