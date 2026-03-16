@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 interface ProjectData {
   slug: string;
@@ -53,41 +56,38 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
 
   const isNew = !projectId;
   const [form, setForm] = useState<ProjectData>(emptyProject);
-  const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.push(`/${adminBase}admin/login`);
-    }
-  }, [session, isPending, router, adminBase]);
+  const { data, isLoading } = useSWR(
+    session && projectId ? `/api/projects/${projectId}` : null,
+    fetcher
+  );
 
+  // Initialize form from fetched data
   useEffect(() => {
-    if (session && projectId) {
-      fetch(`/api/projects/${projectId}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.project) {
-            const p = data.project;
-            setForm({
-              slug: p.slug,
-              active: p.active,
-              featured: p.featured,
-              sortOrder: p.sortOrder,
-              name: p.name,
-              location: p.location || "",
-              websiteUrl: p.websiteUrl || "",
-              categories: (p.categories || []).join(", "),
-              images: (p.images || []).join("\n"),
-              attribution: p.attribution || "",
-            });
-          }
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
+    if (data?.project) {
+      const p = data.project;
+      setForm({
+        slug: p.slug,
+        active: p.active,
+        featured: p.featured,
+        sortOrder: p.sortOrder,
+        name: p.name,
+        location: p.location || "",
+        websiteUrl: p.websiteUrl || "",
+        categories: (p.categories || []).join(", "),
+        images: (p.images || []).join("\n"),
+        attribution: p.attribution || "",
+      });
     }
-  }, [session, projectId]);
+  }, [data]);
+
+  // Auth redirect (render-time)
+  if (!isPending && !session) {
+    router.push(`/${adminBase}admin/login`);
+    return null;
+  }
 
   function update(field: keyof ProjectData, value: string | boolean | number) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -145,6 +145,8 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
     }
     setSaving(false);
   }
+
+  const loading = !isNew && isLoading;
 
   if (isPending || loading) {
     return (

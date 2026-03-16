@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useReducer, useEffect } from "react";
+import useSWR from "swr";
 import { useSession } from "@/lib/auth-client";
 import { useRouter, useParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import Link from "next/link";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 interface ApplicationDetail {
   id: string;
@@ -20,14 +23,45 @@ interface ApplicationDetail {
   updatedAt: string;
 }
 
+interface State {
+  notes: string;
+  status: string;
+  saving: boolean;
+  initialized: boolean;
+}
+
+type Action =
+  | { type: "INIT"; notes: string; status: string }
+  | { type: "SET_NOTES"; notes: string }
+  | { type: "SET_STATUS"; status: string }
+  | { type: "SET_SAVING"; saving: boolean };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "INIT":
+      return { ...state, notes: action.notes, status: action.status, initialized: true };
+    case "SET_NOTES":
+      return { ...state, notes: action.notes };
+    case "SET_STATUS":
+      return { ...state, status: action.status };
+    case "SET_SAVING":
+      return { ...state, saving: action.saving };
+    default:
+      return state;
+  }
+}
+
 export default function ApplicationDetailPage() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const locale = useLocale();
   const params = useParams();
+  const id = params.id as string;
   const t = useTranslations("admin.applicationDetail");
   const td = useTranslations("admin.dashboard");
   const tc = useTranslations("common");
+
+  const adminBase = locale === "de" ? "" : locale + "/";
 
   const statusOptions = [
     { value: "NEW", label: td("statusNew") },
@@ -35,45 +69,48 @@ export default function ApplicationDetailPage() {
     { value: "ACCEPTED", label: td("statusAccepted") },
     { value: "REJECTED", label: td("statusRejected") },
   ];
-  const id = params.id as string;
 
-  const [application, setApplication] = useState<ApplicationDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [notes, setNotes] = useState("");
-  const [status, setStatus] = useState("");
+  const [state, dispatch] = useReducer(reducer, {
+    notes: "",
+    status: "NEW",
+    saving: false,
+    initialized: false,
+  });
 
+  const { data, isLoading } = useSWR(
+    session && id ? `/api/applications/${id}` : null,
+    fetcher
+  );
+  const application: ApplicationDetail | null = data?.application || null;
+
+  // Initialize form from fetched data
   useEffect(() => {
-    if (!isPending && !session) {
-      router.push(`/${locale === "de" ? "" : locale + "/"}admin/login`);
+    if (application && !state.initialized) {
+      dispatch({
+        type: "INIT",
+        notes: application.notes || "",
+        status: application.status || "NEW",
+      });
     }
-  }, [session, isPending, router, locale]);
+  }, [application, state.initialized]);
 
-  useEffect(() => {
-    if (session && id) {
-      fetch(`/api/applications/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setApplication(data.application);
-          setNotes(data.application?.notes || "");
-          setStatus(data.application?.status || "NEW");
-          setLoading(false);
-        })
-        .catch(() => setLoading(false));
-    }
-  }, [session, id]);
+  // Auth redirect (render-time)
+  if (!isPending && !session) {
+    router.push(`/${adminBase}admin/login`);
+    return null;
+  }
 
   async function handleSave() {
-    setSaving(true);
+    dispatch({ type: "SET_SAVING", saving: true });
     await fetch(`/api/applications/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, notes }),
+      body: JSON.stringify({ status: state.status, notes: state.notes }),
     });
-    setSaving(false);
+    dispatch({ type: "SET_SAVING", saving: false });
   }
 
-  if (isPending || loading) {
+  if (isPending || isLoading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
         <p className="text-gray-500">{tc("loading")}</p>
@@ -82,8 +119,6 @@ export default function ApplicationDetailPage() {
   }
 
   if (!session || !application) return null;
-
-  const adminBase = locale === "de" ? "" : locale + "/";
 
   return (
     <section className="py-8 md:py-12">
@@ -170,8 +205,8 @@ export default function ApplicationDetailPage() {
               </label>
               <select
                 id="status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                value={state.status}
+                onChange={(e) => dispatch({ type: "SET_STATUS", status: e.target.value })}
                 className="px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white"
               >
                 {statusOptions.map((opt) => (
@@ -188,8 +223,8 @@ export default function ApplicationDetailPage() {
               </label>
               <textarea
                 id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                value={state.notes}
+                onChange={(e) => dispatch({ type: "SET_NOTES", notes: e.target.value })}
                 rows={4}
                 placeholder={t("notesPlaceholder")}
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none resize-y"
@@ -198,10 +233,10 @@ export default function ApplicationDetailPage() {
 
             <button
               onClick={handleSave}
-              disabled={saving}
+              disabled={state.saving}
               className="bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors disabled:opacity-50"
             >
-              {saving ? t("saving") : t("save")}
+              {state.saving ? t("saving") : t("save")}
             </button>
           </div>
         </div>

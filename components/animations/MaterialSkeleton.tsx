@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useReducedAnimations } from "./useReducedAnimations";
 import { brandColors } from "./variants";
 
@@ -42,7 +42,7 @@ export function MaterialSkeleton({ variant, width = "100%", height = "100%", row
           <div key={r} className="flex gap-1 h-full w-full">
             {Array.from({ length: 6 }).map((_, c) => (
               <div key={c} className="flex-1 bg-gray-200 rounded-b-lg relative overflow-hidden">
-                <motion.div
+                <m.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12"
                   animate={shimmerAnimation}
                 />
@@ -60,7 +60,7 @@ export function MaterialSkeleton({ variant, width = "100%", height = "100%", row
         className="relative overflow-hidden rounded-lg backdrop-blur-sm border border-blue-100/20"
         style={{ width, height, backgroundColor: brandColors.glassBlue }}
       >
-        <motion.div
+        <m.div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[30deg] w-1/2"
           animate={{ x: ["-200%", "300%"], transition: { repeat: Infinity, duration: 2, ease: "linear", delay: 0.5 } }}
         />
@@ -74,7 +74,7 @@ export function MaterialSkeleton({ variant, width = "100%", height = "100%", row
       className="relative overflow-hidden rounded-md"
       style={{ width, height, background: brandColors.metalSilver }}
     >
-       <motion.div
+       <m.div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
           animate={shimmerAnimation}
         />

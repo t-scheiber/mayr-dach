@@ -6,12 +6,14 @@ interface TypewriterTextProps {
   text: string;
   delay?: number;
   charSpeed?: number;
+  onStart?: () => void;
 }
 
 export default function TypewriterText({
   text,
   delay = 800,
   charSpeed = 80,
+  onStart,
 }: TypewriterTextProps) {
   const [displayCount, setDisplayCount] = useState(0);
   const [started, setStarted] = useState(false);
@@ -19,7 +21,10 @@ export default function TypewriterText({
 
   useEffect(() => {
     setMounted(true);
-    const timer = setTimeout(() => setStarted(true), delay);
+    const timer = setTimeout(() => {
+      setStarted(true);
+      onStart?.();
+    }, delay);
     return () => clearTimeout(timer);
   }, [delay]);
 

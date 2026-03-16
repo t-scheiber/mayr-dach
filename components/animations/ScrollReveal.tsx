@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, type Variant } from "framer-motion";
+import { m, type Variant } from "framer-motion";
 import { useReducedAnimations } from "./useReducedAnimations";
 import { durations, easings } from "./variants";
 
@@ -56,7 +56,7 @@ export function ScrollReveal({
     transition: { duration, delay, ease: easings.smooth },
   };
 
-  const Component = motion[as];
+  const Component = m[as];
 
   return (
     <Component
@@ -90,7 +90,7 @@ export function StaggerContainer({
   }
 
   return (
-    <motion.div
+    <m.div
       className={className}
       initial="hidden"
       whileInView="visible"
@@ -105,7 +105,7 @@ export function StaggerContainer({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -120,7 +120,7 @@ export function StaggerItem({ children, className, direction = "up" }: StaggerIt
   const offset = offsets[direction];
 
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={{
         hidden: { opacity: 0, ...offset },
@@ -133,6 +133,6 @@ export function StaggerItem({ children, className, direction = "up" }: StaggerIt
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
