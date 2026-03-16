@@ -5,6 +5,7 @@
  *   npx tsx scripts/seed-projects.ts
  */
 
+import "dotenv/config";
 import { prisma } from "../lib/db";
 import projectsData from "../content/projects.json";
 
