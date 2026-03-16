@@ -150,6 +150,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${inter.variable} ${greatVibes.variable}`}>
+      <head>
+        <link rel="preload" href="/images/hero/video-poster.jpg" as="image" />
+      </head>
       <body className="font-sans antialiased overflow-x-hidden">
         <JsonLd data={localBusinessJsonLd} />
         <NextIntlClientProvider messages={messages}>
