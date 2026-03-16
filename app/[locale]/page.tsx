@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import company from "@/content/company.json";
-import projectsData from "@/content/projects.json";
+import { prisma } from "@/lib/db";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import HeroVideoBackground from "@/components/HeroVideoBackground";
 import { RoofTileLoader, TileFlip, GlassShimmer } from "@/components/animations";
@@ -19,6 +19,8 @@ import {
   ArrowRight
 } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage({
   params,
 }: {
@@ -27,6 +29,11 @@ export default async function HomePage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations();
+
+  const projects = await prisma.project.findMany({
+    where: { active: true },
+    orderBy: { sortOrder: "asc" },
+  });
 
   const services = [
     { key: "roofing", href: "/leistungen/dachdeckerei", icon: Home },
@@ -173,13 +180,14 @@ export default async function HomePage({
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-            {projectsData.projects.map((project) => (
+            {projects.map((project) => (
                 <ProjectCarousel
                   key={project.id}
                   name={project.name}
-                  location={project.location}
+                  location={project.location ?? undefined}
                   images={project.images}
-                  attribution={project.attribution}
+                  attribution={project.attribution ?? undefined}
+                  websiteUrl={project.websiteUrl ?? undefined}
                 />
             ))}
           </div>

@@ -67,7 +67,8 @@ export default function ApplicationForm() {
         form.reset();
       } else {
         const data = await res.json();
-        setErrorMsg(data.error || t("error"));
+        const key = data.error;
+        setErrorMsg(t.has(`errors.${key}`) ? t(`errors.${key}`) : t("error"));
         setStatus("error");
       }
     } catch {

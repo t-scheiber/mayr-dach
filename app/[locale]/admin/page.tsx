@@ -29,7 +29,18 @@ interface Job {
   createdAt: string;
 }
 
-type Tab = "bewerbungen" | "stellenangebote";
+interface Project {
+  id: string;
+  slug: string;
+  name: string;
+  location: string | null;
+  active: boolean;
+  featured: boolean;
+  images: string[];
+  sortOrder: number;
+}
+
+type Tab = "bewerbungen" | "stellenangebote" | "projekte";
 
 export default function AdminDashboard() {
   const { data: session, isPending } = useSession();
@@ -42,7 +53,10 @@ export default function AdminDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loadingApps, setLoadingApps] = useState(true);
   const [loadingJobs, setLoadingJobs] = useState(true);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
   const [deletingJob, setDeletingJob] = useState<string | null>(null);
+  const [deletingProject, setDeletingProject] = useState<string | null>(null);
 
   const adminBase = locale === "de" ? "" : locale + "/";
 
@@ -69,6 +83,14 @@ export default function AdminDashboard() {
           setLoadingJobs(false);
         })
         .catch(() => setLoadingJobs(false));
+
+      fetch("/api/projects?all=true")
+        .then((res) => res.json())
+        .then((data) => {
+          setProjects(data.projects || []);
+          setLoadingProjects(false);
+        })
+        .catch(() => setLoadingProjects(false));
     }
   }, [session]);
 
@@ -80,6 +102,29 @@ export default function AdminDashboard() {
       setJobs((prev) => prev.filter((j) => j.id !== id));
     }
     setDeletingJob(null);
+  }
+
+  async function handleDeleteProject(id: string) {
+    if (!confirm(t("confirmDeleteProject"))) return;
+    setDeletingProject(id);
+    const res = await fetch(`/api/projects/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      setProjects((prev) => prev.filter((p) => p.id !== id));
+    }
+    setDeletingProject(null);
+  }
+
+  async function handleToggleProject(id: string, currentActive: boolean) {
+    const res = await fetch(`/api/projects/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ active: !currentActive }),
+    });
+    if (res.ok) {
+      setProjects((prev) =>
+        prev.map((p) => (p.id === id ? { ...p, active: !currentActive } : p))
+      );
+    }
   }
 
   async function handleToggleJob(id: string, currentActive: boolean) {
@@ -171,6 +216,21 @@ export default function AdminDashboard() {
             {jobs.length > 0 && (
               <span className="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">
                 {jobs.length}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setTab("projekte")}
+            className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+              tab === "projekte"
+                ? "border-primary text-primary"
+                : "border-transparent text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {t("projects")}
+            {projects.length > 0 && (
+              <span className="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">
+                {projects.length}
               </span>
             )}
           </button>
@@ -382,6 +442,112 @@ export default function AdminDashboard() {
                               className="text-red-500 hover:text-red-700 text-sm disabled:opacity-50"
                             >
                               {deletingJob === job.id
+                                ? "..."
+                                : t("delete")}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
+        )}
+        {/* Projects Tab */}
+        {tab === "projekte" && (
+          <>
+            <div className="flex justify-end mb-4">
+              <Link
+                href={`/${adminBase}admin/projects/new`}
+                className="bg-primary hover:bg-primary-light text-white font-semibold text-sm px-4 py-2 rounded transition-colors"
+              >
+                {t("newProject")}
+              </Link>
+            </div>
+
+            {loadingProjects ? (
+              <p className="text-gray-500">{tc("loading")}</p>
+            ) : projects.length === 0 ? (
+              <div className="text-center py-16 bg-gray-50 rounded-lg">
+                <p className="text-gray-500">{t("noProjects")}</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600">
+                        {t("name")}
+                      </th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden sm:table-cell">
+                        {t("location")}
+                      </th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden md:table-cell">
+                        {t("images")}
+                      </th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600">
+                        {t("status")}
+                      </th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600 hidden md:table-cell">
+                        {t("featured")}
+                      </th>
+                      <th className="py-3 px-4 font-semibold text-gray-600 text-right">
+                        {t("actions")}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projects.map((project) => (
+                      <tr
+                        key={project.id}
+                        className="border-b border-gray-100 hover:bg-gray-50"
+                      >
+                        <td className="py-3 px-4 font-medium">
+                          {project.name}
+                        </td>
+                        <td className="py-3 px-4 text-gray-500 hidden sm:table-cell">
+                          {project.location || "—"}
+                        </td>
+                        <td className="py-3 px-4 text-gray-500 hidden md:table-cell">
+                          {project.images.length}
+                        </td>
+                        <td className="py-3 px-4">
+                          <button
+                            onClick={() =>
+                              handleToggleProject(project.id, project.active)
+                            }
+                            className={`text-xs font-medium px-2 py-1 rounded cursor-pointer transition-colors ${
+                              project.active
+                                ? "bg-green-100 text-green-800 hover:bg-green-200"
+                                : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                            }`}
+                          >
+                            {project.active ? t("active") : t("inactive")}
+                          </button>
+                        </td>
+                        <td className="py-3 px-4 hidden md:table-cell">
+                          {project.featured && (
+                            <span className="text-xs font-medium px-2 py-1 rounded bg-yellow-100 text-yellow-800">
+                              {t("featured")}
+                            </span>
+                          )}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="flex gap-2 justify-end">
+                            <Link
+                              href={`/${adminBase}admin/projects/${project.id}`}
+                              className="text-primary hover:underline text-sm"
+                            >
+                              {t("edit")}
+                            </Link>
+                            <button
+                              onClick={() => handleDeleteProject(project.id)}
+                              disabled={deletingProject === project.id}
+                              className="text-red-500 hover:text-red-700 text-sm disabled:opacity-50"
+                            >
+                              {deletingProject === project.id
                                 ? "..."
                                 : t("delete")}
                             </button>

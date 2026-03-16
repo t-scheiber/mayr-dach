@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!name || !email || !phone || !cv) {
       return NextResponse.json(
-        { error: "Name, email, phone and CV are required" },
+        { error: "missingRequired" },
         { status: 400 }
       );
     }
@@ -31,14 +31,14 @@ export async function POST(request: NextRequest) {
     ];
     if (!allowedTypes.includes(cv.type)) {
       return NextResponse.json(
-        { error: "CV must be a PDF or Word document" },
+        { error: "invalidCvType" },
         { status: 400 }
       );
     }
 
-    if (motivation && !allowedTypes.includes(motivation.type)) {
+    if (motivation && motivation.size > 0 && !allowedTypes.includes(motivation.type)) {
       return NextResponse.json(
-        { error: "Motivation letter must be a PDF or Word document" },
+        { error: "invalidMotivationType" },
         { status: 400 }
       );
     }
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Application submission error:", error);
     return NextResponse.json(
-      { error: "Failed to submit application" },
+      { error: "submitFailed" },
       { status: 500 }
     );
   }
