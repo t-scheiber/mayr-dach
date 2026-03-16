@@ -69,8 +69,8 @@ export default async function JobsPage({
                           {isEn ? "Tasks" : "Aufgaben"}
                         </h4>
                         <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                          {(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe).map((task, i) => (
-                            <li key={i}>{task}</li>
+                          {(isEn && job.tasksEn.length > 0 ? job.tasksEn : job.tasksDe).map((task) => (
+                            <li key={task}>{task}</li>
                           ))}
                         </ul>
                       </div>
@@ -82,8 +82,8 @@ export default async function JobsPage({
                           {isEn ? "Requirements" : "Anforderungen"}
                         </h4>
                         <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                          {(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe).map((req, i) => (
-                            <li key={i}>{req}</li>
+                          {(isEn && job.requirementsEn.length > 0 ? job.requirementsEn : job.requirementsDe).map((req) => (
+                            <li key={req}>{req}</li>
                           ))}
                         </ul>
                       </div>
@@ -95,8 +95,8 @@ export default async function JobsPage({
                           {isEn ? "We offer" : "Wir bieten"}
                         </h4>
                         <ul className="list-disc list-inside space-y-1 text-gray-700 text-sm">
-                          {(isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe).map((benefit, i) => (
-                            <li key={i}>{benefit}</li>
+                          {(isEn && job.benefitsEn.length > 0 ? job.benefitsEn : job.benefitsDe).map((benefit) => (
+                            <li key={benefit}>{benefit}</li>
                           ))}
                         </ul>
                       </div>

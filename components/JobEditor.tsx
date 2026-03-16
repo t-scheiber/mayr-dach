@@ -185,8 +185,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Basic info */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Titel (Deutsch) *</label>
+              <label htmlFor="job-titleDe" className={labelCls}>Titel (Deutsch) *</label>
               <input
+                id="job-titleDe"
                 type="text"
                 value={form.titleDe}
                 onChange={(e) => update("titleDe", e.target.value)}
@@ -196,8 +197,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               />
             </div>
             <div>
-              <label className={labelCls}>Title (English)</label>
+              <label htmlFor="job-titleEn" className={labelCls}>Title (English)</label>
               <input
+                id="job-titleEn"
                 type="text"
                 value={form.titleEn}
                 onChange={(e) => update("titleEn", e.target.value)}
@@ -209,8 +211,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
 
           <div className="grid md:grid-cols-3 gap-4">
             <div>
-              <label className={labelCls}>Slug</label>
+              <label htmlFor="job-slug" className={labelCls}>Slug</label>
               <input
+                id="job-slug"
                 type="text"
                 value={form.slug}
                 onChange={(e) => update("slug", e.target.value)}
@@ -222,8 +225,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               </p>
             </div>
             <div>
-              <label className={labelCls}>Reihenfolge</label>
+              <label htmlFor="job-sortOrder" className={labelCls}>Reihenfolge</label>
               <input
+                id="job-sortOrder"
                 type="number"
                 value={form.sortOrder}
                 onChange={(e) =>
@@ -233,8 +237,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               />
             </div>
             <div className="flex items-end gap-4 pb-2">
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label htmlFor="job-active" className="flex items-center gap-2 cursor-pointer">
                 <input
+                  id="job-active"
                   type="checkbox"
                   checked={form.active}
                   onChange={(e) => update("active", e.target.checked)}
@@ -242,8 +247,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
                 />
                 <span className="text-sm">Aktiv</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label htmlFor="job-apprenticeship" className="flex items-center gap-2 cursor-pointer">
                 <input
+                  id="job-apprenticeship"
                   type="checkbox"
                   checked={form.isApprenticeship}
                   onChange={(e) =>
@@ -260,8 +266,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {form.isApprenticeship && (
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className={labelCls}>Dauer (Deutsch)</label>
+                <label htmlFor="job-durationDe" className={labelCls}>Dauer (Deutsch)</label>
                 <input
+                  id="job-durationDe"
                   type="text"
                   value={form.durationDe}
                   onChange={(e) => update("durationDe", e.target.value)}
@@ -270,8 +277,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
                 />
               </div>
               <div>
-                <label className={labelCls}>Duration (English)</label>
+                <label htmlFor="job-durationEn" className={labelCls}>Duration (English)</label>
                 <input
+                  id="job-durationEn"
                   type="text"
                   value={form.durationEn}
                   onChange={(e) => update("durationEn", e.target.value)}
@@ -285,8 +293,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Tasks */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Aufgaben (Deutsch)</label>
+              <label htmlFor="job-tasksDe" className={labelCls}>Aufgaben (Deutsch)</label>
               <textarea
+                id="job-tasksDe"
                 value={form.tasksDe}
                 onChange={(e) => update("tasksDe", e.target.value)}
                 rows={4}
@@ -295,8 +304,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               />
             </div>
             <div>
-              <label className={labelCls}>Tasks (English)</label>
+              <label htmlFor="job-tasksEn" className={labelCls}>Tasks (English)</label>
               <textarea
+                id="job-tasksEn"
                 value={form.tasksEn}
                 onChange={(e) => update("tasksEn", e.target.value)}
                 rows={4}
@@ -309,8 +319,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Requirements */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Anforderungen (Deutsch)</label>
+              <label htmlFor="job-requirementsDe" className={labelCls}>Anforderungen (Deutsch)</label>
               <textarea
+                id="job-requirementsDe"
                 value={form.requirementsDe}
                 onChange={(e) => update("requirementsDe", e.target.value)}
                 rows={4}
@@ -319,8 +330,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               />
             </div>
             <div>
-              <label className={labelCls}>Requirements (English)</label>
+              <label htmlFor="job-requirementsEn" className={labelCls}>Requirements (English)</label>
               <textarea
+                id="job-requirementsEn"
                 value={form.requirementsEn}
                 onChange={(e) => update("requirementsEn", e.target.value)}
                 rows={4}
@@ -333,8 +345,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
           {/* Benefits */}
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Wir bieten (Deutsch)</label>
+              <label htmlFor="job-benefitsDe" className={labelCls}>Wir bieten (Deutsch)</label>
               <textarea
+                id="job-benefitsDe"
                 value={form.benefitsDe}
                 onChange={(e) => update("benefitsDe", e.target.value)}
                 rows={4}
@@ -343,8 +356,9 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
               />
             </div>
             <div>
-              <label className={labelCls}>We offer (English)</label>
+              <label htmlFor="job-benefitsEn" className={labelCls}>We offer (English)</label>
               <textarea
+                id="job-benefitsEn"
                 value={form.benefitsEn}
                 onChange={(e) => update("benefitsEn", e.target.value)}
                 rows={4}

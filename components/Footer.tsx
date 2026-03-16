@@ -36,6 +36,7 @@ export default function Footer() {
               <div
                 key={partner.name}
                 onClick={() => handlePartnerClick(partner.name, partner.url)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); handlePartnerClick(partner.name, partner.url); } }}
                 className={`cursor-pointer bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex items-center justify-center h-24 group transform transform-gpu
                   ${
                     clickedPartner === partner.name
@@ -45,12 +46,14 @@ export default function Footer() {
                 `}
                 title={partner.name}
                 role="link"
+                tabIndex={0}
               >
                 <div className="relative w-full h-full filter grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300">
                   <Image
                     src={`/images/partners/${partner.logo}`}
                     alt={partner.name}
                     fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 16vw"
                     className="object-contain"
                   />
                 </div>

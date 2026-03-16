@@ -78,7 +78,6 @@ export default function AdminLoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    autoFocus
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
                   />
                 </div>
@@ -115,7 +114,6 @@ export default function AdminLoginPage() {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                     required
-                    autoFocus
                     inputMode="numeric"
                     autoComplete="one-time-code"
                     placeholder="000000"
