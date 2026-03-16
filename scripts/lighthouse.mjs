@@ -13,15 +13,8 @@ const filterPatterns = [
 ];
 
 const lh = spawn(
-  "lighthouse",
-  [
-    "https://mayr-dach.com",
-    "--output",
-    "html",
-    "--output-path",
-    "./lighthouse-report.html",
-  ],
-  { stdio: ["inherit", "inherit", "pipe"] }
+  "lighthouse https://mayr-dach.com --output html --output-path ./lighthouse-report.html",
+  { stdio: ["inherit", "inherit", "pipe"], shell: true }
 );
 
 lh.stderr.on("data", (chunk) => {

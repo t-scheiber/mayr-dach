@@ -50,5 +50,6 @@ next-env.d.ts
 /lib/generated/prisma
 /uploads
 lighthouse-*.json
+lighthouse-*.html
 
 /WEBSITE-REPORT.md
