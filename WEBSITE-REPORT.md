@@ -103,7 +103,7 @@ Die neue Website **mayr-dach.com** ersetzt den bestehenden HEROLD-Webauftritt du
 Google Lighthouse ist der Industriestandard für die Bewertung von Webseiten (Skala 0–100).
 
 | Kategorie | Alt (mayr-dach.at) | Neu (mayr-dach.com) | Verbesserung |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **Leistung (Performance)** | 71 | **93** | +22 Punkte |
 | **Barrierefreiheit** | 95 | **100** | +5 Punkte |
 | **Best Practices** | 92 | **100** | +8 Punkte |
@@ -112,7 +112,7 @@ Google Lighthouse ist der Industriestandard für die Bewertung von Webseiten (Sk
 ### Ladezeiten im Detail
 
 | Messwert | Alt | Neu | Verbesserung |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Erste Inhaltsanzeige (FCP) | 2,7 Sek. | **1,6 Sek.** | 41 % schneller |
 | Größtes Element geladen (LCP) | 32,4 Sek. | **3,5 Sek.** | 89 % schneller |
 | Vollständig interaktiv (TTI) | 34,4 Sek. | **3,5 Sek.** | 90 % schneller |
@@ -125,7 +125,7 @@ Google Lighthouse ist der Industriestandard für die Bewertung von Webseiten (Sk
 ## Sicherheit
 
 | Sicherheitsmerkmal | Alt | Neu |
-|---|---|---|
+| --- | --- | --- |
 | HTTPS-Verschlüsselung | ✓ | ✓ |
 | HSTS (Preload) | ✗ | **✓** |
 | Clickjacking-Schutz (X-Frame-Options) | ✗ | **DENY** |
@@ -141,7 +141,7 @@ Die alte Website hat **keine Sicherheitsheader**. Die neue hat alle empfohlenen 
 ## Leistung & Optimierung
 
 | Merkmal | Alt | Neu |
-|---|---|---|
+| --- | --- | --- |
 | Bildformat | Nur JPEG | **WebP/AVIF (automatisch)** |
 | Hero-Videos | Keine | **10 Videos, optimiert (13 MB)** |
 | Schriftarten | Extern geladen (blockiert Anzeige) | **Lokal optimiert** |
@@ -154,7 +154,7 @@ Die alte Website hat **keine Sicherheitsheader**. Die neue hat alle empfohlenen 
 ## SEO & Suchmaschinen
 
 | Merkmal | Alt | Neu |
-|---|---|---|
+| --- | --- | --- |
 | Seitentitel pro Seite | Generisch | **Individuell pro Seite** |
 | Meta-Beschreibungen | Generisch | **Individuell pro Seite** |
 | Open Graph Tags | Teilweise | **Vollständig** |
@@ -167,7 +167,7 @@ Die alte Website hat **keine Sicherheitsheader**. Die neue hat alle empfohlenen 
 ### KI-Sichtbarkeit (ChatGPT, Google Gemini, etc.)
 
 | Merkmal | Alt | Neu |
-|---|---|---|
+| --- | --- | --- |
 | llms.txt für KI-Crawler | ✗ | **✓** |
 | FAQ-Schema für KI-Zitate | ✗ | **✓ (5 häufige Fragen)** |
 | KI-Crawler erlaubt | ✗ | **✓ (GPTBot, ClaudeBot, etc.)** |
@@ -180,35 +180,41 @@ Die alte Website hat **keine Sicherheitsheader**. Die neue hat alle empfohlenen 
 ## Neue Funktionen
 
 ### Zweisprachig (Deutsch & Englisch)
+
 - Vollständige Übersetzung aller Inhalte
 - Sprachumschalter mit Cookie-Speicherung
 - Standardsprache Deutsch, Englisch auf Wunsch
 
 ### Online-Bewerbungssystem
+
 - Bewerber laden Lebenslauf und optional Motivationsschreiben direkt hoch
 - Automatische E-Mail-Benachrichtigung ans Büro
 - Magic-Link in der E-Mail für direkten Zugang zur Bewerbung
 - Statusverwaltung (Neu → In Prüfung → Angenommen/Abgelehnt)
 
 ### Admin-Dashboard
+
 - Sicherer Login mit Einmal-Code per E-Mail (kein Passwort nötig)
 - Verwaltung von Bewerbungen, Stellenangeboten und Projekten
 - Stellenangebote aktivieren/deaktivieren
 - Projekte mit Bildern und Kategorien pflegen
 
 ### Projektportfolio
+
 - Projekte werden dynamisch aus der Datenbank geladen
 - Bildergalerie mit Vollbild-Lightbox
 - Automatische Karussell-Rotation
 - Kategorisierung nach Leistungsbereich
 
 ### Moderne Animationen
+
 - Ladeanimation mit Dachziegel-Motiv
 - Seitenübergänge mit Fade-Animation
 - Scroll-Animationen für Abschnitte
 - Service-spezifische Ladeanimationen (Ziegel, Metall, Glas, Fassade, Abdichtung, Gründach)
 
 ### Automatische Deployments
+
 - Code wird automatisch getestet, gebaut und deployed
 - Build-Validierung vor Deployment verhindert kaputte Updates
 - Keine manuelle Server-Aktualisierung nötig
@@ -218,7 +224,7 @@ Die alte Website hat **keine Sicherheitsheader**. Die neue hat alle empfohlenen 
 ## Infrastruktur
 
 | Merkmal | Alt | Neu |
-|---|---|---|
+| --- | --- | --- |
 | Hosting | HEROLD (Shared Hosting) | **Eigener VPS in Frankfurt** |
 | Webserver | HEROLD proprietär | **Caddy (automatisches SSL)** |
 | Datenbank | Keine | **PostgreSQL** |
