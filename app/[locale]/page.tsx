@@ -218,7 +218,7 @@ export default async function HomePage({
                 href="/ueber-uns"
                 className="inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white font-medium px-8 py-4 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
               >
-                {t("common.learnMore")}
+                {t("common.learnMore")} — {t("about.title")}
               </Link>
             </div>
           </div>

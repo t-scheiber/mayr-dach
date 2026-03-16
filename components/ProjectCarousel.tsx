@@ -435,13 +435,19 @@ export default function ProjectCarousel({
                   <button
                     key={img}
                     onClick={(e) => goToSlide(i, e)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    className={`w-6 h-6 rounded-full transition-all duration-300 flex items-center justify-center ${
                       i === currentIndex
-                        ? "bg-white w-4"
-                        : "bg-white/50 hover:bg-white/80"
+                        ? "bg-white/30"
+                        : "bg-transparent hover:bg-white/20"
                     }`}
                     aria-label={`Go to image ${i + 1}`}
-                  />
+                  >
+                    <span className={`block rounded-full transition-all duration-300 ${
+                      i === currentIndex
+                        ? "w-4 h-2 bg-white"
+                        : "w-2 h-2 bg-white/50"
+                    }`} />
+                  </button>
                 ))}
               </div>
             </>
@@ -480,7 +486,7 @@ export default function ProjectCarousel({
             </p>
           )}
           <div className="mt-auto pt-4 border-t border-gray-100">
-            <p className="text-xs text-gray-400 italic min-h-[16px]">
+            <p className="text-xs text-gray-500 italic min-h-[16px]">
               {attribution ? attribution : ""}
             </p>
           </div>
