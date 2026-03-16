@@ -346,6 +346,18 @@
     "copyright": "Alle Rechte vorbehalten.",
     "credits": "Entworfen, erstellt, implementiert und gewartet von"
   },
+  "faq": {
+    "q1": "Wo befindet sich Karl Mayr?",
+    "a1": "Karl Mayr GmbH & Co. KG befindet sich in der Georg-Scherer-Straße 6, 5760 Saalfelden am Steinernen Meer, im Pinzgau, Salzburg, Österreich.",
+    "q2": "Welche Leistungen bietet Karl Mayr an?",
+    "a2": "Wir bieten sechs Kernleistungen an: Dachdeckerei, Spenglerei, Glaserei, Fassadenbau, Abdichtungsarbeiten und Gründächer. Als Meisterbetrieb mit über 50 Jahren Erfahrung decken wir alle Arbeiten rund um die Gebäudehülle ab.",
+    "q3": "Bietet Karl Mayr Notfall-Dachreparaturen an?",
+    "a3": "Ja, als Dachdeckermeisterbetrieb führen wir auch Notfall-Dachreparaturen durch. Kontaktieren Sie uns unter +43 6582 73366.",
+    "q4": "Bietet Karl Mayr Lehrstellen an?",
+    "a4": "Ja, wir bieten Lehrstellen in den Bereichen Dachdeckerei und Spenglerei an. Aktuelle Stellenangebote und unser Online-Bewerbungsformular finden Sie auf unserer Jobs-Seite.",
+    "q5": "Wie kann ich ein Angebot von Karl Mayr erhalten?",
+    "a5": "Kontaktieren Sie uns telefonisch unter +43 6582 73366, per E-Mail an office@mayr-dach.at oder über das Kontaktformular auf unserer Website."
+  },
   "common": {
     "learnMore": "Mehr erfahren",
     "callNow": "Jetzt anrufen",

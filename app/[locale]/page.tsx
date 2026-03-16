@@ -7,6 +7,7 @@ import ProjectCarousel from "@/components/ProjectCarousel";
 import HeroVideoBackground from "@/components/HeroVideoBackground";
 import { RoofTileLoader, TileFlip, GlassShimmer } from "@/components/animations";
 import HeroSlogan from "@/components/HeroSlogan";
+import { JsonLd } from "@/components/JsonLd";
 import {
   Home,
   Wrench,
@@ -255,6 +256,39 @@ export default async function HomePage({
           </div>
         </div>
       </section>
+
+      {/* FAQ Schema for LLMs and Google Rich Results */}
+      <JsonLd data={{
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: t("faq.q1"),
+            acceptedAnswer: { "@type": "Answer", text: t("faq.a1") },
+          },
+          {
+            "@type": "Question",
+            name: t("faq.q2"),
+            acceptedAnswer: { "@type": "Answer", text: t("faq.a2") },
+          },
+          {
+            "@type": "Question",
+            name: t("faq.q3"),
+            acceptedAnswer: { "@type": "Answer", text: t("faq.a3") },
+          },
+          {
+            "@type": "Question",
+            name: t("faq.q4"),
+            acceptedAnswer: { "@type": "Answer", text: t("faq.a4") },
+          },
+          {
+            "@type": "Question",
+            name: t("faq.q5"),
+            acceptedAnswer: { "@type": "Answer", text: t("faq.a5") },
+          },
+        ],
+      }} />
     </>
   );
 }
