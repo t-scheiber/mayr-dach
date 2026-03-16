@@ -59,7 +59,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
               className="flex flex-col items-center"
             >
               <Image src="/images/logo/logo.png" alt="Mayr Dach" width={120} height={120} />
-              <p className="mt-4 font-script text-3xl text-primary">{t("slogan")}</p>
+              <p className="mt-4 font-handwriting text-3xl text-primary">{t("slogan")}</p>
             </m.div>
           ) : (
             <div className="flex flex-col items-center gap-1">
@@ -107,7 +107,7 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
                   duration: 0.6,
                   ease: easings.smooth,
                 }}
-                className="font-script text-2xl sm:text-4xl text-gray-900 tracking-wide"
+                className="font-handwriting text-2xl sm:text-4xl text-gray-900 tracking-wide"
               >
                 {t("slogan")}
               </m.p>
