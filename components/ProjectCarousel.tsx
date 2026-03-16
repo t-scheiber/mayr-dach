@@ -1,60 +1,14 @@
 "use client";
 
-import { useReducer, useEffect, useCallback, useSyncExternalStore } from "react";
+import { useState, useEffect, useCallback, useReducer, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { m, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, X, ExternalLink } from "lucide-react";
 
-interface ProjectCarouselProps {
-  name: string;
-  location?: string;
-  images: string[];
-  attribution?: string;
-  websiteUrl?: string;
-}
-
-interface State {
-  currentIndex: number;
-  direction: number;
-  lightboxOpen: boolean;
-  lightboxIndex: number;
-  lightboxDirection: number;
-  hovered: boolean;
-}
-
-type Action =
-  | { type: "GO_TO"; index: number; direction: number }
-  | { type: "LIGHTBOX_GO_TO"; index: number; direction: number }
-  | { type: "OPEN_LIGHTBOX"; index: number }
-  | { type: "CLOSE_LIGHTBOX" }
-  | { type: "SET_HOVERED"; hovered: boolean };
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case "GO_TO":
-      return { ...state, currentIndex: action.index, direction: action.direction };
-    case "LIGHTBOX_GO_TO":
-      return { ...state, lightboxIndex: action.index, lightboxDirection: action.direction };
-    case "OPEN_LIGHTBOX":
-      return { ...state, lightboxOpen: true, lightboxIndex: action.index, lightboxDirection: 0 };
-    case "CLOSE_LIGHTBOX":
-      return { ...state, lightboxOpen: false };
-    case "SET_HOVERED":
-      return { ...state, hovered: action.hovered };
-    default:
-      return state;
-  }
-}
-
-const initialState: State = {
-  currentIndex: 0,
-  direction: 0,
-  lightboxOpen: false,
-  lightboxIndex: 0,
-  lightboxDirection: 0,
-  hovered: false,
-};
+/* ------------------------------------------------------------------ */
+/*  Shared                                                            */
+/* ------------------------------------------------------------------ */
 
 function ProjectName({ name, websiteUrl, className }: { name: string; websiteUrl?: string; className: string }) {
   if (websiteUrl) {
@@ -74,6 +28,318 @@ function ProjectName({ name, websiteUrl, className }: { name: string; websiteUrl
   return <span className={className}>{name}</span>;
 }
 
+/* ------------------------------------------------------------------ */
+/*  ProjectLightbox                                                   */
+/* ------------------------------------------------------------------ */
+
+interface ProjectLightboxProps {
+  images: string[];
+  name: string;
+  location?: string;
+  attribution?: string;
+  websiteUrl?: string;
+  isOpen: boolean;
+  initialIndex: number;
+  onClose: () => void;
+}
+
+const lightboxVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 300 : -300,
+    opacity: 0,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 300 : -300,
+    opacity: 0,
+  }),
+};
+
+function ProjectLightbox({
+  images,
+  name,
+  location,
+  attribution,
+  websiteUrl,
+  isOpen,
+  initialIndex,
+  onClose,
+}: ProjectLightboxProps) {
+  const [lightboxIndex, setLightboxIndex] = useState(initialIndex);
+  const [lightboxDirection, setLightboxDirection] = useState(0);
+
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
+
+  // Reset index whenever the lightbox opens with a new initialIndex
+  useEffect(() => {
+    if (isOpen) {
+      setLightboxIndex(initialIndex);
+      setLightboxDirection(0);
+    }
+  }, [isOpen, initialIndex]);
+
+  const lightboxNext = useCallback(() => {
+    setLightboxIndex((prev) => (prev + 1) % images.length);
+    setLightboxDirection(1);
+  }, [images.length]);
+
+  const lightboxPrev = useCallback(() => {
+    setLightboxIndex((prev) => (prev - 1 + images.length) % images.length);
+    setLightboxDirection(-1);
+  }, [images.length]);
+
+  const lightboxGoToSlide = (i: number) => {
+    setLightboxDirection(i > lightboxIndex ? 1 : -1);
+    setLightboxIndex(i);
+  };
+
+  // Keyboard handling
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case "Escape":
+          onClose();
+          break;
+        case "ArrowLeft":
+          lightboxPrev();
+          break;
+        case "ArrowRight":
+          lightboxNext();
+          break;
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose, lightboxPrev, lightboxNext]);
+
+  if (!mounted || !isOpen) return null;
+
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <m.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-9999 flex items-center justify-center bg-black/90"
+          onClick={onClose}
+        >
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-10 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
+            aria-label="Close lightbox"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Lightbox content */}
+          <m.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="relative flex flex-col items-center max-w-5xl w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Image container */}
+            <div className="relative w-full aspect-auto overflow-hidden rounded-lg">
+              <div className="relative w-full aspect-4/3">
+                <AnimatePresence initial={false} custom={lightboxDirection}>
+                  <m.div
+                    key={lightboxIndex}
+                    custom={lightboxDirection}
+                    variants={lightboxVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "spring", stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 },
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      src={`/images/projects/${images[lightboxIndex]}`}
+                      alt={`${name}${location ? ` - ${location}` : ""}`}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 1280px) 100vw, 1280px"
+                      priority
+                    />
+                  </m.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Lightbox navigation arrows */}
+              {images.length > 1 && (
+                <>
+                  <button
+                    onClick={() => lightboxPrev()}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary text-gray-800 hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-md backdrop-blur-md z-10"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button
+                    onClick={() => lightboxNext()}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary text-gray-800 hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-md backdrop-blur-md z-10"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              )}
+
+              {/* Image counter */}
+              {images.length > 1 && (
+                <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-sm z-10 border border-white/20">
+                  {lightboxIndex + 1} / {images.length}
+                </div>
+              )}
+            </div>
+
+            {/* Lightbox dots */}
+            {images.length > 1 && (
+              <div className="flex gap-2 mt-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">
+                {images.map((img, i) => (
+                  <button
+                    key={img}
+                    onClick={() => lightboxGoToSlide(i)}
+                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      i === lightboxIndex
+                        ? "bg-white w-5"
+                        : "bg-white/40 hover:bg-white/70"
+                    }`}
+                    aria-label={`Go to image ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Project info */}
+            <div className="mt-4 text-center">
+              <h3 className="text-white text-xl font-bold">
+                <ProjectName name={name} websiteUrl={websiteUrl} className="text-white" />
+              </h3>
+              {location && (
+                <p className="text-white/70 text-sm mt-1 flex items-center justify-center gap-1.5">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="opacity-70"
+                  >
+                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                    <circle cx="12" cy="10" r="3" />
+                  </svg>
+                  {location}
+                </p>
+              )}
+              {attribution && (
+                <p className="text-white/50 text-xs italic mt-2">
+                  {attribution}
+                </p>
+              )}
+            </div>
+          </m.div>
+        </m.div>
+      )}
+    </AnimatePresence>,
+    document.body
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  ProjectCarousel                                                   */
+/* ------------------------------------------------------------------ */
+
+interface ProjectCarouselProps {
+  name: string;
+  location?: string;
+  images: string[];
+  attribution?: string;
+  websiteUrl?: string;
+}
+
+interface CarouselState {
+  currentIndex: number;
+  direction: number;
+  lightboxOpen: boolean;
+  hovered: boolean;
+}
+
+type CarouselAction =
+  | { type: "GO_TO"; index: number; direction: number }
+  | { type: "OPEN_LIGHTBOX" }
+  | { type: "CLOSE_LIGHTBOX" }
+  | { type: "SET_HOVERED"; hovered: boolean };
+
+function carouselReducer(state: CarouselState, action: CarouselAction): CarouselState {
+  switch (action.type) {
+    case "GO_TO":
+      return { ...state, currentIndex: action.index, direction: action.direction };
+    case "OPEN_LIGHTBOX":
+      return { ...state, lightboxOpen: true };
+    case "CLOSE_LIGHTBOX":
+      return { ...state, lightboxOpen: false };
+    case "SET_HOVERED":
+      return { ...state, hovered: action.hovered };
+    default:
+      return state;
+  }
+}
+
+const carouselInitialState: CarouselState = {
+  currentIndex: 0,
+  direction: 0,
+  lightboxOpen: false,
+  hovered: false,
+};
+
+const cardVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 100 : -100,
+    opacity: 0,
+    scale: 0.95,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 100 : -100,
+    opacity: 0,
+    scale: 0.95,
+  }),
+};
+
 export default function ProjectCarousel({
   name,
   location,
@@ -81,14 +347,8 @@ export default function ProjectCarousel({
   attribution,
   websiteUrl,
 }: ProjectCarouselProps) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { currentIndex, direction, lightboxOpen, lightboxIndex, lightboxDirection, hovered } = state;
-
-  const mounted = useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false,
-  );
+  const [state, dispatch] = useReducer(carouselReducer, carouselInitialState);
+  const { currentIndex, direction, lightboxOpen, hovered } = state;
 
   // Auto-rotate card carousel every 4 seconds (pause on hover or lightbox)
   useEffect(() => {
@@ -115,237 +375,11 @@ export default function ProjectCarousel({
     dispatch({ type: "GO_TO", index: i, direction: i > currentIndex ? 1 : -1 });
   };
 
-  // Lightbox navigation
-  const lightboxNext = useCallback(() => {
-    dispatch({ type: "LIGHTBOX_GO_TO", index: (lightboxIndex + 1) % images.length, direction: 1 });
-  }, [images.length, lightboxIndex]);
+  const openLightbox = () => dispatch({ type: "OPEN_LIGHTBOX" });
 
-  const lightboxPrev = useCallback(() => {
-    dispatch({ type: "LIGHTBOX_GO_TO", index: (lightboxIndex - 1 + images.length) % images.length, direction: -1 });
-  }, [images.length, lightboxIndex]);
-
-  const lightboxGoToSlide = (i: number) => {
-    dispatch({ type: "LIGHTBOX_GO_TO", index: i, direction: i > lightboxIndex ? 1 : -1 });
-  };
-
-  // Open lightbox
-  const openLightbox = () => {
-    dispatch({ type: "OPEN_LIGHTBOX", index: currentIndex });
-  };
-
-  // Close lightbox
   const closeLightbox = useCallback(() => {
     dispatch({ type: "CLOSE_LIGHTBOX" });
   }, []);
-
-  // Keyboard handling for lightbox
-  useEffect(() => {
-    if (!lightboxOpen) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "Escape":
-          closeLightbox();
-          break;
-        case "ArrowLeft":
-          lightboxPrev();
-          break;
-        case "ArrowRight":
-          lightboxNext();
-          break;
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [lightboxOpen, closeLightbox, lightboxPrev, lightboxNext]);
-
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 100 : -100,
-      opacity: 0,
-      scale: 0.95,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 100 : -100,
-      opacity: 0,
-      scale: 0.95,
-    }),
-  };
-
-  const lightboxVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 300 : -300,
-      opacity: 0,
-    }),
-  };
-
-  // Lightbox portal
-  const lightbox =
-    mounted && lightboxOpen
-      ? createPortal(
-          <AnimatePresence>
-            {lightboxOpen && (
-              <m.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="fixed inset-0 z-9999 flex items-center justify-center bg-black/90"
-                onClick={closeLightbox}
-              >
-                {/* Close button */}
-                <button
-                  onClick={closeLightbox}
-                  className="absolute top-4 right-4 z-10 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm"
-                  aria-label="Close lightbox"
-                >
-                  <X size={24} />
-                </button>
-
-                {/* Lightbox content */}
-                <m.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
-                  className="relative flex flex-col items-center max-w-5xl w-full mx-4"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {/* Image container */}
-                  <div className="relative w-full aspect-auto overflow-hidden rounded-lg">
-                    <div className="relative w-full aspect-4/3">
-                      <AnimatePresence initial={false} custom={lightboxDirection}>
-                        <m.div
-                          key={lightboxIndex}
-                          custom={lightboxDirection}
-                          variants={lightboxVariants}
-                          initial="enter"
-                          animate="center"
-                          exit="exit"
-                          transition={{
-                            x: { type: "spring", stiffness: 300, damping: 30 },
-                            opacity: { duration: 0.2 },
-                          }}
-                          className="absolute inset-0"
-                        >
-                          <Image
-                            src={`/images/projects/${images[lightboxIndex]}`}
-                            alt={`${name}${location ? ` - ${location}` : ""}`}
-                            fill
-                            className="object-contain"
-                            sizes="(max-width: 1280px) 100vw, 1280px"
-                            priority
-                          />
-                        </m.div>
-                      </AnimatePresence>
-                    </div>
-
-                    {/* Lightbox navigation arrows */}
-                    {images.length > 1 && (
-                      <>
-                        <button
-                          onClick={() => lightboxPrev()}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary text-gray-800 hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-md backdrop-blur-md z-10"
-                          aria-label="Previous image"
-                        >
-                          <ChevronLeft size={24} />
-                        </button>
-                        <button
-                          onClick={() => lightboxNext()}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-primary text-gray-800 hover:text-white w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 shadow-md backdrop-blur-md z-10"
-                          aria-label="Next image"
-                        >
-                          <ChevronRight size={24} />
-                        </button>
-                      </>
-                    )}
-
-                    {/* Image counter */}
-                    {images.length > 1 && (
-                      <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-sm z-10 border border-white/20">
-                        {lightboxIndex + 1} / {images.length}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Lightbox dots */}
-                  {images.length > 1 && (
-                    <div className="flex gap-2 mt-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full">
-                      {images.map((img, i) => (
-                        <button
-                          key={img}
-                          onClick={() => lightboxGoToSlide(i)}
-                          className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                            i === lightboxIndex
-                              ? "bg-white w-5"
-                              : "bg-white/40 hover:bg-white/70"
-                          }`}
-                          aria-label={`Go to image ${i + 1}`}
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Project info */}
-                  <div className="mt-4 text-center">
-                    <h3 className="text-white text-xl font-bold">
-                      <ProjectName name={name} websiteUrl={websiteUrl} className="text-white" />
-                    </h3>
-                    {location && (
-                      <p className="text-white/70 text-sm mt-1 flex items-center justify-center gap-1.5">
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="opacity-70"
-                        >
-                          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                          <circle cx="12" cy="10" r="3" />
-                        </svg>
-                        {location}
-                      </p>
-                    )}
-                    {attribution && (
-                      <p className="text-white/50 text-xs italic mt-2">
-                        {attribution}
-                      </p>
-                    )}
-                  </div>
-                </m.div>
-              </m.div>
-            )}
-          </AnimatePresence>,
-          document.body
-        )
-      : null;
 
   return (
     <>
@@ -365,7 +399,7 @@ export default function ProjectCarousel({
             <m.div
               key={currentIndex}
               custom={direction}
-              variants={variants}
+              variants={cardVariants}
               initial="enter"
               animate="center"
               exit="exit"
@@ -461,8 +495,17 @@ export default function ProjectCarousel({
         </div>
       </div>
 
-      {/* Lightbox portal */}
-      {lightbox}
+      {/* Lightbox */}
+      <ProjectLightbox
+        images={images}
+        name={name}
+        location={location}
+        attribution={attribution}
+        websiteUrl={websiteUrl}
+        isOpen={lightboxOpen}
+        initialIndex={currentIndex}
+        onClose={closeLightbox}
+      />
     </>
   );
 }

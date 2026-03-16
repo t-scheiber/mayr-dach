@@ -20,11 +20,14 @@ export function RoofTileLoader({ onComplete, size = "md" }: RoofTileLoaderProps)
   useEffect(() => {
     const duration = shouldReduce ? 800 : 2800;
     const fadeOut = shouldReduce ? 400 : 500;
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      if (onComplete) setTimeout(onComplete, fadeOut);
-    }, duration);
-    return () => clearTimeout(timer);
+    const hideTimer = setTimeout(() => setIsVisible(false), duration);
+    const completeTimer = onComplete
+      ? setTimeout(onComplete, duration + fadeOut)
+      : undefined;
+    return () => {
+      clearTimeout(hideTimer);
+      if (completeTimer) clearTimeout(completeTimer);
+    };
   }, [shouldReduce, onComplete]);
 
   const rows = size === "sm" ? 3 : size === "md" ? 4 : 5;
