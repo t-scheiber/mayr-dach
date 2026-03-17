@@ -1,0 +1,204 @@
+name: Renovate AI Fix
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - ready_for_review
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: renovate-ai-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  renovate-ai-fix:
+    if: startsWith(github.event.pull_request.head.ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+    steps:
+      - name: Checkout Renovate branch
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          token: ${{ secrets.RENOVATE_TOKEN }}
+
+      - name: Checkout shared Renovate config
+        uses: actions/checkout@v6
+        with:
+          repository: t-scheiber/renovate-config
+          ref: main
+          path: .renovate-config
+          token: ${{ secrets.RENOVATE_TOKEN }}
+
+      - name: Detect validation strategy
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > .renovate-commands
+          : > .renovate-install-command
+          echo "supported=false" >> "$GITHUB_OUTPUT"
+          echo "needs_node=false" >> "$GITHUB_OUTPUT"
+          echo "needs_bun=false" >> "$GITHUB_OUTPUT"
+          echo "needs_pnpm=false" >> "$GITHUB_OUTPUT"
+          echo "needs_java=false" >> "$GITHUB_OUTPUT"
+
+          if [ -f package.json ]; then
+            echo "supported=true" >> "$GITHUB_OUTPUT"
+            echo "needs_node=true" >> "$GITHUB_OUTPUT"
+
+            if [ -f bun.lock ] || [ -f bun.lockb ]; then
+              echo "needs_bun=true" >> "$GITHUB_OUTPUT"
+              echo "bun install" > .renovate-install-command
+              runner="bun run"
+            elif [ -f pnpm-lock.yaml ]; then
+              echo "needs_pnpm=true" >> "$GITHUB_OUTPUT"
+              echo "pnpm install --frozen-lockfile" > .renovate-install-command
+              runner="pnpm"
+            elif [ -f yarn.lock ]; then
+              echo "yarn install --immutable || yarn install --frozen-lockfile" > .renovate-install-command
+              runner="yarn"
+            elif [ -f package-lock.json ]; then
+              echo "npm ci" > .renovate-install-command
+              runner="npm run"
+            else
+              echo "npm install" > .renovate-install-command
+              runner="npm run"
+            fi
+
+            node - <<'NODE' > .renovate-script-names
+          const pkg = require("./package.json");
+          const scripts = pkg.scripts || {};
+          for (const name of ["lint", "typecheck", "build"]) {
+            if (scripts[name]) {
+              console.log(name);
+            }
+          }
+          NODE
+
+            while IFS= read -r name; do
+              [ -n "$name" ] || continue
+              case "$runner" in
+                "bun run")
+                  echo "bun run $name" >> .renovate-commands
+                  ;;
+                "pnpm")
+                  echo "pnpm $name" >> .renovate-commands
+                  ;;
+                "yarn")
+                  echo "yarn $name" >> .renovate-commands
+                  ;;
+                *)
+                  echo "npm run $name" >> .renovate-commands
+                  ;;
+              esac
+            done < .renovate-script-names
+          else
+            gradlew="$(find . -maxdepth 3 -type f -name gradlew | head -n 1 || true)"
+            if [ -n "$gradlew" ]; then
+              echo "supported=true" >> "$GITHUB_OUTPUT"
+              echo "needs_java=true" >> "$GITHUB_OUTPUT"
+              gradle_dir="$(dirname "$gradlew")"
+              echo "true" > .renovate-install-command
+              echo "cd \"$gradle_dir\" && chmod +x ./gradlew && ./gradlew build" > .renovate-commands
+            fi
+          fi
+
+          if [ ! -s .renovate-commands ]; then
+            echo "supported=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Node.js
+        if: steps.detect.outputs.needs_node == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Set up Bun
+        if: steps.detect.outputs.needs_bun == 'true'
+        uses: oven-sh/setup-bun@v2
+
+      - name: Set up pnpm
+        if: steps.detect.outputs.needs_pnpm == 'true'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Java
+        if: steps.detect.outputs.needs_java == 'true'
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install dependencies
+        if: steps.detect.outputs.supported == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          install_command="$(cat .renovate-install-command)"
+          bash -lc "$install_command"
+
+      - name: Validate Renovate update
+        id: validate
+        if: steps.detect.outputs.supported == 'true'
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > renovate-validation.log
+          while IFS= read -r command; do
+            [ -n "$command" ] || continue
+            echo "\$ $command" | tee -a renovate-validation.log
+            if ! bash -lc "$command" 2>&1 | tee -a renovate-validation.log; then
+              exit 1
+            fi
+            echo | tee -a renovate-validation.log
+          done < .renovate-commands
+
+      - name: Run Gemini fixer
+        if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=()
+          while IFS= read -r command; do
+            [ -n "$command" ] || continue
+            args+=(--command "$command")
+          done < .renovate-commands
+          node .renovate-config/scripts/ai-renovate-fix.mjs --log renovate-validation.log "${args[@]}"
+
+      - name: Commit and push AI repair
+        if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .renovate-ai-fix-*.patch renovate-ai-validation-*.log renovate-validation.log .renovate-commands .renovate-install-command .renovate-script-names
+          rm -rf .renovate-config
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No repair changes to push."
+            exit 0
+          fi
+          git config user.name "Renovate AI Fixer"
+          git config user.email "renovate-ai-fixer@users.noreply.github.com"
+          git add -A
+          git commit -m "chore: apply Gemini fix for Renovate update"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+
+      - name: Enable auto-merge
+        if: (steps.detect.outputs.supported != 'true' || steps.validate.outcome == 'success') && contains(github.event.pull_request.labels.*.name, 'renovate-automerge')
+        env:
+          GH_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
