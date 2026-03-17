@@ -54,3 +54,7 @@ lighthouse-*.html
 
 /WEBSITE-REPORT.md
 scripts/rotate-secrets.sh
+
+.claude/
+.chatgpt/
+.gemini/
