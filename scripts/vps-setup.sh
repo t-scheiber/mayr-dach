@@ -1,8 +1,21 @@
 #!/bin/bash
 set -e
 
+# =============================================================
+# Mayr Dach VPS Setup
+# Before running, create /opt/mayr-dach/.env with your secrets.
+# See .env.example for required variables.
+# =============================================================
+
 echo "=== Mayr Dach VPS Setup ==="
 echo ""
+
+# Check for required env vars
+if [ ! -f /opt/mayr-dach/.env ] && [ ! -f .env.prepared ]; then
+  echo "WARNING: /opt/mayr-dach/.env not found."
+  echo "You'll need to create it before the app can start."
+  echo "See .env.example for the required variables."
+fi
 
 # 1. System update
 echo ">>> Updating system..."
@@ -31,9 +44,11 @@ apt install -y postgresql postgresql-contrib
 systemctl enable postgresql
 systemctl start postgresql
 
-# Create database and user
+# Create database and user (set your own password!)
 echo ">>> Configuring PostgreSQL..."
-sudo -u postgres psql -c "CREATE USER mayrdach WITH PASSWORD 'REDACTED_PG_PASSWORD';" 2>/dev/null || true
+read -sp "Enter PostgreSQL password for 'mayrdach' user: " PG_PASS
+echo ""
+sudo -u postgres psql -c "CREATE USER mayrdach WITH PASSWORD '${PG_PASS}';" 2>/dev/null || true
 sudo -u postgres psql -c "CREATE DATABASE mayrdach OWNER mayrdach;" 2>/dev/null || true
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE mayrdach TO mayrdach;" 2>/dev/null || true
 
@@ -55,21 +70,14 @@ else
 fi
 cd /opt/mayr-dach
 
-# 8. Create .env file
-echo ">>> Creating .env..."
-cat > /opt/mayr-dach/.env << 'ENVEOF'
-DATABASE_URL="postgresql://mayrdach:REDACTED_PG_PASSWORD@localhost:5432/mayrdach"
-
-BETTER_AUTH_SECRET=REDACTED_AUTH_SECRET
-BETTER_AUTH_URL="https://mayr-dach.com"
-NEXT_PUBLIC_BETTER_AUTH_URL="https://mayr-dach.com"
-
-SMTP_HOST="smtp.hostinger.com"
-SMTP_PORT="587"
-SMTP_USER="noreply@mayr-dach.com"
-SMTP_PASS="REDACTED_SMTP_PASSWORD"
-NOTIFICATION_EMAIL="office@mayr-dach.com"
-ENVEOF
+# 8. Create .env file from template
+echo ">>> Setting up .env..."
+if [ ! -f /opt/mayr-dach/.env ]; then
+  cp /opt/mayr-dach/.env.example /opt/mayr-dach/.env
+  echo "IMPORTANT: Edit /opt/mayr-dach/.env with your actual secrets before proceeding!"
+  echo "Required: DATABASE_URL, BETTER_AUTH_SECRET, SMTP_PASS"
+  read -p "Press Enter after editing .env, or Ctrl+C to abort..."
+fi
 
 # 9. Install dependencies and build
 echo ">>> Installing dependencies..."
@@ -87,27 +95,6 @@ $BUN_INSTALL/bin/bun run build
 
 # 10. Create systemd service
 echo ">>> Creating systemd service..."
-cat > /etc/systemd/system/mayr-dach.service << 'SVCEOF'
-[Unit]
-Description=Mayr Dach Next.js App
-After=network.target postgresql.service
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/opt/mayr-dach
-ExecStart=/usr/bin/node /opt/mayr-dach/.next/standalone/server.js
-Restart=on-failure
-RestartSec=5
-Environment=NODE_ENV=production
-Environment=PORT=3000
-EnvironmentFile=/opt/mayr-dach/.env
-
-[Install]
-WantedBy=multi-user.target
-SVCEOF
-
-# Wait, we're not using standalone anymore. Use next start instead.
 cat > /etc/systemd/system/mayr-dach.service << 'SVCEOF'
 [Unit]
 Description=Mayr Dach Next.js App
@@ -148,5 +135,4 @@ systemctl restart caddy
 echo ""
 echo "=== Setup complete! ==="
 echo "App running at https://mayr-dach.com"
-echo "PostgreSQL: mayrdach@localhost:5432/mayrdach"
 echo ""
