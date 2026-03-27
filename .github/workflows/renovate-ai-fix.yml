@@ -21,6 +21,7 @@ jobs:
   renovate-ai-fix:
     if: startsWith(github.event.pull_request.head.ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
@@ -121,7 +122,7 @@ jobs:
         if: steps.detect.outputs.needs_node == 'true'
         uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 24.14.0
 
       - name: Set up Bun
         if: steps.detect.outputs.needs_bun == 'true'
@@ -131,7 +132,7 @@ jobs:
         if: steps.detect.outputs.needs_pnpm == 'true'
         uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 10.32.1
 
       - name: Set up Java
         if: steps.detect.outputs.needs_java == 'true'
@@ -166,6 +167,7 @@ jobs:
           done < .renovate-commands
 
       - name: Run Gemini fixer
+        id: ai_fix
         if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -177,14 +179,17 @@ jobs:
             [ -n "$command" ] || continue
             args+=(--command "$command")
           done < .renovate-commands
-          node .renovate-config/scripts/ai-renovate-fix.mjs --log renovate-validation.log "${args[@]}"
+          node .renovate-config/scripts/ai-renovate-fix.mjs \
+            --log renovate-validation.log \
+            --attempts 3 \
+            "${args[@]}"
 
       - name: Commit and push AI repair
-        if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
+        if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success' && steps.ai_fix.outcome == 'success'
         shell: bash
         run: |
           set -euo pipefail
-          rm -f .renovate-ai-fix-*.patch renovate-ai-validation-*.log renovate-validation.log .renovate-commands .renovate-install-command .renovate-script-names
+          rm -f .renovate-ai-fix-*.patch .renovate-ai-response-*.txt renovate-ai-validation-*.log renovate-validation.log .renovate-commands .renovate-install-command .renovate-script-names
           rm -rf .renovate-config
           if [ -z "$(git status --porcelain)" ]; then
             echo "No repair changes to push."
@@ -197,7 +202,10 @@ jobs:
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Enable auto-merge
-        if: (steps.detect.outputs.supported != 'true' || steps.validate.outcome == 'success') && contains(github.event.pull_request.labels.*.name, 'renovate-automerge')
+        if: |
+          (steps.detect.outputs.supported != 'true') ||
+          (steps.validate.outcome == 'success') ||
+          (steps.ai_fix.outcome == 'success')
         env:
           GH_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
         run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
