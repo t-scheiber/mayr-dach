@@ -13,7 +13,7 @@
     "db:seed": "bun prisma/seed.ts"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.22.2"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
