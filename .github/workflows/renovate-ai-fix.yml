@@ -122,7 +122,7 @@ jobs:
         if: steps.detect.outputs.needs_node == 'true'
         uses: actions/setup-node@v6
         with:
-          node-version: 24.14.0
+          node-version: 24.14.1
 
       - name: Set up Bun
         if: steps.detect.outputs.needs_bun == 'true'
@@ -132,7 +132,7 @@ jobs:
         if: steps.detect.outputs.needs_pnpm == 'true'
         uses: pnpm/action-setup@v4
         with:
-          version: 10.32.1
+          version: 10.33.0
 
       - name: Set up Java
         if: steps.detect.outputs.needs_java == 'true'
