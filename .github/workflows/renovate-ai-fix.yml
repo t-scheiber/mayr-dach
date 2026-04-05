@@ -122,7 +122,7 @@ jobs:
         if: steps.detect.outputs.needs_node == 'true'
         uses: actions/setup-node@v6
         with:
-          node-version: 24.14.0
+          node-version: 24
 
       - name: Set up Bun
         if: steps.detect.outputs.needs_bun == 'true'
@@ -132,7 +132,7 @@ jobs:
         if: steps.detect.outputs.needs_pnpm == 'true'
         uses: pnpm/action-setup@v4
         with:
-          version: 10.32.1
+          version: 10
 
       - name: Set up Java
         if: steps.detect.outputs.needs_java == 'true'
@@ -169,6 +169,7 @@ jobs:
       - name: Run Gemini fixer
         id: ai_fix
         if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
+        continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         shell: bash
@@ -201,11 +202,11 @@ jobs:
           git commit -m "chore: apply Gemini fix for Renovate update"
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
-      - name: Enable auto-merge
+      - name: Merge PR
         if: |
           (steps.detect.outputs.supported != 'true') ||
           (steps.validate.outcome == 'success') ||
           (steps.ai_fix.outcome == 'success')
         env:
           GH_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
-        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
+        run: gh pr merge --squash "${{ github.event.pull_request.html_url }}"
