@@ -209,4 +209,10 @@ jobs:
           (steps.ai_fix.outcome == 'success')
         env:
           GH_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
-        run: gh pr merge --squash "${{ github.event.pull_request.html_url }}"
+        run: |
+          mergeable=$(gh pr view "${{ github.event.pull_request.number }}" --json mergeable -q '.mergeable')
+          if [ "$mergeable" != "MERGEABLE" ]; then
+            echo "PR is not mergeable (state: $mergeable). Skipping merge — Renovate will rebase."
+            exit 0
+          fi
+          gh pr merge --squash "${{ github.event.pull_request.html_url }}"
