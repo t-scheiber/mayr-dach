@@ -27,6 +27,7 @@ jobs:
 
   deploy:
     needs: build
+    if: vars.DEPLOY_ENABLED != 'false'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy webhook
