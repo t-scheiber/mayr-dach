@@ -141,7 +141,7 @@ jobs:
         if: steps.detect.outputs.needs_pnpm == 'true'
         uses: pnpm/action-setup@v6
         with:
-          version: 11.3.0
+          version: 11.8.0
 
       - name: Set up Java
         if: steps.detect.outputs.needs_java == 'true'
