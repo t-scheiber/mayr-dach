@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 30
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ci
     steps:
       - name: Checkout Renovate branch
         uses: actions/checkout@v6
@@ -55,6 +56,15 @@ jobs:
           path: .renovate-config
           token: ${{ github.token }}
           persist-credentials: false
+          sparse-checkout: .github/renovate
+
+      - name: Stage trusted Renovate helpers outside workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf "$RUNNER_TEMP/renovate-helpers"
+          cp -R .renovate-config/.github/renovate "$RUNNER_TEMP/renovate-helpers"
+          rm -rf .renovate-config
 
       - name: Detect validation strategy
         id: detect
@@ -205,7 +215,7 @@ jobs:
             [ -n "$command" ] || continue
             args+=(--command "$command")
           done < .renovate-commands
-          node .renovate-config/.github/renovate/scripts/ai-renovate-fix.mjs \
+          node "$RUNNER_TEMP/renovate-helpers/scripts/ai-renovate-fix.mjs" \
             --log renovate-validation.log \
             --attempts 3 \
             "${args[@]}"
