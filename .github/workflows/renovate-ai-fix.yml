@@ -47,11 +47,11 @@ jobs:
               ;;
           esac
 
-      - name: Checkout shared Renovate config
+      - name: Checkout trusted Renovate helpers
         uses: actions/checkout@v6
         with:
-          repository: t-scheiber/renovate-config
-          ref: main
+          repository: ${{ github.repository }}
+          ref: ${{ github.event.pull_request.base.sha }}
           path: .renovate-config
           token: ${{ github.token }}
           persist-credentials: false
@@ -69,7 +69,7 @@ jobs:
           gh auth setup-git
           git fetch origin "$BASE_REF"
           if ! git merge --no-commit --no-ff "origin/$BASE_REF"; then
-            node .renovate-config/scripts/ai-renovate-fix.mjs --conflicts --attempts 3
+            node .renovate-config/.github/renovate/scripts/ai-renovate-fix.mjs --conflicts --attempts 3
           fi
           if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
             git commit -m "chore: merge current base into Renovate update"
@@ -224,7 +224,7 @@ jobs:
             [ -n "$command" ] || continue
             args+=(--command "$command")
           done < .renovate-commands
-          node .renovate-config/scripts/ai-renovate-fix.mjs \
+          node .renovate-config/.github/renovate/scripts/ai-renovate-fix.mjs \
             --log renovate-validation.log \
             --attempts 3 \
             "${args[@]}"
