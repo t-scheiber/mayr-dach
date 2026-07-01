@@ -19,19 +19,33 @@ concurrency:
 
 jobs:
   renovate-ai-fix:
-    if: startsWith(github.event.pull_request.head.ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository
+    if: startsWith(github.event.pull_request.head.ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login == 't-scheiber'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
     steps:
       - name: Checkout Renovate branch
         uses: actions/checkout@v6
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-          token: ${{ secrets.RENOVATE_TOKEN }}
+          token: ${{ github.token }}
+          persist-credentials: false
+
+      - name: Verify Renovate branch provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          author_email="$(git log -1 --format=%ae)"
+          case "$author_email" in
+            29139614+renovate\[bot\]@users.noreply.github.com|renovate-ai-fixer@users.noreply.github.com)
+              ;;
+            *)
+              echo "Refusing secret-bearing workflow for unexpected author: $author_email" >&2
+              exit 1
+              ;;
+          esac
 
       - name: Checkout shared Renovate config
         uses: actions/checkout@v6
@@ -39,7 +53,27 @@ jobs:
           repository: t-scheiber/renovate-config
           ref: main
           path: .renovate-config
-          token: ${{ secrets.RENOVATE_TOKEN }}
+          token: ${{ github.token }}
+          persist-credentials: false
+
+      - name: Merge current base branch and resolve conflicts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GH_TOKEN: ${{ github.token }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Renovate AI Fixer"
+          git config user.email "renovate-ai-fixer@users.noreply.github.com"
+          gh auth setup-git
+          git fetch origin "$BASE_REF"
+          if ! git merge --no-commit --no-ff "origin/$BASE_REF"; then
+            node .renovate-config/scripts/ai-renovate-fix.mjs --conflicts --attempts 3
+          fi
+          if git rev-parse -q --verify MERGE_HEAD >/dev/null; then
+            git commit -m "chore: merge current base into Renovate update"
+          fi
 
       - name: Detect validation strategy
         id: detect
@@ -60,7 +94,7 @@ jobs:
 
             if [ -f bun.lock ] || [ -f bun.lockb ]; then
               echo "needs_bun=true" >> "$GITHUB_OUTPUT"
-              echo "bun install" > .renovate-install-command
+              echo "bun install --frozen-lockfile" > .renovate-install-command
               runner="bun run"
             elif node -e "const s=JSON.stringify(require('./package.json').scripts||{}); process.exit(s.includes('bun ')?0:1)"; then
               echo "needs_bun=true" >> "$GITHUB_OUTPUT"
@@ -141,7 +175,7 @@ jobs:
         if: steps.detect.outputs.needs_pnpm == 'true'
         uses: pnpm/action-setup@v6
         with:
-          version: 11.3.0
+          version: 11.8.0
 
       - name: Set up Java
         if: steps.detect.outputs.needs_java == 'true'
@@ -178,8 +212,10 @@ jobs:
       - name: Run Gemini fixer
         id: ai_fix
         if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
+        continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
         shell: bash
         run: |
           set -euo pipefail
@@ -193,28 +229,35 @@ jobs:
             --attempts 3 \
             "${args[@]}"
 
-      - name: Commit and push AI repair
-        if: steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success' && steps.ai_fix.outcome == 'success'
+      - name: Final validation without secrets
+        id: final_validate
+        if: |
+          steps.detect.outputs.supported == 'true' &&
+          (steps.validate.outcome == 'success' || steps.ai_fix.outcome == 'success')
+        shell: bash
+        run: |
+          set -euo pipefail
+          while IFS= read -r command; do
+            [ -n "$command" ] || continue
+            bash -lc "$command"
+          done < .renovate-commands
+
+      - name: Commit and push validated repair
+        if: |
+          always() && !cancelled() &&
+          (steps.detect.outputs.supported != 'true' || steps.final_validate.outcome == 'success')
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           rm -f .renovate-ai-fix-*.patch .renovate-ai-response-*.txt renovate-ai-validation-*.log renovate-validation.log .renovate-commands .renovate-install-command .renovate-script-names
           rm -rf .renovate-config
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No repair changes to push."
-            exit 0
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "Renovate AI Fixer"
+            git config user.email "renovate-ai-fixer@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: apply validated AI repair"
           fi
-          git config user.name "Renovate AI Fixer"
-          git config user.email "renovate-ai-fixer@users.noreply.github.com"
-          git add -A
-          git commit -m "chore: apply Gemini fix for Renovate update"
+          gh auth setup-git
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
-      - name: Enable auto-merge
-        if: |
-          (steps.detect.outputs.supported != 'true') ||
-          (steps.validate.outcome == 'success') ||
-          (steps.ai_fix.outcome == 'success')
-        env:
-          GH_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
-        run: gh pr merge --auto --squash "${{ github.event.pull_request.html_url }}"
