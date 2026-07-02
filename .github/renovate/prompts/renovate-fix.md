@@ -40,7 +40,14 @@ Study the **full diff** provided below. It shows exactly which packages were bum
 2. What files in `node_modules`, `site-packages`, etc. changed (if visible)
 3. Whether the bump is a single package or a group
 
-Then mentally recall the migration path for that package's major version. Common patterns follow.
+Then consult the **official upgrade path** for each bumped package:
+
+1. Identify the exact package name and old → new version from the diff.
+2. Use Google Search (enabled for this task) to find the package's official changelog, release notes, or migration guide for that version range.
+3. Prefer the documented migration steps from official sources (project docs, GitHub releases, npm package page, framework docs) over memory or guesswork.
+4. Apply only the breaking changes that are relevant to the files and errors in this repository.
+
+Common patterns follow, but always verify against the official guide when a major version is involved.
 
 ## Step 3 — Apply the minimal fix
 

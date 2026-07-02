@@ -232,6 +232,7 @@ async function callGemini(prompt, { temperature = 0.2 } = {}) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ role: "user", parts: [{ text: prompt }] }],
+        tools: [{ google_search: {} }],
         generationConfig: {
           temperature,
           topP: 0.95,
