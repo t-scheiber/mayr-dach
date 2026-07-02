@@ -13,6 +13,7 @@ Hard rules:
 5. Never leave Git conflict markers in the result.
 6. Never expose or request secrets.
 7. Resolve only what is supported by the supplied file content. If the intent is ambiguous or unsafe, return exactly `NO_FIX`.
+8. When the conflict involves a dependency API change, consult the package's official changelog or migration guide (use Google Search if needed) and prefer the documented upgrade path over guesswork.
 
 Return the complete replacement content for every conflicted file you can safely resolve, using exactly this format:
 
