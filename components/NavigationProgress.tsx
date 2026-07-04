@@ -42,18 +42,23 @@ export function NavigationProgress() {
     return () => document.removeEventListener("click", handleClick, true);
   }, []);
 
-  // Complete progress bar when pathname changes
+  // Complete progress bar when pathname changes. State updates happen in
+  // timer callbacks rather than synchronously in the effect body to comply
+  // with react-hooks/set-state-in-effect.
   useEffect(() => {
     if (pathname !== prevPath.current) {
       prevPath.current = pathname;
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (visible) {
-        setWidth(100);
+        const complete = setTimeout(() => setWidth(100), 0);
         const timer = setTimeout(() => {
           setVisible(false);
           setWidth(0);
         }, 400);
-        return () => clearTimeout(timer);
+        return () => {
+          clearTimeout(complete);
+          clearTimeout(timer);
+        };
       }
     }
   }, [pathname, visible]);

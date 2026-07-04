@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -65,23 +65,24 @@ export default function ProjectEditor({ projectId }: { projectId?: string }) {
   );
 
   // Initialize form from fetched data
-  useEffect(() => {
-    if (data?.project) {
-      const p = data.project;
-      setForm({
-        slug: p.slug,
-        active: p.active,
-        featured: p.featured,
-        sortOrder: p.sortOrder,
-        name: p.name,
-        location: p.location || "",
-        websiteUrl: p.websiteUrl || "",
-        categories: (p.categories || []).join(", "),
-        images: (p.images || []).join("\n"),
-        attribution: p.attribution || "",
-      });
-    }
-  }, [data]);
+  // (state adjustment during render instead of an effect).
+  const [loadedProject, setLoadedProject] = useState<unknown>(null);
+  if (data?.project && data.project !== loadedProject) {
+    setLoadedProject(data.project);
+    const p = data.project;
+    setForm({
+      slug: p.slug,
+      active: p.active,
+      featured: p.featured,
+      sortOrder: p.sortOrder,
+      name: p.name,
+      location: p.location || "",
+      websiteUrl: p.websiteUrl || "",
+      categories: (p.categories || []).join(", "),
+      images: (p.images || []).join("\n"),
+      attribution: p.attribution || "",
+    });
+  }
 
   // Auth redirect (render-time)
   if (!isPending && !session) {
