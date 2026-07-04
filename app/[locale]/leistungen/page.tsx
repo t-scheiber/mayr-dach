@@ -1,6 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { ScrollReveal, StaggerContainer, StaggerItem, TileFlip } from "@/components/animations";
+import { StaggerContainer, StaggerItem, TileFlip } from "@/components/animations";
 
 export async function generateMetadata({
   params,

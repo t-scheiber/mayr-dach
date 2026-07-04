@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
@@ -26,16 +26,19 @@ export default function ApplicationFormContent() {
   const [position, setPosition] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [prefilled, setPrefilled] = useState(false);
 
   // Pre-select position when jobs load and jobId is present
-  useEffect(() => {
-    if (jobId && jobOptions.length > 0 && !position) {
+  // (state adjustment during render instead of an effect).
+  if (!prefilled && jobId && jobOptions.length > 0) {
+    setPrefilled(true);
+    if (!position) {
       const match = jobOptions.find((j) => j.slug === jobId);
       if (match) {
         setPosition((locale === "en" && match.titleEn) ? match.titleEn : match.titleDe);
       }
     }
-  }, [jobId, jobOptions, locale, position]);
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

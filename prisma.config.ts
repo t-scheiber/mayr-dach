@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export default {
+const prismaConfig = {
   schema: path.join("prisma", "schema.prisma"),
   datasource: {
     url: process.env.DATABASE_URL,
@@ -12,3 +12,5 @@ export default {
     seed: "bun prisma/seed.ts",
   },
 };
+
+export default prismaConfig;

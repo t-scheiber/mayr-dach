@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useSWR from "swr";
 import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
@@ -73,27 +73,28 @@ export default function JobEditor({ jobId }: { jobId?: string }) {
   );
 
   // Initialize form from fetched data
-  useEffect(() => {
-    if (data?.job) {
-      const j = data.job;
-      setForm({
-        slug: j.slug,
-        active: j.active,
-        isApprenticeship: j.isApprenticeship,
-        sortOrder: j.sortOrder,
-        titleDe: j.titleDe,
-        titleEn: j.titleEn || "",
-        durationDe: j.durationDe || "",
-        durationEn: j.durationEn || "",
-        tasksDe: (j.tasksDe || []).join("\n"),
-        tasksEn: (j.tasksEn || []).join("\n"),
-        requirementsDe: (j.requirementsDe || []).join("\n"),
-        requirementsEn: (j.requirementsEn || []).join("\n"),
-        benefitsDe: (j.benefitsDe || []).join("\n"),
-        benefitsEn: (j.benefitsEn || []).join("\n"),
-      });
-    }
-  }, [data]);
+  // (state adjustment during render instead of an effect).
+  const [loadedJob, setLoadedJob] = useState<unknown>(null);
+  if (data?.job && data.job !== loadedJob) {
+    setLoadedJob(data.job);
+    const j = data.job;
+    setForm({
+      slug: j.slug,
+      active: j.active,
+      isApprenticeship: j.isApprenticeship,
+      sortOrder: j.sortOrder,
+      titleDe: j.titleDe,
+      titleEn: j.titleEn || "",
+      durationDe: j.durationDe || "",
+      durationEn: j.durationEn || "",
+      tasksDe: (j.tasksDe || []).join("\n"),
+      tasksEn: (j.tasksEn || []).join("\n"),
+      requirementsDe: (j.requirementsDe || []).join("\n"),
+      requirementsEn: (j.requirementsEn || []).join("\n"),
+      benefitsDe: (j.benefitsDe || []).join("\n"),
+      benefitsEn: (j.benefitsEn || []).join("\n"),
+    });
+  }
 
   // Auth redirect (render-time)
   if (!isPending && !session) {
