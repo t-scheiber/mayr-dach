@@ -33,7 +33,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.1",
+    "@tailwindcss/postcss": "^4.3.2",
     "@types/node": "^25.9.4",
     "@types/nodemailer": "^7.0.12",
     "@types/pg": "^8.18.0",
@@ -41,7 +41,7 @@
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.6.0",
     "eslint-config-next": "16.1.7",
-    "tailwindcss": "^4.2.1",
+    "tailwindcss": "^4.3.2",
     "typescript": "^6.0.3"
   },
   "ignoreScripts": [
