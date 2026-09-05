@@ -1,5 +1,5 @@
 import { github, pages, trustedPR, VALIDATION_CONTEXT, validationDescription } from './github-api.mjs';
-import { decision, POLICY_REVISION } from './reconcile-prs.mjs';
+import { decision, POLICY_REVISION, reconcile } from './reconcile-prs.mjs';
 const repo=process.env.GITHUB_REPOSITORY, number=process.env.PR_NUMBER;
 if (!/^\d+$/.test(number||'')) throw new Error('Invalid PR number');
 const route=`/repos/${repo}`;
@@ -29,3 +29,6 @@ if(!result.merged) throw new Error('Merge was not confirmed');
 const verified=await github(`${route}/pulls/${number}`);
 if(!verified.merged) throw new Error('Merge readback failed');
 console.log(`Merged ${repo} #${number} at ${result.sha}`);
+
+// A confirmed merge advances the queue immediately. Failures retain the scheduled backoff.
+console.log(await reconcile(repo));

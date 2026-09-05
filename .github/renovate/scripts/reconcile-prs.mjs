@@ -23,7 +23,7 @@ export function decision({ pr, repo, base, statuses, run, validationJobSucceeded
   return 'validate';
 }
 
-async function reconcile(repo) {
+export async function reconcile(repo) {
   const meta = await github(`/repos/${repo}`, { allow404: true });
   if (!meta || meta.archived || meta.disabled) return `${repo}: skipped`;
   const prs = (await pages(`/repos/${repo}/pulls?state=open`)).filter(pr => trustedPR(pr, repo));
