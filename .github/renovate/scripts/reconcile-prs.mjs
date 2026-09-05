@@ -2,6 +2,16 @@ import fs from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { github, pages, trustedPR, VALIDATION_CONTEXT, validationDescription } from './github-api.mjs';
 export const POLICY_REVISION = '2';
+export const MERGE_READY_CONTEXT = 'renovate/merge-ready';
+export function mergeAuthorized(statuses, repo, base, now = Date.now()) {
+  const validation = statuses.find(s => s.context === VALIDATION_CONTEXT);
+  const ready = statuses.find(s => s.context === MERGE_READY_CONTEXT);
+  const expected = validationDescription(base, POLICY_REVISION);
+  return [validation,ready].every(s => s?.state === 'success' && s.description === expected && s.creator?.login === 'github-actions[bot]') &&
+    ready.target_url === validation.target_url && ready.target_url.startsWith(`https://github.com/${repo}/actions/runs/`) &&
+    /^\d+$/.test(ready.target_url.split('/').at(-1)) && Date.parse(ready.created_at) >= Date.parse(validation.created_at) &&
+    now - Date.parse(ready.created_at) >= 0 && now - Date.parse(ready.created_at) < 60*60*1000;
+}
 export function decision({ pr, repo, base, statuses, run, validationJobSucceeded = false, checks = [], now = Date.now() }) {
   if (!trustedPR(pr, repo)) return 'skip';
   const expected = validationDescription(base, POLICY_REVISION);
@@ -33,6 +43,17 @@ export async function reconcile(repo) {
   for (const summary of prs) {
     const pr = await github(`/repos/${repo}/pulls/${summary.number}`);
     const all = await pages(`/repos/${repo}/commits/${pr.head.sha}/statuses`);
+    if (mergeAuthorized(all,repo,base)) {
+      // The fresh scoped merge job has checked all CI. The existing Renovate token
+      // supplies only the final write for workflow updates that GITHUB_TOKEN cannot merge.
+      const current = await github(`/repos/${repo}/pulls/${pr.number}`);
+      const currentBase = (await github(`/repos/${repo}/git/ref/heads/${encodeURIComponent(meta.default_branch)}`)).object.sha;
+      if (!trustedPR(current,repo) || current.head.sha !== pr.head.sha || currentBase !== base) return `${repo}: revision changed before central merge`;
+      const result = await github(`/repos/${repo}/pulls/${pr.number}/merge`,{method:'PUT',body:{sha:pr.head.sha,merge_method:'squash'}});
+      if (!result.merged || !(await github(`/repos/${repo}/pulls/${pr.number}`)).merged) throw new Error(`Merge readback failed for ${repo} #${pr.number}`);
+      console.log(`Merged ${repo} #${pr.number} at ${result.sha} after scoped authorization`);
+      return reconcile(repo);
+    }
     const proofs = all.filter(s => s.context === VALIDATION_CONTEXT && s.description === validationDescription(base,POLICY_REVISION) && s.creator?.login === 'github-actions[bot]');
     const proof = proofs[0];
     let action = 'validate';

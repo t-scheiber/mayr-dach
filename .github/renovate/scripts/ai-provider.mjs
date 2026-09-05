@@ -20,7 +20,7 @@ export async function requestRepair(prompt, config, fetchImpl = fetch) {
     fs.writeFileSync(config.budgetFile, JSON.stringify({requests:used+1}));
   }
   const body = config.provider === 'openrouter'
-    ? { model: config.model, messages: [{ role: 'user', content: prompt }], max_tokens: 12000, temperature: 0.2 }
+    ? { model: config.model, messages: [{ role: 'user', content: prompt }], max_tokens: 12000, reasoning: { effort: 'low' }, temperature: 0.2 }
     : { model: config.model, input: prompt, max_output_tokens: 12000, reasoning: { effort: 'medium' }, store: false };
   const response = await fetchImpl(config.url, {
     method: 'POST', signal: AbortSignal.timeout(180000),
@@ -33,7 +33,7 @@ export async function requestRepair(prompt, config, fetchImpl = fetch) {
   const text = config.provider === 'openrouter'
     ? payload.choices?.[0]?.message?.content
     : payload.output?.flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('\n');
-  if (typeof text !== 'string' || !text.trim()) throw new Error('AI provider returned no repair text');
+  if (typeof text !== 'string' || !text.trim()) throw new Error(`AI provider returned no repair text (finish: ${['stop','length','content_filter','error'].includes(payload.choices?.[0]?.finish_reason) ? payload.choices[0].finish_reason : 'unknown'})`);
   console.log(`Repair model: ${config.model}; tokens used: ${payload.usage?.total_tokens ?? 'unreported'}`);
   return text;
 }

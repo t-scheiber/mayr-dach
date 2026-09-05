@@ -311,6 +311,7 @@ async function resolveConflicts(maxAttempts) {
     const response = await callAI(prompt, {
       temperature: attempt === 1 ? 0.1 : 0.2,
     });
+    if (response.trim() === "NO_FIX") throw new Error("AI could not establish a safe conflict resolution; stopping this run");
     const replacements = extractFileReplacements(response);
     if (!replacements) continue;
     if (!(await applyFileReplacements(replacements, allowedPaths))) continue;
@@ -439,6 +440,8 @@ async function main() {
       console.error(`  AI provider API error: ${err.message}`);
       continue;
     }
+
+    if (responseText.trim() === "NO_FIX") throw new Error("AI identified an environment issue or insufficient migration evidence; stopping this run");
 
     await fs.writeFile(
       path.resolve(process.cwd(), `.renovate-ai-response-${attempt}.txt`),
