@@ -1,285 +1,215 @@
 name: Renovate AI Fix
+run-name: Renovate ${{ inputs.mode || github.event.client_payload.mode || 'validate' }} for PR ${{ inputs.pr_number || github.event.client_payload.pr_number }}
 
 on:
-  pull_request_target:
-    types:
-      - opened
-      - synchronize
-      - reopened
-      - labeled
-      - ready_for_review
+  repository_dispatch:
+    types: [renovate-validate]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Renovate pull request number
+        required: true
+        type: string
+
+      mode:
+        description: Validate and merge, or retry merge only
+        default: validate
+        type: choice
+        options: [validate, merge]
 
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 
 concurrency:
-  group: renovate-ai-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: renovate-validation-${{ inputs.pr_number || github.event.client_payload.pr_number }}
+  cancel-in-progress: false
 
 jobs:
   renovate-ai-fix:
-    if: >-
-      github.event.pull_request.state == 'open' &&
-      startsWith(github.event.pull_request.head.ref, 'renovate/') &&
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.user.login == 't-scheiber'
+    if: (inputs.mode || github.event.client_payload.mode || 'validate') != 'merge'
+    permissions:
+      contents: write
+      pull-requests: read
+      statuses: write
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+      PR_NUMBER: ${{ inputs.pr_number || github.event.client_payload.pr_number }}
+      POLICY_REVISION: '2'
+      CI: 'true'
+      AI_PROVIDER: openrouter
+      AI_MODEL: z-ai/glm-5.3-flash
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ci
-    steps:
-      - name: Skip if PR branch was already deleted
-        id: guard
+      BETTER_AUTH_SECRET: ci-only-placeholder-not-used-outside-disposable-validation
+    services:
+      postgres:
+        image: postgres:17
         env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          state="$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}" --jq .state)"
-          if [ "$state" != "open" ]; then
-            echo "PR is $state; skipping Renovate AI Fix."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          if ! gh api "repos/${{ github.repository }}/git/ref/heads/${{ github.event.pull_request.head.ref }}" >/dev/null 2>&1; then
-            echo "Branch ${{ github.event.pull_request.head.ref }} is gone; skipping Renovate AI Fix."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-
-      - name: Checkout Renovate branch
-        if: steps.guard.outputs.skip != 'true'
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ci
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - name: Checkout trusted helpers from default branch
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-          token: ${{ github.token }}
-          persist-credentials: false
-
-      - name: Verify Renovate branch provenance
-        if: steps.guard.outputs.skip != 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          author_email="$(git log -1 --format=%ae)"
-          case "$author_email" in
-            29139614+renovate\[bot\]@users.noreply.github.com|renovate-ai-fixer@users.noreply.github.com)
-              ;;
-            *)
-              echo "Refusing secret-bearing workflow for unexpected author: $author_email" >&2
-              exit 1
-              ;;
-          esac
-
-      - name: Checkout trusted Renovate helpers
-        if: steps.guard.outputs.skip != 'true'
-        uses: actions/checkout@v7
-        with:
-          repository: ${{ github.repository }}
-          ref: ${{ github.event.pull_request.base.ref }}
-          path: .renovate-config
-          token: ${{ github.token }}
           persist-credentials: false
           sparse-checkout: .github/renovate
 
-      - name: Stage trusted Renovate helpers outside workspace
-        if: steps.guard.outputs.skip != 'true'
-        shell: bash
+      - name: Stage helpers outside the application checkout
         run: |
-          set -euo pipefail
-          rm -rf "$RUNNER_TEMP/renovate-helpers"
-          cp -R .renovate-config/.github/renovate "$RUNNER_TEMP/renovate-helpers"
-          rm -rf .renovate-config
+          cp -R .github/renovate "$RUNNER_TEMP/renovate-helpers"
+          echo "RENOVATE_PLAN=$RUNNER_TEMP/renovate-plan.json" >> "$GITHUB_ENV"
 
-      - name: Detect validation strategy
-        if: steps.guard.outputs.skip != 'true'
-        id: detect
-        shell: bash
-        run: |
-          set -euo pipefail
-          : > .renovate-commands
-          : > .renovate-install-command
-          echo "supported=false" >> "$GITHUB_OUTPUT"
-          echo "needs_node=false" >> "$GITHUB_OUTPUT"
-          echo "needs_bun=false" >> "$GITHUB_OUTPUT"
-          echo "needs_pnpm=false" >> "$GITHUB_OUTPUT"
-          echo "needs_java=false" >> "$GITHUB_OUTPUT"
-
-          if [ -f package.json ]; then
-            echo "supported=true" >> "$GITHUB_OUTPUT"
-            echo "needs_node=true" >> "$GITHUB_OUTPUT"
-
-            if [ -f bun.lock ] || [ -f bun.lockb ]; then
-              echo "needs_bun=true" >> "$GITHUB_OUTPUT"
-              echo "bun install --frozen-lockfile" > .renovate-install-command
-              runner="bun run"
-            elif node -e "const s=JSON.stringify(require('./package.json').scripts||{}); process.exit(s.includes('bun ')?0:1)"; then
-              echo "needs_bun=true" >> "$GITHUB_OUTPUT"
-              if [ -f package-lock.json ]; then
-                echo "npm ci" > .renovate-install-command
-              else
-                echo "npm install" > .renovate-install-command
-              fi
-              runner="npm run"
-            elif [ -f pnpm-lock.yaml ]; then
-              echo "needs_pnpm=true" >> "$GITHUB_OUTPUT"
-              echo "pnpm install --frozen-lockfile" > .renovate-install-command
-              runner="pnpm"
-            elif [ -f yarn.lock ]; then
-              echo "yarn install --immutable || yarn install --frozen-lockfile" > .renovate-install-command
-              runner="yarn"
-            elif [ -f package-lock.json ]; then
-              echo "npm ci" > .renovate-install-command
-              runner="npm run"
-            else
-              echo "npm install" > .renovate-install-command
-              runner="npm run"
-            fi
-
-            node - <<'NODE' > .renovate-script-names
-          const pkg = require("./package.json");
-          const scripts = pkg.scripts || {};
-          for (const name of ["lint", "typecheck", "build"]) {
-            if (scripts[name]) {
-              console.log(name);
-            }
-          }
-          NODE
-
-            while IFS= read -r name; do
-              [ -n "$name" ] || continue
-              case "$runner" in
-                "bun run")
-                  echo "bun run $name" >> .renovate-commands
-                  ;;
-                "pnpm")
-                  echo "pnpm $name" >> .renovate-commands
-                  ;;
-                "yarn")
-                  echo "yarn $name" >> .renovate-commands
-                  ;;
-                *)
-                  echo "npm run $name" >> .renovate-commands
-                  ;;
-              esac
-            done < .renovate-script-names
-          else
-            gradlew="$(find . -maxdepth 3 -type f -name gradlew | head -n 1 || true)"
-            if [ -n "$gradlew" ]; then
-              echo "supported=true" >> "$GITHUB_OUTPUT"
-              echo "needs_java=true" >> "$GITHUB_OUTPUT"
-              gradle_dir="$(dirname "$gradlew")"
-              echo "true" > .renovate-install-command
-              echo "cd \"$gradle_dir\" && chmod +x ./gradlew && ./gradlew build" > .renovate-commands
-            fi
-          fi
-
-          if [ ! -s .renovate-commands ]; then
-            echo "supported=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Set up Node.js
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.needs_node == 'true'
-        uses: actions/setup-node@v7
-        with:
-          node-version: 24.18.1
-
-      - name: Set up Bun
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.needs_bun == 'true'
-        uses: oven-sh/setup-bun@v2
-
-      - name: Set up pnpm
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.needs_pnpm == 'true'
-        uses: pnpm/action-setup@v6
-        with:
-          version: 11.18.0
-
-      - name: Set up Java
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.needs_java == 'true'
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: "21"
-
-      - name: Install dependencies
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.supported == 'true'
-        shell: bash
-        run: |
-          set -euo pipefail
-          install_command="$(cat .renovate-install-command)"
-          bash -lc "$install_command"
-
-      - name: Validate Renovate update
-        id: validate
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.supported == 'true'
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -euo pipefail
-          : > renovate-validation.log
-          while IFS= read -r command; do
-            [ -n "$command" ] || continue
-            echo "\$ $command" | tee -a renovate-validation.log
-            if ! bash -lc "$command" 2>&1 | tee -a renovate-validation.log; then
-              exit 1
-            fi
-            echo | tee -a renovate-validation.log
-          done < .renovate-commands
-
-      - name: Run Gemini fixer
-        id: ai_fix
-        if: steps.guard.outputs.skip != 'true' && steps.detect.outputs.supported == 'true' && steps.validate.outcome != 'success'
-        continue-on-error: true
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          args=()
-          while IFS= read -r command; do
-            [ -n "$command" ] || continue
-            args+=(--command "$command")
-          done < .renovate-commands
-          node "$RUNNER_TEMP/renovate-helpers/scripts/ai-renovate-fix.mjs" \
-            --log renovate-validation.log \
-            --attempts 3 \
-            "${args[@]}"
-
-      - name: Final validation without secrets
-        id: final_validate
-        if: |
-          steps.guard.outputs.skip != 'true' &&
-          steps.detect.outputs.supported == 'true' &&
-          (steps.validate.outcome == 'success' || steps.ai_fix.outcome == 'success')
-        shell: bash
-        run: |
-          set -euo pipefail
-          while IFS= read -r command; do
-            [ -n "$command" ] || continue
-            bash -lc "$command"
-          done < .renovate-commands
-
-      - name: Commit and push validated repair
-        if: |
-          always() && !cancelled() &&
-          steps.guard.outputs.skip != 'true' &&
-          (steps.detect.outputs.supported != 'true' || steps.final_validate.outcome == 'success')
+      - name: Resolve and mark the exact PR revision
+        id: pr
         env:
           GH_TOKEN: ${{ github.token }}
-        shell: bash
+        run: node "$RUNNER_TEMP/renovate-helpers/scripts/pr-lifecycle.mjs" prepare
+
+      - name: Checkout the resolved revision
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ steps.pr.outputs.head }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Include current default branch in validation
+        id: merge
+        continue-on-error: true
+        env:
+          BASE_SHA: ${{ steps.pr.outputs.base }}
         run: |
-          set -euo pipefail
-          rm -f .renovate-ai-fix-*.patch .renovate-ai-response-*.txt renovate-ai-validation-*.log renovate-validation.log .renovate-commands .renovate-install-command .renovate-script-names
-          rm -rf .renovate-config
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "Renovate AI Fixer"
-            git config user.email "renovate-ai-fixer@users.noreply.github.com"
-            git add -A
-            git commit -m "chore: apply validated AI repair"
-            gh auth setup-git
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          fi
+          git config user.name 'Renovate AI Fixer'
+          git config user.email 'renovate-ai-fixer@users.noreply.github.com'
+          git config core.hooksPath /dev/null
+          git merge --no-edit "$BASE_SHA"
+
+      - name: Resolve dependency merge conflicts
+        if: steps.merge.outcome == 'failure'
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          BASE_REF: ${{ steps.pr.outputs.base_ref }}
+        run: |
+          node "$RUNNER_TEMP/renovate-helpers/scripts/ai-renovate-fix.mjs" --conflicts --attempts 3
+          git commit -m 'fix(deps): resolve dependency update conflicts'
+
+      - name: Detect validation for all project directories
+        id: detect
+        env:
+          BASE_SHA: ${{ steps.pr.outputs.base }}
+        run: node "$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs" detect
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Set up Bun
+        if: steps.detect.outputs.needs_bun == 'true'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ steps.detect.outputs.bun_version }}
+
+      - name: Set up pnpm
+        if: steps.detect.outputs.needs_pnpm == 'true'
+        uses: pnpm/action-setup@v6
+        with:
+          version: ${{ steps.detect.outputs.pnpm_version }}
+
+      - name: Set up Java
+        if: steps.detect.outputs.needs_java == 'true'
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Python
+        if: steps.detect.outputs.needs_python == 'true'
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Install Rust desktop build dependencies
+        if: steps.detect.outputs.needs_rust == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Install workflow validator
+        run: |
+          curl --fail --location --silent --show-error https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz -o "$RUNNER_TEMP/actionlint.tar.gz"
+          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Install and repair stale lockfiles
+        id: install
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          node "$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs" install 2>&1 | tee renovate-validation.log
+          git add -u
+          git diff --cached --quiet || git commit -m 'chore(deps): regenerate dependency lockfiles'
+
+      - name: Validate update
+        id: validate
+        if: steps.install.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          node "$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs" validate 2>&1 | tee -a renovate-validation.log
+
+      - name: Repair using GLM 5.3 Flash
+        id: repair
+        if: steps.install.outcome == 'failure' || steps.validate.outcome == 'failure'
+        continue-on-error: true
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          BASE_REF: ${{ steps.pr.outputs.base_ref }}
+        run: |
+          install_command="node '$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs' install"
+          printf '%s\n' "$install_command" > .renovate-install-command
+          node "$RUNNER_TEMP/renovate-helpers/scripts/ai-renovate-fix.mjs" \
+            --log renovate-validation.log --attempts 3 \
+            --command "$install_command" \
+            --command "node '$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs' validate"
+
+      - name: Final validation without API credentials
+        id: final
+        if: steps.validate.outcome == 'success' || steps.repair.outcome == 'success'
+        run: |
+          node "$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs" install
+          node "$RUNNER_TEMP/renovate-helpers/scripts/validation-plan.mjs" validate
+          git add -u
+          git diff --cached --quiet || git commit -m 'fix(deps): apply validated dependency migration'
+
+      - name: Publish repair and validation evidence
+        if: always() && steps.pr.outputs.head != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ORIGINAL_HEAD: ${{ steps.pr.outputs.head }}
+          BASE_SHA: ${{ steps.pr.outputs.base }}
+          VALIDATION_RESULT: ${{ steps.final.outcome }}
+        run: node "$RUNNER_TEMP/renovate-helpers/scripts/pr-lifecycle.mjs" finish
+
+  merge:
+    needs: renovate-ai-fix
+    if: always() && (needs.renovate-ai-fix.result == 'success' || (needs.renovate-ai-fix.result == 'skipped' && (inputs.mode || github.event.client_payload.mode) == 'merge'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+      statuses: read
+      checks: read
+      actions: read
+    steps:
+      - name: Checkout trusted merge controller
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+          sparse-checkout: .github/renovate
+      - name: Merge only the validated current revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ inputs.pr_number || github.event.client_payload.pr_number }}
+        run: node .github/renovate/scripts/merge-pr.mjs
