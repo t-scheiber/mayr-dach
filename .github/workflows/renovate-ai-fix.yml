@@ -39,6 +39,8 @@ jobs:
       CI: 'true'
       AI_PROVIDER: openrouter
       AI_MODEL: z-ai/glm-5.3-flash
+      APP_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ci
       BETTER_AUTH_SECRET: ci-only-placeholder-not-used-outside-disposable-validation
     services:
@@ -96,6 +98,9 @@ jobs:
           test -n "$(git diff --name-only --diff-filter=U)"
           node "$RUNNER_TEMP/renovate-helpers/scripts/ai-renovate-fix.mjs" --conflicts --attempts 3
           git commit -m 'fix(deps): resolve dependency update conflicts'
+
+      - name: Record the merged validation baseline
+        run: echo "VALIDATION_BASELINE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Detect validation for all project directories
         id: detect
@@ -201,7 +206,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      statuses: read
+      statuses: write
       checks: read
       actions: read
     steps:

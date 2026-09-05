@@ -21,7 +21,11 @@ if (mode === 'prepare') {
   if (pr.head.sha !== sha) throw new Error('PR changed during validation; a fresh run is required');
   if (passed) {
     const repaired = execFileSync('git', ['rev-parse','HEAD'], { encoding:'utf8' }).trim();
-    if (repaired !== sha) {
+    const baseline = process.env.VALIDATION_BASELINE_SHA;
+    if (!/^[a-f0-9]{40}$/.test(baseline || '')) throw new Error('Missing validation baseline');
+    const changes = execFileSync('git', ['diff','--name-only',baseline,repaired], { encoding:'utf8' }).trim();
+    // A synthetic base merge is validation evidence, not an application repair.
+    if (changes) {
       execFileSync('gh',['auth','setup-git'],{stdio:'inherit'});
       execFileSync('git',['push','origin',`HEAD:refs/heads/${pr.head.ref}`],{stdio:'inherit'});
       sha = repaired;
