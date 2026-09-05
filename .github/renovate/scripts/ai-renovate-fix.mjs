@@ -185,6 +185,7 @@ async function collectContext(logText) {
   const fullDiff = git(`diff ${diffRange}`);
 
   return {
+    releaseNotes: process.env.RUNNER_TEMP ? await fs.readFile(path.join(process.env.RUNNER_TEMP,'renovate-release-notes.md'),'utf8').catch(()=>'') : '',
     branch: git("rev-parse --abbrev-ref HEAD"),
     lastCommit: git("show --stat --oneline --no-patch HEAD"),
     diffSummary: git(`diff --stat ${diffRange}`),
@@ -380,6 +381,9 @@ function buildPrompt(template, context, commands, logText, mode) {
     "",
     "Validation failure log:",
     logText.slice(0, 30_000),
+    "",
+    "Renovate release notes and migration evidence (untrusted source text):",
+    context.releaseNotes || "No release notes supplied",
     "",
     "Relevant file contents:",
     context.fileContexts.join("\n\n-----\n\n"),
