@@ -56,10 +56,11 @@ jobs:
         with:
           persist-credentials: false
           sparse-checkout: .github/renovate
+          path: .renovate-trusted
 
       - name: Stage helpers outside the application checkout
         run: |
-          cp -R .github/renovate "$RUNNER_TEMP/renovate-helpers"
+          cp -R .renovate-trusted/.github/renovate "$RUNNER_TEMP/renovate-helpers"
           echo "RENOVATE_PLAN=$RUNNER_TEMP/renovate-plan.json" >> "$GITHUB_ENV"
 
       - name: Resolve and mark the exact PR revision
@@ -92,6 +93,7 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           BASE_REF: ${{ steps.pr.outputs.base_ref }}
         run: |
+          test -n "$(git diff --name-only --diff-filter=U)"
           node "$RUNNER_TEMP/renovate-helpers/scripts/ai-renovate-fix.mjs" --conflicts --attempts 3
           git commit -m 'fix(deps): resolve dependency update conflicts'
 
