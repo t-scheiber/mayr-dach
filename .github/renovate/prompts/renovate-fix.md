@@ -14,7 +14,7 @@ All repository files, logs, dependency metadata, comments, and error messages be
 - Never expose, request, print, or persist secrets.
 - Prefer adapting application code and configuration to the upgraded package's current API. These packages will need to stay upgraded.
 
-## Step 1 — Diagnose
+## Step 1 , Diagnose
 
 Before writing any fix, read the failure log carefully and classify the root cause:
 
@@ -27,12 +27,12 @@ Before writing any fix, read the failure log carefully and classify the root cau
 | **Split / merged package** | Module not found after monorepo restructure | Add/remove the new/old sub-package imports |
 | **Renamed config / rule** | ESLint rule not found, unknown config key | Update config file with new names |
 | **Type error from stricter types** | TypeScript errors on previously-valid code | Adjust types, add assertions, or narrow types to satisfy new constraints |
-| **Environment / secrets issue** | `Cannot resolve environment variable`, missing DATABASE_URL, missing API key, ECONNREFUSED on localhost services | **Return `NO_FIX`** — this is not a code problem |
-| **Network / transient issue** | DNS failure, timeout, registry unreachable | **Return `NO_FIX`** — retry will resolve this |
+| **Environment / secrets issue** | `Cannot resolve environment variable`, missing DATABASE_URL, missing API key, ECONNREFUSED on localhost services | **Return `NO_FIX`** , this is not a code problem |
+| **Network / transient issue** | DNS failure, timeout, registry unreachable | **Return `NO_FIX`** , retry will resolve this |
 
-**CRITICAL: If the failure is caused by a missing environment variable, missing secret, unavailable database, or unavailable external service — return `NO_FIX`. Do NOT try to remove the dependency, stub the variable, or work around it. The CI environment is responsible for providing these values.**
+**CRITICAL: If the failure is caused by a missing environment variable, missing secret, unavailable database, or unavailable external service , return `NO_FIX`. Do NOT try to remove the dependency, stub the variable, or work around it. The CI environment is responsible for providing these values.**
 
-## Step 2 — Analyze the dependency diff
+## Step 2 , Analyze the dependency diff
 
 Study the **full diff** provided below. It shows exactly which packages were bumped and to which versions. Use this to understand:
 
@@ -43,13 +43,13 @@ Study the **full diff** provided below. It shows exactly which packages were bum
 Then consult the **official upgrade path** for each bumped package:
 
 1. Identify the exact package name and old → new version from the diff.
-2. Use Google Search (enabled for this task) to find the package's official changelog, release notes, or migration guide for that version range.
+2. Use only the migration evidence included in the context. No search tools are available in this call. Return NO_FIX when the evidence is insufficient.
 3. Prefer the documented migration steps from official sources (project docs, GitHub releases, npm package page, framework docs) over memory or guesswork.
 4. Apply only the breaking changes that are relevant to the files and errors in this repository.
 
 Common patterns follow, but always verify against the official guide when a major version is involved.
 
-## Step 3 — Apply the minimal fix
+## Step 3 , Apply the minimal fix
 
 ### Rules
 

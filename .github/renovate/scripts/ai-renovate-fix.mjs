@@ -4,7 +4,12 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
-const geminiApiKey = process.env.GEMINI_API_KEY;
+import { providerConfig, requestRepair } from './ai-provider.mjs';
+import { assertRepairPolicy } from './repair-policy.mjs';
+const aiConfig = providerConfig();
+delete process.env.OPENAI_API_KEY;
+delete process.env.OPENROUTER_API_KEY;
+delete process.env.GITHUB_TOKEN;
 delete process.env.GEMINI_API_KEY;
 delete process.env.RENOVATE_TOKEN;
 delete process.env.GH_TOKEN;
@@ -70,7 +75,8 @@ function normalizeRepositoryPath(filePath) {
     normalized === "renovate.json" ||
     normalized === ".renovaterc" ||
     normalized.startsWith(".github/workflows/") ||
-    normalized.startsWith(".github/renovate/")
+    normalized.startsWith(".github/renovate/") ||
+    /(^|\/)(tests?|__tests__)(\/|$)|\.(test|spec)\.[cm]?[jt]sx?$/.test(normalized)
   ) {
     return null;
   }
@@ -86,7 +92,7 @@ function normalizeRepositoryPath(filePath) {
 
 function validateChangedPaths(allowedPaths) {
   const changed = unique([
-    ...run("git diff --name-only --diff-filter=ACMR").stdout.split(/\r?\n/),
+    ...run("git diff HEAD --name-only").stdout.split(/\r?\n/),
     ...run("git ls-files --others --exclude-standard").stdout.split(/\r?\n/),
   ].map((entry) => entry.trim()));
   const denied = changed.filter(
@@ -184,7 +190,7 @@ async function collectContext(logText) {
     diffSummary: git(`diff --stat ${diffRange}`),
     fullDiff,
     fileContexts,
-    allowedPaths: new Set(fileContextPaths.map(normalizeRepositoryPath).filter(Boolean)),
+    allowedPaths: new Set([...fileContextPaths, ...changedFiles.filter(x => /(^|\/)(package-lock.json|bun.lockb?|pnpm-lock.yaml|yarn.lock)$/.test(x))].map(normalizeRepositoryPath).filter(Boolean)),
   };
 }
 
@@ -220,52 +226,15 @@ function extractDiff(text) {
   return null;
 }
 
-async function callGemini(prompt, { temperature = 0.2 } = {}) {
-  const apiKey = geminiApiKey;
-  if (!apiKey) throw new Error("GEMINI_API_KEY is required");
-
-  const model = process.env.GEMINI_MODEL || "gemini-2.5-pro";
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        tools: [{ google_search: {} }],
-        generationConfig: {
-          temperature,
-          topP: 0.95,
-          maxOutputTokens: 65535,
-        },
-      }),
-    },
-  );
-
-  const payload = await response.json();
-  if (!response.ok) throw new Error(JSON.stringify(payload, null, 2));
-
-  return (
-    payload.candidates?.[0]?.content?.parts
-      ?.map((part) => part.text || "")
-      .join("\n") || ""
-  );
+async function callAI(prompt) {
+  return requestRepair(prompt, aiConfig);
 }
 
 function applyPatch(patchPath) {
-  const apply3Way = run(`git apply --3way --whitespace=nowarn "${patchPath}"`);
-  if (apply3Way.status === 0) return { ok: true };
-
-  const applyFuzz = run(`git apply --whitespace=nowarn -C1 "${patchPath}"`);
-  if (applyFuzz.status === 0) return { ok: true };
-
-  const applyReject = run(`git apply --reject --whitespace=nowarn "${patchPath}"`);
-  if (applyReject.status === 0) return { ok: true };
-
-  const errorOutput = [apply3Way.stderr, applyFuzz.stderr, applyReject.stderr]
-    .filter(Boolean)
-    .join("\n");
-  return { ok: false, error: errorOutput };
+  const check = runFile('git', ['apply', '--check', '--whitespace=nowarn', patchPath]);
+  if (check.status !== 0) return { ok: false, error: check.stderr };
+  const applied = runFile('git', ['apply', '--whitespace=nowarn', patchPath]);
+  return { ok: applied.status === 0, error: applied.stderr };
 }
 
 async function applyFileReplacements(replacements, allowedPaths) {
@@ -338,7 +307,7 @@ async function resolveConflicts(maxAttempts) {
       contexts.join("\n\n-----\n\n"),
     ].join("\n");
 
-    const response = await callGemini(prompt, {
+    const response = await callAI(prompt, {
       temperature: attempt === 1 ? 0.1 : 0.2,
     });
     const replacements = extractFileReplacements(response);
@@ -423,6 +392,9 @@ async function main() {
   const args = parseArgs(process.argv.slice(2));
   const commands = args.commands.filter(Boolean);
   const maxAttempts = args.attempts || 3;
+  if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 3) {
+    throw new Error('Repair attempts must be between 1 and 3');
+  }
 
   if (args.conflicts) {
     await resolveConflicts(maxAttempts);
@@ -450,7 +422,7 @@ async function main() {
     );
 
     if (attempt > 1) {
-      run("git checkout -- .");
+      run("git reset --hard HEAD");
       run("git clean -f -- .renovate-ai-fix-*.patch .renovate-ai-response-*.txt renovate-ai-validation-*.log");
     }
 
@@ -458,9 +430,9 @@ async function main() {
 
     let responseText;
     try {
-      responseText = await callGemini(prompt, { temperature });
+      responseText = await callAI(prompt, { temperature });
     } catch (err) {
-      console.error(`  Gemini API error: ${err.message}`);
+      console.error(`  AI provider API error: ${err.message}`);
       continue;
     }
 
@@ -475,7 +447,7 @@ async function main() {
     if (mode === "diff") {
       const diffText = extractDiff(responseText);
       if (!diffText) {
-        console.error("  Gemini did not return an applicable diff.");
+        console.error("  AI provider did not return an applicable diff.");
         continue;
       }
 
@@ -503,7 +475,7 @@ async function main() {
             continue;
           }
         } else {
-          console.error("  Gemini did not return file replacements or a diff.");
+          console.error("  AI provider did not return file replacements or a diff.");
           continue;
         }
       } else {
@@ -517,6 +489,10 @@ async function main() {
 
     if (!applied) continue;
 
+    try { assertRepairPolicy(); } catch (error) {
+      console.error(error.message);
+      continue;
+    }
     const pathValidation = validateChangedPaths(context.allowedPaths);
     if (!pathValidation.ok) {
       console.error(
@@ -526,7 +502,7 @@ async function main() {
       continue;
     }
 
-    const changedAfterPatch = run("git diff --name-only").stdout.trim();
+    const changedAfterPatch = run("git diff HEAD --name-only").stdout.trim();
     if (changedAfterPatch.includes("package.json") || changedAfterPatch.includes("build.gradle")) {
       console.log("  Dependency files changed, re-running install...");
       const installCmd = await fs
@@ -544,7 +520,9 @@ async function main() {
       "utf8",
     );
 
-    if (validation.ok) {
+    assertRepairPolicy();
+    const finalPaths = validateChangedPaths(context.allowedPaths);
+    if (validation.ok && finalPaths.ok) {
       console.log(`AI fix applied and validation succeeded on attempt ${attempt}.`);
       process.exit(0);
     }
@@ -554,7 +532,7 @@ async function main() {
   }
 
   console.error(
-    `AI fix failed after ${maxAttempts} attempts. Check .renovate-ai-response-*.txt for Gemini outputs.`,
+    `AI fix failed after ${maxAttempts} attempts. Check .renovate-ai-response-*.txt for AI provider outputs.`,
   );
   process.exit(1);
 }
