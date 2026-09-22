@@ -161,7 +161,7 @@ export default async function LocaleLayout({
             {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && (
               <aside className="bg-gray-900 px-4 py-2 text-center text-sm text-white">
                 {isEn ? "Website demo by Thomas Scheiber. Forms are disabled. " : "Website-Demo von Thomas Scheiber. Formulare sind deaktiviert. "}
-                <a href="https://mayr-dach.com" className="underline underline-offset-2">
+                <a href="https://mayr-dach.at" className="underline underline-offset-2">
                   {isEn ? "Visit the official website" : "Zur offiziellen Website"}
                 </a>
               </aside>
