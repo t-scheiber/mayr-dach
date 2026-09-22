@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { prisma } from "@/lib/db";
+import { getJobs } from "@/lib/site-content";
 import ApplicationForm from "@/components/ApplicationForm";
 import { Suspense } from "react";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations";
@@ -8,7 +8,7 @@ import company from "@/content/company.json";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://mayr-dach.com";
 
-export const dynamic = "force-dynamic";
+
 
 export async function generateMetadata({
   params,
@@ -36,10 +36,7 @@ export default async function JobsPage({
   setRequestLocale(locale);
   const t = await getTranslations();
 
-  const jobs = await prisma.job.findMany({
-    where: { active: true },
-    orderBy: { sortOrder: "asc" },
-  });
+  const jobs = await getJobs();
 
   const isEn = locale === "en";
 
@@ -171,7 +168,7 @@ export default async function JobsPage({
                       href={`?jobId=${job.slug}#bewerbung`}
                       className="inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors text-sm"
                     >
-                      {t("jobs.applyNow")} →
+                      {t("jobs.applyNow")} â†’
                     </a>
                   </div>
                 </ScrollReveal>

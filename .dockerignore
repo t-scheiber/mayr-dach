@@ -1,0 +1,9 @@
+.git
+.github
+.next
+.demo-build
+.demo-out
+node_modules
+.env*
+WEBSITE-REPORT.pdf
+*.tsbuildinfo

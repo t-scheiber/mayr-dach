@@ -132,9 +132,9 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/admin/login" className="hover:text-white hover:underline transition-all">
+                {process.env.NEXT_PUBLIC_DEMO_MODE !== "true" && (<Link href="/admin/login" className="hover:text-white hover:underline transition-all">
                   {t("footer.adminLogin")}
-                </Link>
+                </Link>)}
               </li>
             </ul>
           </div>

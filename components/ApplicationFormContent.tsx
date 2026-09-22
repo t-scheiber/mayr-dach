@@ -4,6 +4,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
+import jobsData from "@/content/jobs.json";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -20,7 +21,9 @@ export default function ApplicationFormContent() {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
 
-  const { data } = useSWR("/api/jobs", fetcher);
+  const { data } = useSWR(process.env.NEXT_PUBLIC_DEMO_MODE === "true" ? null : "/api/jobs", fetcher, {
+    fallbackData: process.env.NEXT_PUBLIC_DEMO_MODE === "true" ? { jobs: jobsData.jobs.map((j) => ({ slug: j.id, titleDe: j.title.de, titleEn: j.title.en })) } : undefined,
+  });
   const jobOptions: JobOption[] = data?.jobs || [];
 
   const [position, setPosition] = useState("");
@@ -42,6 +45,7 @@ export default function ApplicationFormContent() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") return;
     setStatus("submitting");
     setErrorMsg("");
 
@@ -92,6 +96,8 @@ export default function ApplicationFormContent() {
       <p className="text-gray-600 mb-6">{t("subtitle")}</p>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+      <fieldset disabled={process.env.NEXT_PUBLIC_DEMO_MODE === "true"} className="contents">
+        {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">{locale === "en" ? "Demo only. No messages or applications can be submitted." : "Nur zur Ansicht. Nachrichten und Bewerbungen können nicht gesendet werden."}</p>}
         <div className="grid md:grid-cols-2 gap-5">
           <div>
             <label htmlFor="app-name" className="block text-sm font-medium mb-1">{t("name")} *</label>
@@ -115,7 +121,7 @@ export default function ApplicationFormContent() {
             <label htmlFor="app-position" className="block text-sm font-medium mb-1">{t("position")}</label>
             <select id="app-position" name="position" value={position} onChange={(e) => setPosition(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white">
-              <option value="">—</option>
+              <option value="">â€”</option>
               {jobOptions.map((job) => {
                 const title = (locale === "en" && job.titleEn) ? job.titleEn : job.titleDe;
                 return (
@@ -154,7 +160,8 @@ export default function ApplicationFormContent() {
           className="bg-primary hover:bg-primary-light text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
           {status === "submitting" ? t("submitting") : t("submit")}
         </button>
-      </form>
+      </fieldset>
+    </form>
     </div>
   );
 }

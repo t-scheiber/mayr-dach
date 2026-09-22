@@ -73,13 +73,13 @@ export default function Header() {
 
             <div className="flex items-center gap-4 border-l border-gray-200 pl-6">
               <LanguageSwitcher />
-              <Link
+              {process.env.NEXT_PUBLIC_DEMO_MODE !== "true" && (<Link
                 href="/admin/login"
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-gray-600 hover:bg-primary hover:text-white transition-all duration-300 border border-gray-100 hover:border-transparent shadow-sm hover:shadow-md"
                 title={t("footer.adminLogin")}
               >
                 <User size={18} strokeWidth={2.5} />
-              </Link>
+              </Link>)}
             </div>
           </nav>
 
@@ -123,14 +123,14 @@ export default function Header() {
               
               <div className="pt-4 flex items-center justify-between">
                 <LanguageSwitcher />
-                <Link
+                {process.env.NEXT_PUBLIC_DEMO_MODE !== "true" && (<Link
                   href="/admin/login"
                   className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors border border-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <User size={16} />
                   <span>{t("footer.adminLogin")}</span>
-                </Link>
+                </Link>)}
               </div>
             </nav>
           </m.div>
