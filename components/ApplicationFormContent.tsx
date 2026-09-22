@@ -121,7 +121,7 @@ export default function ApplicationFormContent() {
             <label htmlFor="app-position" className="block text-sm font-medium mb-1">{t("position")}</label>
             <select id="app-position" name="position" value={position} onChange={(e) => setPosition(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none bg-white">
-              <option value="">â€”</option>
+              <option value="">—</option>
               {jobOptions.map((job) => {
                 const title = (locale === "en" && job.titleEn) ? job.titleEn : job.titleDe;
                 return (

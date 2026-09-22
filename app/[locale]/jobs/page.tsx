@@ -168,7 +168,7 @@ export default async function JobsPage({
                       href={`?jobId=${job.slug}#bewerbung`}
                       className="inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors text-sm"
                     >
-                      {t("jobs.applyNow")} â†’
+                      {t("jobs.applyNow")} →
                     </a>
                   </div>
                 </ScrollReveal>
