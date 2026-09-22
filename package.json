@@ -13,7 +13,7 @@
     "db:seed": "bun prisma/seed.ts"
   },
   "engines": {
-    "node": ">=24.18.0"
+    "node": ">=24.20.0"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
@@ -33,15 +33,15 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.2",
-    "@types/node": "^26.1.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.4.1",
     "@types/nodemailer": "^8.0.1",
-    "@types/pg": "^8.18.0",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^10.6.0",
-    "eslint-config-next": "16.2.12",
-    "tailwindcss": "^4.3.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "eslint": "^10.9.1",
+    "eslint-config-next": "16.3.4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   },
   "ignoreScripts": [
