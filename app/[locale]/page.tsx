@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import company from "@/content/company.json";
-import { prisma } from "@/lib/db";
+import { getProjects } from "@/lib/site-content";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import HeroVideoBackground from "@/components/HeroVideoBackground";
 import { RoofTileLoader, TileFlip, GlassShimmer } from "@/components/animations";
@@ -21,7 +21,7 @@ import {
   ArrowRight
 } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+
 
 export default async function HomePage({
   params,
@@ -32,10 +32,7 @@ export default async function HomePage({
   setRequestLocale(locale);
   const t = await getTranslations();
 
-  const projects = await prisma.project.findMany({
-    where: { active: true },
-    orderBy: { sortOrder: "asc" },
-  });
+  const projects = await getProjects();
 
   const services = [
     { key: "roofing", href: "/leistungen/dachdeckerei", icon: Home },
