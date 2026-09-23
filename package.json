@@ -13,35 +13,35 @@
     "db:seed": "bun prisma/seed.ts"
   },
   "engines": {
-    "node": ">=24.18.0"
+    "node": ">=24.20.0"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
-    "better-auth": "^1.6.25",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "better-auth": "^1.7.2",
     "dotenv": "^17.4.2",
-    "framer-motion": "^12.42.2",
-    "lucide-react": "^1.23.0",
-    "next": "16.2.11",
-    "next-intl": "^4.13.4",
-    "nodemailer": "^9.0.3",
-    "pg": "^8.22.0",
-    "prisma": "^7.8.0",
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
-    "swr": "^2.4.2",
-    "zod": "^4.4.3"
+    "framer-motion": "^12.43.0",
+    "lucide-react": "^1.39.0",
+    "next": "16.3.4",
+    "next-intl": "^4.14.2",
+    "nodemailer": "^9.1.1",
+    "pg": "^8.23.0",
+    "prisma": "^7.10.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "swr": "^2.5.1",
+    "zod": "^4.5.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.3.2",
-    "@types/node": "^26.1.2",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.4.1",
     "@types/nodemailer": "^8.0.1",
-    "@types/pg": "^8.18.0",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^10.6.0",
-    "eslint-config-next": "16.2.12",
-    "tailwindcss": "^4.3.2",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "eslint": "^10.9.1",
+    "eslint-config-next": "16.3.4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   },
   "ignoreScripts": [
