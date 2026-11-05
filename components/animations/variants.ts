@@ -12,15 +12,15 @@ export const brandColors = {
 };
 
 export const durations = {
-  fast: 0.2,
-  normal: 0.4,
-  slow: 0.8,
-  splash: 2.5,
+  fast: 0.16,
+  normal: 0.19,
+  slow: 0.6,
+  splash: 4,
 };
 
 export const easings = {
-  smooth: [0.25, 0.1, 0.25, 1] as [number, number, number, number], // Custom ease-in-out
-  springDrop: { type: "spring" as const, bounce: 0.4, duration: 0.8 },
+  smooth: [0.23, 1, 0.32, 1] as [number, number, number, number], // Custom ease-in-out
+  springDrop: { type: "spring" as const, bounce: 0, duration: 0.19 },
   linear: "linear",
 };
 

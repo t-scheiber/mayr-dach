@@ -13,6 +13,7 @@ export function NavigationProgress() {
   // Start progress bar on internal link click
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const anchor = (e.target as HTMLElement).closest(
         "a[href]"
       ) as HTMLAnchorElement | null;
@@ -39,7 +40,10 @@ export function NavigationProgress() {
     };
 
     document.addEventListener("click", handleClick, true);
-    return () => document.removeEventListener("click", handleClick, true);
+    return () => {
+      document.removeEventListener("click", handleClick, true);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, []);
 
   // Complete progress bar when pathname changes. State updates happen in
@@ -68,13 +72,11 @@ export function NavigationProgress() {
   return (
     <div className="fixed top-0 left-0 right-0 z-200 h-[3px] pointer-events-none">
       <div
-        className="h-full bg-primary rounded-r-full"
+        className="navigation-progress h-full bg-primary rounded-r-full"
         style={{
-          width: `${width}%`,
-          transition:
-            width === 100
-              ? "width 200ms ease-out"
-              : "width 500ms ease-out",
+          transform: `scaleX(${width / 100})`,
+          opacity: width === 100 ? 0 : 1,
+          transitionDelay: width === 100 ? "0s, var(--dur-base)" : "0s",
           boxShadow: "0 0 8px var(--primary)",
         }}
       />

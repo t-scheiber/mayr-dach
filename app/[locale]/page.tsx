@@ -5,7 +5,8 @@ import company from "@/content/company.json";
 import { getProjects } from "@/lib/site-content";
 import ProjectCarousel from "@/components/ProjectCarousel";
 import HeroVideoBackground from "@/components/HeroVideoBackground";
-import { RoofTileLoader, TileFlip, GlassShimmer } from "@/components/animations";
+import { TileFlip, GlassShimmer } from "@/components/animations";
+import { PageTransition, ServiceTitle } from "@/components/PageTransition";
 import HeroSlogan from "@/components/HeroSlogan";
 import { JsonLd } from "@/components/JsonLd";
 import {
@@ -44,14 +45,13 @@ export default async function HomePage({
   ] as const;
 
   return (
-    <>
-      <RoofTileLoader size="md" />
+    <PageTransition>
       {/* Hero Section */}
       <section className="relative bg-neutral-900 text-white overflow-hidden flex items-end min-h-[80vh] pb-16 md:pb-24">
-        <HeroVideoBackground randomize />
+        <HeroVideoBackground />
         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
         <div className="relative w-full px-4 sm:px-8 md:px-16 lg:px-24 z-10 text-center">
-          <HeroSlogan text={t("hero.slogan")} delay={3000} charSpeed={120} />
+          <HeroSlogan text={t("hero.slogan")} />
         </div>
       </section>
 
@@ -78,13 +78,13 @@ export default async function HomePage({
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`tel:${company.company.phone}`}
-              className="inline-flex items-center justify-center bg-primary hover:bg-primary-light text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              className="motion-press inline-flex items-center justify-center bg-primary hover:bg-primary-light text-white font-semibold px-8 py-4 rounded-lg shadow-lg hover:shadow-xl"
             >
               {t("hero.cta")}: {company.company.phone}
             </a>
             <Link
               href="/leistungen"
-              className="inline-flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-300 hover:-translate-y-1"
+              className="motion-press inline-flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white font-semibold px-8 py-4 rounded-lg"
             >
               {t("services.title")}
             </Link>
@@ -105,9 +105,9 @@ export default async function HomePage({
             {(["expertise", "team", "quality"] as const).map((value) => {
               const Icon = value === "expertise" ? Award : value === "team" ? Users : CheckCircle;
               return (
-                <div key={value} className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 group">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors duration-300">
-                    <Icon className="w-8 h-8 text-primary group-hover:text-white transition-colors duration-300" />
+                <div key={value} className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg group">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary">
+                    <Icon className="w-8 h-8 text-primary group-hover:text-white" />
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900">
                     {t(`values.${value}.title`)}
@@ -140,18 +140,18 @@ export default async function HomePage({
                 <TileFlip key={service.key}>
                   <Link
                     href={service.href}
-                    className="group block p-6 sm:p-8 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:shadow-xl transition-all duration-300 h-full"
+                    className="group block p-6 sm:p-8 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:shadow-xl h-full"
                   >
-                    <div className="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-primary group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-primary">
                       <Icon className="w-7 h-7" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-primary transition-colors">
+                    <ServiceTitle slug={service.href.split("/").at(-1)!}><h3 className="text-xl font-bold mb-3 text-gray-900 group-hover:text-primary">
                       {t(`services.${service.key}.title`)}
-                    </h3>
+                    </h3></ServiceTitle>
                     <p className="text-gray-600 text-sm mb-6 leading-relaxed">
                       {t(`services.${service.key}.shortDescription`)}
                     </p>
-                    <span className="inline-flex items-center text-primary font-medium text-sm group-hover:gap-2 transition-all">
+                    <span className="motion-link inline-flex items-center text-primary font-medium text-sm">
                       {t("services.learnMore")} <ArrowRight className="w-4 h-4 ml-1" />
                     </span>
                   </Link>
@@ -192,12 +192,12 @@ export default async function HomePage({
       <section className="py-12 sm:py-20 md:py-28 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-            <div className="relative aspect-4/3 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="photo-reveal relative aspect-4/3 rounded-3xl overflow-hidden shadow-2xl">
               <Image
                 src="/images/hero/about-hero.jpg"
                 alt={t("about.title")}
                 fill
-                className="object-cover hover:scale-105 transition-transform duration-700"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0 ring-1 ring-inset ring-black/10 rounded-3xl"></div>
@@ -214,7 +214,7 @@ export default async function HomePage({
               </p>
               <Link
                 href="/ueber-uns"
-                className="inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white font-medium px-8 py-4 rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
+                className="motion-press inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white font-medium px-8 py-4 rounded-lg shadow-md hover:shadow-lg"
               >
                 {t("common.learnMore")} — {t("about.title")}
               </Link>
@@ -237,7 +237,7 @@ export default async function HomePage({
             <GlassShimmer intensity="bold">
               <a
                 href={`tel:${company.company.phone}`}
-                className="inline-flex items-center justify-center w-full bg-white text-primary font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-gray-50 transition-all duration-300"
+                className="motion-press inline-flex items-center justify-center w-full bg-white text-primary font-bold px-8 py-4 rounded-lg shadow-lg hover:bg-gray-50"
               >
                 {company.company.phone}
               </a>
@@ -245,7 +245,7 @@ export default async function HomePage({
             <GlassShimmer intensity="subtle">
               <a
                 href={`mailto:${company.company.email}`}
-                className="inline-flex items-center justify-center w-full bg-transparent border-2 border-white/80 text-white font-bold px-8 py-4 rounded-lg hover:bg-white/10 hover:border-white transition-all duration-300"
+                className="motion-press inline-flex items-center justify-center w-full bg-transparent border-2 border-white/80 text-white font-bold px-8 py-4 rounded-lg hover:bg-white/10 hover:border-white"
               >
                 {company.company.email}
               </a>
@@ -286,6 +286,6 @@ export default async function HomePage({
           },
         ],
       }} />
-    </>
+    </PageTransition>
   );
 }
