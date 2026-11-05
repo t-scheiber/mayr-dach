@@ -33,6 +33,7 @@ export default function ContactForm() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (process.env.NEXT_PUBLIC_DEMO_MODE === "true") return;
     setStatus("submitting");
     setGeneralError("");
     setFieldErrors({});
@@ -111,6 +112,8 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      <fieldset disabled={process.env.NEXT_PUBLIC_DEMO_MODE === "true"} className="contents">
+        {process.env.NEXT_PUBLIC_DEMO_MODE === "true" && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">{locale === "en" ? "Demo only. No messages or applications can be submitted." : "Nur zur Ansicht. Nachrichten und Bewerbungen können nicht gesendet werden."}</p>}
       <div>
         <label htmlFor="contact-name" className="block text-sm font-medium mb-1">
           {t("name")} *
@@ -186,6 +189,7 @@ export default function ContactForm() {
       >
         {status === "submitting" ? t("submitting") : t("send")}
       </button>
+    </fieldset>
     </form>
   );
 }
