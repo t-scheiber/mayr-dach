@@ -20,6 +20,16 @@
   --gray-700: #334155;
   --gray-800: #1E293B;
   --gray-900: #0F172A;
+  --dur-instant: 100ms;
+  --dur-fast: 160ms;
+  --dur-base: 190ms;
+  --dur-route: 240ms;
+  --dur-hero: 600ms;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --shift-sm: 4px;
+  --shift-md: 8px;
+  --press-scale: 0.98;
 }
 
 @theme inline {
@@ -44,6 +54,9 @@
   --color-gray-900: var(--gray-900);
   --font-sans: var(--font-inter);
   --font-handwriting: var(--font-script), cursive;
+  --ease-brand-out: var(--ease-out);
+  --ease-brand-soft: var(--ease-soft);
+  --animate-hero-enter: hero-enter var(--dur-hero) var(--ease-soft) both;
 }
 
 body {
@@ -57,6 +70,115 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+.motion-press {
+  transition: transform var(--dur-instant) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+.motion-press:active:not(:focus-visible):not(:disabled) {
+  transform: scale(var(--press-scale));
+  transition-duration: var(--dur-fast);
+}
+.motion-card { transition: transform var(--dur-base) var(--ease-out); }
+.motion-link svg { transition: transform var(--dur-fast) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .motion-card:hover { transform: translateY(-2px); }
+  .motion-link:hover svg { transform: translateX(2px); }
+}
+:where(a, button, [role="button"]):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 4px;
+}
+.hero-slogan { width: 100%; margin-inline: auto; animation: hero-enter var(--dur-hero) var(--ease-soft) both; }
+@keyframes hero-enter { from { transform: translateY(var(--shift-md)); } }
+
+/* Retarget one mounted panel when the visitor toggles it rapidly. */
+.mobile-menu {
+  opacity: 0;
+  transform: translateY(calc(-1 * var(--shift-sm)));
+  visibility: hidden;
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out), visibility 0s var(--dur-fast);
+}
+.mobile-menu[data-open="true"] {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  transition-duration: var(--dur-base), var(--dur-base), 0s;
+  transition-delay: 0s;
+}
+.nav-indicator { opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); }
+[aria-current="page"] .nav-indicator { opacity: 1; }
+.navigation-progress {
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out), opacity 150ms var(--ease-out);
+}
+.partner-logo, .gallery-arrow { transition: opacity var(--dur-fast) var(--ease-out); }
+@media (hover: hover) and (pointer: fine) {
+  .project-card .gallery-arrow { opacity: 0; }
+  .project-card:hover .gallery-arrow, .project-card:focus-within .gallery-arrow { opacity: 1; }
+}
+.gallery-image { opacity: 0; transition: opacity var(--dur-base) var(--ease-out); }
+.gallery-image[data-current="true"] { opacity: 1; }
+.gallery-image[data-instant="true"] { transition-duration: 0s; }
+.gallery-dot { transform: scaleX(1); transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out); }
+.gallery-dot[aria-current="true"] { transform: scaleX(2); }
+.project-lightbox {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-base) var(--ease-out), visibility 0s var(--dur-base);
+}
+.project-lightbox[data-open="true"] { opacity: 1; visibility: visible; transition-delay: 0s; }
+.project-lightbox[data-instant="true"] { transition-duration: 0s; }
+@starting-style {
+  .project-lightbox[data-open="true"] { opacity: 0; }
+}
+.status-feedback { animation: status-fade 150ms var(--ease-out); }
+@keyframes status-fade { from { opacity: 0.9; } }
+
+@supports (animation-timeline: view()) {
+  .photo-reveal {
+    animation: photo-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+@keyframes photo-reveal {
+  from { opacity: 0.65; transform: translateY(var(--shift-md)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+::view-transition-group(*) { animation-duration: var(--dur-route); animation-timing-function: var(--ease-out); }
+::view-transition-group(.page-fade) { animation: none; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+::view-transition-old(.service-title), ::view-transition-new(.service-title) { animation-duration: var(--dur-route); }
+::view-transition-old(.page-fade) { animation: page-fade-out var(--dur-route) var(--ease-out) both; }
+::view-transition-new(.page-fade) { animation: page-fade-in var(--dur-route) var(--ease-out) both; }
+@keyframes page-fade-in { from { opacity: 0; } }
+@keyframes page-fade-out { to { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 150ms;
+    --dur-base: 150ms;
+    --dur-route: 150ms;
+    --dur-hero: 150ms;
+    --shift-sm: 0px;
+    --shift-md: 0px;
+    --press-scale: 1;
+  }
+  html { scroll-behavior: auto; }
+  .hero-slogan { animation-name: status-fade; }
+  .motion-card:hover, .motion-link:hover svg { transform: none; }
+  .mobile-menu { transform: none; }
+  .gallery-dot, .gallery-dot[aria-current="true"] { transform: none; }
+  .gallery-dot:not([aria-current="true"]) { opacity: 0.85; }
+  .gallery-dot:active { opacity: 0.6; }
+  ::view-transition-group(*) { animation-duration: 0s; }
+  ::view-transition-old(.page-fade), ::view-transition-new(.page-fade) { animation-duration: 150ms; }
+}
+html[data-input="keyboard"] :is(.motion-press, .mobile-menu, .nav-indicator, .navigation-progress, .gallery-dot, .project-lightbox) { transition-duration: 0s; }
+html[data-input="keyboard"] :is(.hero-slogan, .status-feedback) { animation: none; }
+html[data-input="keyboard"]::view-transition-group(*),
+html[data-input="keyboard"]::view-transition-old(*),
+html[data-input="keyboard"]::view-transition-new(*) { animation-duration: 0s; }
 
 /* Loading animation keyframes */
 @keyframes tile-drop {

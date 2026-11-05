@@ -1,3 +1,4 @@
+import { PageTransition, ServiceTitle } from "@/components/PageTransition";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -132,7 +133,7 @@ export default async function ServiceDetailPage({
   };
 
   return (
-    <>
+    <PageTransition key={slug}>
       <JsonLd data={serviceJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
       {/* Hero */}
@@ -152,9 +153,9 @@ export default async function ServiceDetailPage({
             </Link>{" "}
             / {t(`services.${serviceKey}.title`)}
           </p>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          <ServiceTitle slug={slug}><h1 className="text-3xl md:text-5xl font-bold mb-4">
             {t(`services.${serviceKey}.heroTitle`)}
-          </h1>
+          </h1></ServiceTitle>
           <p className="text-lg md:text-xl opacity-90 max-w-3xl">
             {t(`services.${serviceKey}.heroDescription`)}
           </p>
@@ -209,7 +210,7 @@ export default async function ServiceDetailPage({
             <GlassShimmer intensity="bold">
               <a
                 href={`tel:${company.company.phone}`}
-                className="inline-flex items-center justify-center w-full bg-white text-primary font-semibold px-8 py-3 rounded hover:bg-gray-100 transition-colors"
+                className="motion-press inline-flex items-center justify-center w-full bg-white text-primary font-semibold px-8 py-3 rounded hover:bg-gray-100"
               >
                 {company.company.phone}
               </a>
@@ -217,7 +218,7 @@ export default async function ServiceDetailPage({
             <GlassShimmer intensity="subtle">
               <a
                 href={`mailto:${company.company.email}`}
-                className="inline-flex items-center justify-center w-full border-2 border-white text-white font-semibold px-8 py-3 rounded hover:bg-white hover:text-primary transition-colors"
+                className="motion-press inline-flex items-center justify-center w-full border-2 border-white text-white font-semibold px-8 py-3 rounded hover:bg-white hover:text-primary"
               >
                 {company.company.email}
               </a>
@@ -225,6 +226,6 @@ export default async function ServiceDetailPage({
           </div>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

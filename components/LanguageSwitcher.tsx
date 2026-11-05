@@ -13,10 +13,10 @@ export default function LanguageSwitcher() {
   }
 
   return (
-    <div className="flex items-center gap-1 text-sm">
+    <div className="grid grid-cols-[35px_4px_35px] items-center gap-1 text-sm">
       <button
         onClick={() => switchLocale("de")}
-        className={`px-2 py-1 rounded transition-colors ${
+        className={`motion-press px-2 py-1 rounded ${
           locale === "de"
             ? "bg-primary text-white font-semibold"
             : "text-gray-500 hover:text-gray-700"
@@ -27,7 +27,7 @@ export default function LanguageSwitcher() {
       <span className="text-gray-300">|</span>
       <button
         onClick={() => switchLocale("en")}
-        className={`px-2 py-1 rounded transition-colors ${
+        className={`motion-press px-2 py-1 rounded ${
           locale === "en"
             ? "bg-primary text-white font-semibold"
             : "text-gray-500 hover:text-gray-700"

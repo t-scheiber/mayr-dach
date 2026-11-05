@@ -1,3 +1,4 @@
+import { PageTransition } from "@/components/PageTransition";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import team from "@/content/team.json";
 import { ScrollReveal, StaggerContainer, StaggerItem } from "@/components/animations";
@@ -38,7 +39,7 @@ export default async function AboutPage({
   ];
 
   return (
-    <>
+    <PageTransition>
       {/* Hero */}
       <section className="bg-dark text-white py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -109,6 +110,6 @@ export default async function AboutPage({
           </StaggerContainer>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

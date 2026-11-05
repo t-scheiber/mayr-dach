@@ -1,23 +1,10 @@
-"use client";
-
-import { useState } from "react";
-import TypewriterText from "./TypewriterText";
-
-interface HeroSloganProps {
-  text: string;
-  delay?: number;
-  charSpeed?: number;
-}
-
-export default function HeroSlogan({ text, delay = 3000, charSpeed = 120 }: HeroSloganProps) {
-  const [visible, setVisible] = useState(false);
-
+export default function HeroSlogan({ text }: { text: string }) {
   return (
     <h1
-      className={`inline-block font-handwriting font-normal tracking-wide text-white leading-[1.1] drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] whitespace-nowrap transition-all duration-1000 transform ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+      className="hero-slogan inline-block font-handwriting font-normal tracking-wide text-white leading-[1.1] drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)] whitespace-nowrap"
       style={{ fontSize: "clamp(1.2rem, 5.5vw, 6.5rem)", maxWidth: "90vw" }}
     >
-      <TypewriterText text={text} delay={delay} charSpeed={charSpeed} onStart={() => setVisible(true)} />
+      {text}
     </h1>
   );
 }

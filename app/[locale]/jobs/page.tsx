@@ -1,3 +1,4 @@
+import { PageTransition } from "@/components/PageTransition";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getJobs } from "@/lib/site-content";
 import ApplicationForm from "@/components/ApplicationForm";
@@ -84,7 +85,7 @@ export default async function JobsPage({
   });
 
   return (
-    <>
+    <PageTransition>
       {jobPostingJsonLdItems.map((item) => (
         <JsonLd key={item.id} data={item.data} />
       ))}
@@ -114,13 +115,13 @@ export default async function JobsPage({
             <div className="space-y-8">
               {jobs.map((job, index) => (
                 <ScrollReveal key={job.id} direction="up" delay={index * 0.1}>
-                  <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md">
                     <h3 className="text-xl font-bold mb-4">
                       {(isEn && job.titleEn) || job.titleDe}
                     </h3>
 
                     {job.isApprenticeship && job.durationDe && (
-                      <span className="inline-block bg-primary text-white text-xs font-semibold px-3 py-1 rounded mb-4">
+                      <span className="motion-press inline-block bg-primary text-white text-xs font-semibold px-3 py-1 rounded mb-4">
                         {(isEn && job.durationEn) || job.durationDe}
                       </span>
                     )}
@@ -166,7 +167,7 @@ export default async function JobsPage({
 
                     <a
                       href={`?jobId=${job.slug}#bewerbung`}
-                      className="inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded transition-colors text-sm"
+                      className="motion-press inline-block bg-primary hover:bg-primary-light text-white font-semibold py-2 px-6 rounded text-sm"
                     >
                       {t("jobs.applyNow")} →
                     </a>
@@ -211,6 +212,6 @@ export default async function JobsPage({
           </StaggerContainer>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

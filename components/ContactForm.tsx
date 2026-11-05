@@ -91,7 +91,7 @@ export default function ContactForm() {
 
   if (status === "success") {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-8 text-center">
+      <div className="status-feedback bg-green-50 border border-green-200 rounded-lg p-8 text-center">
         <svg
           className="w-16 h-16 text-green-500 mx-auto mb-4"
           fill="none"
@@ -185,7 +185,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="w-full sm:w-auto bg-primary hover:bg-primary-light text-white font-semibold px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="motion-press w-full sm:w-auto bg-primary hover:bg-primary-light text-white font-semibold px-8 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === "submitting" ? t("submitting") : t("send")}
       </button>

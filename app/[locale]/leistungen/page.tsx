@@ -1,3 +1,4 @@
+import { PageTransition, ServiceTitle } from "@/components/PageTransition";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { StaggerContainer, StaggerItem, TileFlip } from "@/components/animations";
@@ -38,7 +39,7 @@ export default async function ServicesPage({
   ] as const;
 
   return (
-    <>
+    <PageTransition>
       <section className="bg-dark text-white py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
@@ -58,11 +59,11 @@ export default async function ServicesPage({
                 <TileFlip>
                   <Link
                     href={service.href}
-                    className="group block p-6 sm:p-8 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary transition-all h-full"
+                    className="group block p-6 sm:p-8 bg-white border border-gray-200 rounded-lg hover:shadow-lg hover:border-primary h-full"
                   >
-                    <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+                    <ServiceTitle slug={service.href.split("/").at(-1)!}><h3 className="text-xl font-semibold mb-3 group-hover:text-primary">
                       {t(`services.${service.key}.title`)}
-                    </h3>
+                    </h3></ServiceTitle>
                     <p className="text-gray-600 mb-4">
                       {t(`services.${service.key}.shortDescription`)}
                     </p>
@@ -76,6 +77,6 @@ export default async function ServicesPage({
           </StaggerContainer>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

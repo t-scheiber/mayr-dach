@@ -1,64 +1,49 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 
-// Sorted smallest-first so the initial video loads fast during the loader animation
-const videos = [
-  "/hero-videos/ai_video_10.mp4",
-  "/hero-videos/ai_video_09.mp4",
-  "/hero-videos/ai_video_08.mp4",
-  "/hero-videos/ai_video_06.mp4",
-  "/hero-videos/ai_video_07.mp4",
-  "/hero-videos/ai_video_05.mp4",
-  "/hero-videos/ai_video_04.mp4",
-  "/hero-videos/ai_video_01.mp4",
-  "/hero-videos/ai_video_02.mp4",
-  "/hero-videos/ai_video_03.mp4",
-];
-
-function pickRandom(exclude: number) {
-  let next;
-  do {
-    next = Math.floor(Math.random() * videos.length);
-  } while (next === exclude && videos.length > 1);
-  return next;
-}
-
-export default function HeroVideoBackground({ randomize = false }: { randomize?: boolean }) {
-  const [currentIndex, setCurrentIndex] = useState(() =>
-    randomize ? Math.floor(Math.random() * videos.length) : 0
-  );
+export default function HeroVideoBackground() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const handleEnded = useCallback(() => {
-    const nextIndex = pickRandom(currentIndex);
-    setCurrentIndex(nextIndex);
-
-    if (videoRef.current) {
-      videoRef.current.src = videos[nextIndex];
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
-    }
-  }, [currentIndex]);
-
-  // Keep the handler fresh on the video element
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.addEventListener("ended", handleEnded);
-    return () => video.removeEventListener("ended", handleEnded);
-  }, [handleEnded]);
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let started = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const stop = () => { clearTimeout(timer); video.pause(); };
+    const limit = () => { timer ??= setTimeout(stop, 4000); };
+    const updatePreference = () => {
+      if (preference.matches) {
+        stop();
+        video.removeAttribute("src");
+        video.load();
+      } else if (!started && !document.hidden) {
+        started = true;
+        video.src = "/hero-videos/ai_video_10.mp4";
+        video.play().catch(() => {});
+      }
+    };
+    const onVisibility = () => { if (document.hidden) stop(); };
+    video.addEventListener("playing", limit);
+    video.addEventListener("ended", stop);
+    preference.addEventListener("change", updatePreference);
+    document.addEventListener("visibilitychange", onVisibility);
+    updatePreference();
+    return () => {
+      stop();
+      video.removeEventListener("playing", limit);
+      video.removeEventListener("ended", stop);
+      preference.removeEventListener("change", updatePreference);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, []);
 
   return (
-    <video
-      ref={videoRef}
-      autoPlay
-      muted
-      playsInline
-      preload="auto"
+    <video ref={videoRef} muted playsInline preload="none"
       poster="/images/hero/video-poster.jpg"
       className="absolute inset-0 w-full h-full object-cover"
-      src={videos[currentIndex]}
+      aria-hidden="true"
     />
   );
 }

@@ -1,3 +1,4 @@
+import { PageTransition } from "@/components/PageTransition";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import company from "@/content/company.json";
 
@@ -13,7 +14,7 @@ export default async function ImpressumPage({
   const { legal, address, phone, fax, email } = company.company;
 
   return (
-    <>
+    <PageTransition>
       <section className="bg-dark text-white py-20 md:py-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h1 className="text-3xl md:text-5xl font-bold">
@@ -89,6 +90,6 @@ export default async function ImpressumPage({
           </ul>
         </div>
       </section>
-    </>
+    </PageTransition>
   );
 }

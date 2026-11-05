@@ -5,7 +5,6 @@ import { routing } from "@/i18n/routing";
 import { Inter, Great_Vibes } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { BlueprintTransition } from "@/components/animations";
 import { NavigationProgress } from "@/components/NavigationProgress";
 import { MotionProvider } from "@/components/MotionProvider";
 import { JsonLd } from "@/components/JsonLd";
@@ -52,8 +51,8 @@ export async function generateMetadata({
   };
 }
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "--font-script" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "optional" });
+const greatVibes = Great_Vibes({ weight: "400", subsets: ["latin"], variable: "--font-script", display: "optional" });
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -151,7 +150,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${greatVibes.variable}`}>
       <head>
-        <link rel="preload" href="/images/hero/video-poster.jpg" as="image" />
+        <link rel="preload" href="/images/hero/video-poster.jpg" as="image" fetchPriority="high" />
       </head>
       <body className="font-sans antialiased overflow-x-hidden">
         <JsonLd data={localBusinessJsonLd} />
@@ -167,10 +166,8 @@ export default async function LocaleLayout({
               </aside>
             )}
             <Header />
-            <main>
-              <BlueprintTransition>
-                {children}
-              </BlueprintTransition>
+            <main className="site-main relative w-full min-h-screen">
+              {children}
             </main>
             <Footer />
           </MotionProvider>

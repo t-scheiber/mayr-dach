@@ -81,7 +81,7 @@ export default function ApplicationFormContent() {
 
   if (status === "success") {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-8 text-center">
+      <div className="status-feedback bg-green-50 border border-green-200 rounded-lg p-8 text-center">
         <svg className="w-16 h-16 text-green-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
@@ -157,7 +157,7 @@ export default function ApplicationFormContent() {
         <p className="text-xs text-gray-500">{t("privacy")}</p>
 
         <button type="submit" disabled={status === "submitting"}
-          className="bg-primary hover:bg-primary-light text-white font-semibold py-3 px-8 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          className="motion-press bg-primary hover:bg-primary-light text-white font-semibold py-3 px-8 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
           {status === "submitting" ? t("submitting") : t("submit")}
         </button>
       </fieldset>
