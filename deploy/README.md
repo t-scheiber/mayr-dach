@@ -12,4 +12,4 @@ Coolify configuration: Dockerfile build pack, `/Dockerfile.demo`, exposed port `
 
 The root redirects to `/de/`. nginx uses relative redirects so neither the internal port nor HTTP leaks into public redirects. Both locale prefixes are explicit for static hosting. A proxied Cloudflare CNAME points to the Proxmox tunnel; its existing `*.thomasscheiber.com` route reaches the Coolify proxy at `https://192.168.1.200`. This route was verified against the public demo hostname, including pages, static assets, and video range responses.
 
-The original VPS workflow is not used for this demo. Deployments use the dedicated `deploy/coolify-demo` branch in Coolify.
+The original VPS workflow is not used for this demo. Deployments use the `main` branch in Coolify. Automatic deployment is disabled, so deploy the merged commit explicitly.
